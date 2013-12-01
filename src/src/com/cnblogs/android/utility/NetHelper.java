@@ -36,24 +36,24 @@ import android.util.Log;
 
 public class NetHelper {
 	/**
-	 * »ñÈ¡DefaultHttpClientÊµÀı
+	 * ï¿½ï¿½È¡DefaultHttpClientÊµï¿½ï¿½
 	 * 
 	 * @param charset
-	 *            ²ÎÊı±àÂë¼¯, ¿É¿Õ
-	 * @return DefaultHttpClient ¶ÔÏó
+	 *            ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë¼¯, ï¿½É¿ï¿½
+	 * @return DefaultHttpClient ï¿½ï¿½ï¿½ï¿½
 	 */
 	private static DefaultHttpClient getDefaultHttpClient(final String charset) {
 		HttpParams httpParams = new BasicHttpParams();
 
-		// ÉèÖÃÁ¬½Ó³¬Ê±ºÍ Socket ³¬Ê±£¬ÒÔ¼° Socket »º´æ´óĞ¡
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³ï¿½Ê±ï¿½ï¿½ Socket ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ô¼ï¿½ Socket ï¿½ï¿½ï¿½ï¿½ï¿½Ğ¡
 		HttpConnectionParams.setConnectionTimeout(httpParams, 20 * 1000);
 		HttpConnectionParams.setSoTimeout(httpParams, 20 * 1000);
 		HttpConnectionParams.setSocketBufferSize(httpParams, 8192);
 
-		// ÉèÖÃÖØ¶¨Ïò£¬È±Ê¡Îª true
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Ø¶ï¿½ï¿½ï¿½È±Ê¡Îª true
 		HttpClientParams.setRedirecting(httpParams, true);
 
-		// ÉèÖÃ user agent
+		// ï¿½ï¿½ï¿½ï¿½ user agent
 		String userAgent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2) Gecko/20100115 Firefox/3.6";
 		HttpProtocolParams.setUserAgent(httpParams, userAgent);
 
@@ -69,7 +69,7 @@ public class NetHelper {
 		try {
 			httpClient = getDefaultHttpClient(charset);
 			hg = new HttpGet(url);
-			// ·¢ËÍÇëÇó£¬µÃµ½ÏìÓ¦
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ó£¬µÃµï¿½ï¿½ï¿½Ó¦
 			HttpResponse response = httpClient.execute(hg);
 			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
 				return "";
@@ -88,11 +88,7 @@ public class NetHelper {
 		}
 		return responseStr;
 	}
-	/**
-	 * »ñÈ¡ÍøÂçÊÇ·ñ¿ÉÓÃ×´Ì¬
-	 * 
-	 * @return
-	 */
+
 	public static boolean networkIsAvailable(Context context) {
 		ConnectivityManager cManager = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -105,13 +101,11 @@ public class NetHelper {
 		}
 		return false;
 	}
+
 	/**
-	 * ¶ÁÈ¡ÍøÂçÊı¾İ
-	 * 
-	 * @param _url
+	 * è¯»å–ç½‘ç»œæ•°æ®
+	 * @param url
 	 * @return
-	 * @throws IOException
-	 * @throws ClientProtocolException
 	 */
 	public static String GetContentFromUrl(String url) {
 		String result = "";
@@ -121,7 +115,7 @@ public class NetHelper {
 			HttpResponse resp = client.execute(req);
 			HttpEntity ent = resp.getEntity();
 			int status = resp.getStatusLine().getStatusCode();
-			// If the status is equal to 200 £¬that is OK
+
 			if (status == HttpStatus.SC_OK) {
 				result = EntityUtils.toString(ent);
 				// Encode utf-8 to iso-8859-1
@@ -130,13 +124,12 @@ public class NetHelper {
 			client.getConnectionManager().shutdown();
 			return result;
 		} catch (Exception e) {
-			Log.e("NetHelper", "______________¶ÁÈ¡Êı¾İÊ§°Ü" + e.toString()
-					+ "_____________");
+			Log.e("NetHelper", "______________è¯»å–æ•°æ®å¤±è´¥" + e.toString() + "_____________");
 			return "";
 		}
 	}
 	/**
-	 * µÃµ½xmlÄÚÈİ
+	 * å¾—åˆ°xmlå†…å®¹
 	 * 
 	 * @param url
 	 * @param contentType
@@ -146,7 +139,7 @@ public class NetHelper {
 		return GetContentFromUrl(url, contentType).replaceAll("\n|\t|\r", "");
 	}
 	/**
-	 * ¶ÁÈ¡ÍøÂçÊı¾İ
+	 * è¯»å–ç½‘ç»œæ•°æ®
 	 * 
 	 * @param _url
 	 * @return
@@ -162,7 +155,7 @@ public class NetHelper {
 			req.getParams().setParameter("Content-Type", "UTF-8");
 			HttpEntity ent = resp.getEntity();
 			int status = resp.getStatusLine().getStatusCode();
-			// If the status is equal to 200 £¬that is OK
+			// If the status is equal to 200 ï¿½ï¿½that is OK
 			if (status == HttpStatus.SC_OK) {
 				result = EntityUtils.toString(ent);
 				// Encode utf-8 to iso-8859-1
@@ -171,13 +164,13 @@ public class NetHelper {
 			client.getConnectionManager().shutdown();
 			return result;
 		} catch (Exception e) {
-			Log.e("NetHelper", "______________¶ÁÈ¡Êı¾İÊ§°Ü" + e.toString()
+			Log.e("NetHelper", "______________ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ê§ï¿½ï¿½" + e.toString()
 					+ "_____________");
 			return "";
 		}
 	}
 	/**
-	 * ´ø²ÎÊıPostÊı¾İ»ñµÃ·µ»Ø
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½Postï¿½ï¿½İ»ï¿½Ã·ï¿½ï¿½ï¿½
 	 * 
 	 * @param url
 	 * @param params
@@ -198,10 +191,10 @@ public class NetHelper {
 				return result;
 			}
 			if (responseCode == 403) {
-				return "1";// ÒÑ¾­¹Ø×¢ÁË´ËÈË
+				return "1";// ï¿½Ñ¾ï¿½ï¿½ï¿½×¢ï¿½Ë´ï¿½ï¿½ï¿½
 			}
 		} catch (Exception e) {
-			Log.e("NetHelper", "______________¶ÁÈ¡Êı¾İÊ§°Ü" + e.toString()
+			Log.e("NetHelper", "______________ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ê§ï¿½ï¿½" + e.toString()
 					+ "_____________");
 			e.printStackTrace();
 		}
@@ -209,7 +202,7 @@ public class NetHelper {
 		return "";
 	}
 	/**
-	 * ¶ÁÈ¡ÊäÈëÁ÷
+	 * ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	public static byte[] readInputStream(InputStream inStream) throws Exception {
 		ByteArrayOutputStream outSteam = new ByteArrayOutputStream();
@@ -223,14 +216,14 @@ public class NetHelper {
 		return outSteam.toByteArray();
 	}
 	/**
-	 * ÏÂÔØÍ¼Æ¬µ½±¾µØ
+	 * ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param url
 	 * @return
 	 */
 	public static Drawable loadImageFromUrlWithStore(String folder, String url) {
 		try {
-			//×¢Òâurl¿ÉÄÜ°üº¬?µÄÇé¿ö£¬ĞèÒªÔÚ?Ç°½Ø¶Ï
+			//×¢ï¿½ï¿½urlï¿½ï¿½ï¿½Ü°ï¿½?ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½?Ç°ï¿½Ø¶ï¿½
 			if(url.indexOf("?")>0){
 				url=url.substring(0,url.indexOf("?"));
 			}
@@ -255,7 +248,7 @@ public class NetHelper {
 		return null;
 	}
 	/**
-	 * ÏÂÔØÍ¼Æ¬
+	 * ï¿½ï¿½ï¿½ï¿½Í¼Æ¬
 	 * 
 	 * @param url
 	 * @return

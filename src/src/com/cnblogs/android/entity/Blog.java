@@ -2,17 +2,11 @@ package com.cnblogs.android.entity;
 
 import java.util.Date;
 
-/**
- * 博客实体类
- * @author walkingp
- * @since 2011-11-18 
- *
- */
 public class Blog {
 	private int _blogId;
 	private String _blogTitle;
-	private String _author;//作者博客名
-	private String _userName;//用户名
+	private String _author;
+	private String _userName;
 	private String _authorUrl;
 	private String _blogContent;
 	private Date _addTime;
@@ -107,7 +101,7 @@ public class Blog {
 		return _blogUrl;
 	}
 	/**
-	 * 重写
+	 * 锟斤拷写
 	 */
 	@Override
 	public boolean equals(Object obj){

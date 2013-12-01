@@ -25,12 +25,7 @@ public class BlogDalHelper {
 	public void Close(){
 		dbHelper.close();
 	}
-	/**
-	 * ÅÐ¶ÏÊÇ·ñÒÑ¾­´æÔÚ
-	 * 
-	 * @param blogId
-	 * @return
-	 */
+
 	private boolean Exist(int blogId) {
 		String where = "BlogId=?";
 		String[] args = {String.valueOf(blogId)};
@@ -40,11 +35,7 @@ public class BlogDalHelper {
 		cursor.close();
 		return isExist;
 	}
-	/**
-	 * ÅÐ¶ÏÊÇ·ñÒÑ¾­Ð´ÈëÄÚÈÝ
-	 * @param blogId
-	 * @return
-	 */
+
 	private boolean IsFull(int blogId){
 		String where="BlogId=?";
 		String[] args={String.valueOf(blogId)};
@@ -60,29 +51,22 @@ public class BlogDalHelper {
 		cursor.close();
 		return isFull;
 	}
-	/**
-	 * µÃµ½Í·Ìõ
-	 * 
-	 * @return
-	 */
+
 	public List<Blog> GetTopBlogList() {
 		String limit = "10";
 		String where = "";
 
 		return GetBlogListByWhere(limit, where, null);
 	}
-	/**
-	 * ·ÖÒ³
-	 */
+	
+	
 	public List<Blog> GetBlogListByPage(int pageIndex, int pageSize) {
-		String limit = String.valueOf((pageIndex - 1) * pageSize) + ","
-				+ String.valueOf(pageSize);
+		String limit = String.valueOf((pageIndex - 1) * pageSize) + ","	+ String.valueOf(pageSize);
 		List<Blog> list = GetBlogListByWhere(limit, null, null);
 
 		return list;
 	}
 	/**
-	 * µÃµ½Ä³¸ö×÷ÕßµÄÀëÏßÊý¾Ý
 	 * @param author
 	 * @param pageIndex
 	 * @param pageSize
@@ -97,7 +81,6 @@ public class BlogDalHelper {
 		return list;
 	}
 	/**
-	 * µÃµ½¶ÔÏó
 	 */
 	public Blog GetBlogEntity(int blogId) {
 		String limit = "1";
@@ -110,35 +93,22 @@ public class BlogDalHelper {
 
 		return null;
 	}
-	/**
-	 * µÃµ½
-	 * 
-	 * @param top
-	 * @param where
-	 */
-	public List<Blog> GetBlogListByWhere(String limit, String where,
-			String[] args) {
+
+	public List<Blog> GetBlogListByWhere(String limit, String where, String[] args) {
 		List<Blog> listBlog = new ArrayList<Blog>();
 		String orderBy = "BlogID desc";
-		Cursor cursor = db.query(Config.DB_BLOG_TABLE, null, where, args, null,
-				null, orderBy, limit);
+		Cursor cursor = db.query(Config.DB_BLOG_TABLE, null, where, args, null, null, orderBy, limit);
 		while (cursor != null && cursor.moveToNext()) {
 			Blog entity = new Blog();
-			String addTimeStr = cursor.getString(cursor
-					.getColumnIndex("Published"));
+			String addTimeStr = cursor.getString(cursor.getColumnIndex("Published"));
 			Date addTime = AppUtil.ParseDate(addTimeStr);
 			entity.SetAddTime(addTime);
-			entity.SetAuthor(cursor.getString(cursor
-					.getColumnIndex("AuthorName")));
-			entity.SetAuthorUrl(cursor.getString(cursor
-					.getColumnIndex("AuthorUrl")));
-			entity.SetAvator(cursor.getString(cursor
-					.getColumnIndex("AuthorAvatar")));
-			entity.SetBlogContent(cursor.getString(cursor
-					.getColumnIndex("Content")));
+			entity.SetAuthor(cursor.getString(cursor.getColumnIndex("AuthorName")));
+			entity.SetAuthorUrl(cursor.getString(cursor.getColumnIndex("AuthorUrl")));
+			entity.SetAvator(cursor.getString(cursor.getColumnIndex("AuthorAvatar")));
+			entity.SetBlogContent(cursor.getString(cursor.getColumnIndex("Content")));
 			entity.SetBlogId(cursor.getInt(cursor.getColumnIndex("BlogId")));
-			entity.SetBlogTitle(cursor.getString(cursor
-					.getColumnIndex("BlogTitle")));
+			entity.SetBlogTitle(cursor.getString(cursor.getColumnIndex("BlogTitle")));
 			String blogUrl = "";
 			if (cursor.getString(cursor.getColumnIndex("BlogUrl")) != null) {
 				blogUrl = cursor.getString(cursor.getColumnIndex("BlogUrl"));
@@ -150,16 +120,14 @@ public class BlogDalHelper {
 				cateName = cursor.getString(cursor.getColumnIndex("CateName"));
 			}
 			entity.SetCateName(cateName);
-			entity.SetCommentNum(cursor.getInt(cursor
-					.getColumnIndex("Comments")));
+			entity.SetCommentNum(cursor.getInt(cursor.getColumnIndex("Comments")));
 			entity.SetDiggsNum(cursor.getInt(cursor.getColumnIndex("Digg")));
 			boolean isFull = cursor.getString(cursor.getColumnIndex("IsFull")).equals("1");
 			entity.SetIsFullText(isFull);
 			entity.SetSummary(cursor.getString(cursor.getColumnIndex("Summary")));
 			Date updateTime = new java.util.Date();
 			if (cursor.getString(cursor.getColumnIndex("Updated")) != null) {
-				updateTime = AppUtil.ParseDate(cursor.getString(cursor
-						.getColumnIndex("Updated")));
+				updateTime = AppUtil.ParseDate(cursor.getString(cursor.getColumnIndex("Updated")));
 			}
 			entity.SetUpdateTime(updateTime);
 			entity.SetViewNum(cursor.getInt(cursor.getColumnIndex("View")));
@@ -173,12 +141,7 @@ public class BlogDalHelper {
 
 		return listBlog;
 	}
-	/**
-	 * ÊÇ·ñÒÑ¶Á
-	 * 
-	 * @param blogId
-	 * @return
-	 */
+
 	public boolean GetIsReaded(int blogId) {
 		Blog entity = GetBlogEntity(blogId);
 		if (entity != null) {
@@ -187,7 +150,7 @@ public class BlogDalHelper {
 		return false;
 	}
 	/**
-	 * ±êÖ¾ÎªÒÑ¶Á
+	 * ï¿½ï¿½Ö¾Îªï¿½Ñ¶ï¿½
 	 * 
 	 * @param blogId
 	 */
@@ -197,7 +160,7 @@ public class BlogDalHelper {
 		db.execSQL(sql, args);
 	}
 	/**
-	 * ½«²©¿ÍÄÚÈÝÍ¬²½µ½Êý¾Ý¿â
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½
 	 * 
 	 * @param blogId
 	 * @param blogContent
@@ -211,7 +174,7 @@ public class BlogDalHelper {
 		db.execSQL(sql, args);
 	}
 	/**
-	 * ²åÈë
+	 * ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param list
 	 */
@@ -264,7 +227,7 @@ public class BlogDalHelper {
 		synchronized (_writeLock) {
 			db.beginTransaction();
 			try {
-				// Çå³ýÒÑÓÐ
+				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				// String where="IsFull=?";
 				// String[] args={"0"};
 				// db.delete(DB_BLOG_TABLE, where, args);
@@ -274,7 +237,7 @@ public class BlogDalHelper {
 					boolean isFull = IsFull(blogId);
 					if (!isExist) {
 						db.insert(Config.DB_BLOG_TABLE, null, list.get(i));
-					} else if (!isFull) {// Èç¹ûÃ»ÓÐÐ´ÄÚÈÝ
+					} else if (!isFull) {// ï¿½ï¿½ï¿½Ã»ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½
 						SynchronyContent2DB(list.get(i).getAsInteger("BlogId"),
 								list.get(i).getAsString("Content"));
 					}

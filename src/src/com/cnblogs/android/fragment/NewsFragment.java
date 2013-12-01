@@ -1,7 +1,19 @@
-package com.cnblogs.android;
+package com.cnblogs.android.fragment;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.cnblogs.android.CommentActivity;
+import com.cnblogs.android.NewsDetailActivity;
+import com.cnblogs.android.R;
+import com.cnblogs.android.adapter.NewsListAdapter;
+import com.cnblogs.android.dal.NewsDalHelper;
+import com.cnblogs.android.entity.News;
+import com.cnblogs.android.utility.NetHelper;
+import com.cnblogs.android.controls.PullToRefreshListView;
+import com.cnblogs.android.controls.PullToRefreshListView.OnRefreshListener;
+import com.cnblogs.android.core.NewsHelper;
+import com.cnblogs.android.core.Config;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,125 +23,126 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.view.View.OnCreateContextMenuListener;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
-//import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView.OnItemClickListener;
-import com.cnblogs.android.adapter.NewsListAdapter;
-import com.cnblogs.android.controls.PullToRefreshListView;
-import com.cnblogs.android.controls.PullToRefreshListView.OnRefreshListener;
-import com.cnblogs.android.core.Config;
-import com.cnblogs.android.core.NewsHelper;
-import com.cnblogs.android.dal.NewsDalHelper;
-import com.cnblogs.android.entity.News;
-import com.cnblogs.android.utility.NetHelper;
+
 /**
- * ĞÂÎÅÁĞ±í
- * @author walkingp
- * @date:2011-12
+ * æ–°é—»åˆ—è¡¨
+ * @author czl
  *
  */
-public class NewsActivity extends BaseMainActivity {
+public class NewsFragment extends Fragment {
 	List<News> listNews = new ArrayList<News>();
 
 	NewsListAdapter adapter;
-
-	int pageIndex = 1;// Ò³Âë
-
+	int pageIndex = 1;// é¡µç 
 	ListView listView;
 
-	private ImageButton refresh_btn; // Í·²¿Ë¢ĞÂ°´Å¥
-	ProgressBar news_progress_bar; // Í·²¿¼ÓÔØ°´Å¥
+	private ImageButton refresh_btn; // å¤´éƒ¨åˆ·æ–°æŒ‰é’®
+	ProgressBar news_progress_bar; // å¤´éƒ¨åŠ è½½æŒ‰é’®
 
-	ProgressBar newsBody_progressBar;// Ö÷Ìâ½ø¶È
+	ProgressBar newsBody_progressBar;// ä¸»é¢˜è¿›åº¦
 
 	LinearLayout viewFooter;// footer view
-	TextView tvFooterMore;// µ×²¿¸ü¶àÏÔÊ¾
-	ProgressBar list_footer_progress;// µ×²¿½ø¶ÈÌõ
+	TextView tvFooterMore;// åº•éƒ¨æ›´å¤šæ˜¾ç¤º
+	ProgressBar list_footer_progress;// åº•éƒ¨è¿›åº¦æ¡
 
 	private int lastItem;
 
-	static final int MENU_DETAIL = Menu.FIRST;// ²é¿´ÏêÏ¸
-	static final int MENU_COMMENT = Menu.FIRST + 1;// ²é¿´ÆÀÂÛ
-	static final int MENU_VIEW_BROWSER = Menu.FIRST + 2;// ÔÚä¯ÀÀÆ÷ÖĞ²é¿´
-	static final int MENU_SHARE_TO = Menu.FIRST + 3;// ·ÖÏíµ½
+	static final int MENU_DETAIL = Menu.FIRST;// æŸ¥çœ‹è¯¦ç»†
+	static final int MENU_COMMENT = Menu.FIRST + 1;// æŸ¥çœ‹è¯„è®º
+	static final int MENU_VIEW_BROWSER = Menu.FIRST + 2;// åœ¨æµè§ˆå™¨ä¸­æŸ¥çœ‹
+	static final int MENU_SHARE_TO = Menu.FIRST + 3;// åˆ†äº«åˆ°
 
-	Resources res;// ×ÊÔ´
+	Resources res;// èµ„æº
+    
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.setContentView(R.layout.news_layout);
 
 		res = this.getResources();
-		InitialControls();
+	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.news_layout, null);
+		
+		InitialControls(rootView);
 		InitialNewsList();
 		BindEvent();
-		
+                
 		UpdateListViewReceiver receiver=new UpdateListViewReceiver();
-		IntentFilter filter=new IntentFilter();
+		IntentFilter filter = new IntentFilter();
 		filter.addAction("android.cnblogs.com.update_newslist");
-		registerReceiver(receiver, filter);
+		getActivity().registerReceiver(receiver, filter);
+		
+		return rootView;
 	}
+
+
 	/**
-	 * ³õÊ¼»¯ÁĞ±í
+	 * åˆå§‹åŒ–åˆ—è¡¨
 	 */
-	private void InitialControls() {
-		listView = (ListView) findViewById(R.id.news_list);
+	private void InitialControls(View rootView) {
+		listView = (ListView) rootView.findViewById(R.id.news_list);
 		listView.removeAllViewsInLayout();
-		newsBody_progressBar = (ProgressBar) findViewById(R.id.newsList_progressBar);
+		newsBody_progressBar = (ProgressBar) rootView.findViewById(R.id.newsList_progressBar);
 		newsBody_progressBar.setVisibility(View.VISIBLE);
-		// Ë¢ĞÂ
-		refresh_btn = (ImageButton) findViewById(R.id.news_refresh_btn);
-		news_progress_bar = (ProgressBar) findViewById(R.id.news_progressBar);
-		// µ×²¿view
-		LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		viewFooter = (LinearLayout) mInflater.inflate(R.layout.listview_footer,
-				null, false);
+		// åˆ·æ–°
+		refresh_btn = (ImageButton) rootView.findViewById(R.id.news_refresh_btn);
+		news_progress_bar = (ProgressBar) rootView.findViewById(R.id.news_progressBar);
+		// åº•éƒ¨view
+		LayoutInflater mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		viewFooter = (LinearLayout) mInflater.inflate(R.layout.listview_footer, null, false);
 	}
+	
 	/**
-	 * ¼ÓÔØ³õÊ¼Êı¾İ(³õÊ¼»¯)
+	 * åŠ è½½åˆå§‹æ•°æ®(åˆå§‹åŒ–)
 	 */
 	private void InitialNewsList() {
 		new PageTask(0, true).execute();
 	}
+	
 	/**
-	 * °ó¶¨ÊÂ¼ş
+	 * ç»‘å®šäº‹ä»¶
 	 */
 	private void BindEvent() {
-		// Ë¢ĞÂ
+		// åˆ·æ–°
 		refresh_btn.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				new PageTask(1, true).execute();
 			}
 		});
-		// ÉÏÀ­Ë¢ĞÂ
-		((PullToRefreshListView) listView)
-				.setOnRefreshListener(new OnRefreshListener() {
-					@Override
-					public void onRefresh() {
-						new PageTask(-1, true).execute();
-					}
-				});
-		// ÏÂÀ­Ë¢ĞÂ
+		// ä¸Šæ‹‰åˆ·æ–°
+		((PullToRefreshListView) listView).setOnRefreshListener(new OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				new PageTask(-1, true).execute();
+			}
+		});
+		// ä¸‹æ‹‰åˆ·æ–°
 		listView.setOnScrollListener(new OnScrollListener() {
 			/**
-			 * ÏÂÀ­µ½×îºóÒ»ĞĞ
+			 * ä¸‹æ‹‰åˆ°æœ€åä¸€è¡Œ
 			 */
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -139,14 +152,15 @@ public class NewsActivity extends BaseMainActivity {
 					new PageTask(pageIndex, false).execute();
 				}
 			}
-
+			
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
 				lastItem = firstVisibleItem - 2 + visibleItemCount;
 			}
 		});
-		// µã»÷Ìø×ª
+		
+		// ç‚¹å‡»è·³è½¬
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v,
@@ -154,20 +168,20 @@ public class NewsActivity extends BaseMainActivity {
 				RedirectDetailActivity(v);
 			}
 		});
-		// ³¤°´ÊÂ¼ş
-		listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+		// é•¿æŒ‰äº‹ä»¶
+		listView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
 			@Override
-			public void onCreateContextMenu(ContextMenu menu, View v,
-					ContextMenuInfo menuInfo) {
-				menu.setHeaderTitle("ÇëÑ¡Ôñ²Ù×÷");
-				menu.add(0, MENU_DETAIL, 0, "²é¿´ÄÚÈİ");
-				menu.add(0, MENU_COMMENT, 0, "²é¿´ÆÀÂÛ");
-				menu.add(0, MENU_VIEW_BROWSER, 0, "ÔÚä¯ÀÀÆ÷ÖĞ²é¿´");
-				menu.add(0, MENU_SHARE_TO, 0, "·ÖÏíµ½¡­¡­");
+			public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+				menu.setHeaderTitle("è¯·é€‰æ‹©æ“ä½œ");
+				menu.add(0, MENU_DETAIL, 0, "æŸ¥çœ‹å†…å®¹");
+				menu.add(0, MENU_COMMENT, 0, "æŸ¥çœ‹è¯„è®º");
+				menu.add(0, MENU_VIEW_BROWSER, 0, "åœ¨æµè§ˆå™¨ä¸­æŸ¥çœ‹");
+				menu.add(0, MENU_SHARE_TO, 0, "åˆ†äº«åˆ°â€¦â€¦");
 			}
 		});
 	}
-	// ³¤°´²Ëµ¥ÏìÓ¦º¯Êı
+      
+	// é•¿æŒ‰èœå•å“åº”å‡½æ•°
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		int itemIndex = item.getItemId();
@@ -175,31 +189,32 @@ public class NewsActivity extends BaseMainActivity {
 				.getMenuInfo();
 		View v = menuInfo.targetView;
 		switch (itemIndex) {
-			case MENU_DETAIL :// ÏêÏ¸
-				RedirectDetailActivity(v);
-				break;
-			case MENU_COMMENT :// ÆÀÂÛ
-				RedirectCommentActivity(v);
-				break;
-			case MENU_VIEW_BROWSER :// ÔÚä¯ÀÀÆ÷ÖĞ²é¿´
-				ViewInBrowser(v);
-				break;
-			case MENU_SHARE_TO :// ·ÖÏíµ½
-				ShareTo(v);
-				break;
+		case MENU_DETAIL :// è¯¦ç»†
+			RedirectDetailActivity(v);
+			break;
+		case MENU_COMMENT :// è¯„è®º
+			RedirectCommentActivity(v);
+			break;
+		case MENU_VIEW_BROWSER :// åœ¨æµè§ˆå™¨ä¸­æŸ¥çœ‹
+			ViewInBrowser(v);
+			break;
+		case MENU_SHARE_TO :// åˆ†äº«åˆ°
+			ShareTo(v);
+			break;
 		}
 
 		return super.onContextItemSelected(item);
 	}
+	
 	/**
-	 * ¶àÏß³ÌÆô¶¯£¨ÓÃÓÚÉÏÀ­¼ÓÔØ¡¢³õÊ¼»¯¡¢ÏÂÔØ¼ÓÔØ¡¢Ë¢ĞÂ£©
+	 * å¤šçº¿ç¨‹å¯åŠ¨ï¼ˆç”¨äºä¸Šæ‹‰åŠ è½½ã€åˆå§‹åŒ–ã€ä¸‹è½½åŠ è½½ã€åˆ·æ–°ï¼‰
 	 * 
 	 */
 	public class PageTask extends AsyncTask<String, Integer, List<News>> {
 		boolean isRefresh = false;
 		int curPageIndex = 0;
-		boolean isLocalData = false;// ÊÇ·ñÊÇ´Ó±¾µØ¶ÁÈ¡µÄÊı¾İ
-		NewsDalHelper dbHelper = new NewsDalHelper(getApplicationContext());
+		boolean isLocalData = false;// æ˜¯å¦æ˜¯ä»æœ¬åœ°è¯»å–çš„æ•°æ®
+		NewsDalHelper dbHelper = new NewsDalHelper(getActivity().getApplicationContext());
 		public PageTask(int page, boolean isRefresh) {
 			curPageIndex = page;
 			this.isRefresh = isRefresh;
@@ -207,146 +222,147 @@ public class NewsActivity extends BaseMainActivity {
 
 		protected List<News> doInBackground(String... params) {
 			boolean isNetworkAvailable = NetHelper
-					.networkIsAvailable(getApplicationContext());
+					.networkIsAvailable(getActivity().getApplicationContext());
 			int _pageIndex = curPageIndex;
 			if (_pageIndex <= 0) {
 				_pageIndex = 1;
 			}
-			// ÓÅÏÈ¶ÁÈ¡±¾µØÊı¾İ
+			// ä¼˜å…ˆè¯»å–æœ¬åœ°æ•°æ®
 			List<News> listNewsLocal = dbHelper.GetNewsListByPage(_pageIndex,
 					Config.NEWS_PAGE_SIZE);
-
-			if (isNetworkAvailable) {// ÓĞÍøÂçÇé¿ö
+			
+			if (isNetworkAvailable) {// æœ‰ç½‘ç»œæƒ…å†µ
 				List<News> listNewsNew = NewsHelper.GetNewsList(_pageIndex);
 				switch (curPageIndex) {
-					case -1 :// ÉÏÀ­\
-						List<News> listTmp = new ArrayList<News>();
-						if (listNews != null && listNews.size() > 0) {
-							if (listNewsNew != null && listNewsNew.size() > 0) {
-								int size = listNewsNew.size();
-								for (int i = 0; i < size; i++) {
-									if (!listNews.contains(listNewsNew.get(i))) {// ±ÜÃâ³öÏÖÖØ¸´
-										listTmp.add(listNewsNew.get(i));
-									}
-								}
-							}
-						}
-						return listTmp;
-					case 0 :// Ê×´Î¼ÓÔØ
-					case 1 :// Ë¢ĞÂ
+				case -1 :// ä¸Šæ‹‰\
+					List<News> listTmp = new ArrayList<News>();
+					if (listNews != null && listNews.size() > 0) {
 						if (listNewsNew != null && listNewsNew.size() > 0) {
-							return listNewsNew;
-						}
-						break;
-					default :// ÏÂÀ­
-						List<News> listT = new ArrayList<News>();
-						if (listNews != null && listNews.size() > 0) {// ±ÜÃâÊ×Ò³ÎŞÊı¾İÊ±
-							if (listNewsNew != null && listNewsNew.size() > 0) {
-								int size = listNewsNew.size();
-								for (int i = 0; i < size; i++) {
-									if (!listNews.contains(listNewsNew.get(i))) {// ±ÜÃâ³öÏÖÖØ¸´
-										listT.add(listNewsNew.get(i));
-									}
+							int size = listNewsNew.size();
+							for (int i = 0; i < size; i++) {
+								if (!listNews.contains(listNewsNew.get(i))) {// é¿å…å‡ºç°é‡å¤
+									listTmp.add(listNewsNew.get(i));
 								}
 							}
 						}
-						return listT;
+					}
+					return listTmp;
+				case 0 :// é¦–æ¬¡åŠ è½½
+				case 1 :// åˆ·æ–°
+					if (listNewsNew != null && listNewsNew.size() > 0) {
+						return listNewsNew;
+					}
+					break;
+				default :// ä¸‹æ‹‰
+					List<News> listT = new ArrayList<News>();
+					if (listNews != null && listNews.size() > 0) {// é¿å…é¦–é¡µæ— æ•°æ®æ—¶
+						if (listNewsNew != null && listNewsNew.size() > 0) {
+							int size = listNewsNew.size();
+							for (int i = 0; i < size; i++) {
+								if (!listNews.contains(listNewsNew.get(i))) {// é¿å…å‡ºç°é‡å¤
+									listT.add(listNewsNew.get(i));
+								}
+							}
+						}
+					}
+					return listT;
 				}
-			} else {// ÎŞÍøÂçÇé¿ö
+			} else {// æ— ç½‘ç»œæƒ…å†µ
 				isLocalData = true;
-				if (curPageIndex == -1) {// ÉÏÀ­²»¼ÓÔØÊı¾İ
+				if (curPageIndex == -1) {// ä¸Šæ‹‰ä¸åŠ è½½æ•°æ®
 					return null;
 				}
 				return listNewsLocal;
 			}
-
+			
 			return null;
 		}
-
+		
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
 		}
+		
 		/**
-		 * ¼ÓÔØÄÚÈİ
+		 * åŠ è½½å†…å®¹
 		 */
 		@Override
 		protected void onPostExecute(List<News> result) {
-			// ÓÒÉÏ½Ç
+			// å³ä¸Šè§’
 			news_progress_bar.setVisibility(View.GONE);
 			refresh_btn.setVisibility(View.VISIBLE);
-
-			// ÍøÂç²»¿ÉÓÃ²¢ÇÒ±¾µØÃ»ÓĞ±£´æÊı¾İ
-			if (result == null || result.size() == 0) {// Ã»ÓĞĞÂÊı¾İ
+			
+			// ç½‘ç»œä¸å¯ç”¨å¹¶ä¸”æœ¬åœ°æ²¡æœ‰ä¿å­˜æ•°æ®
+			if (result == null || result.size() == 0) {// æ²¡æœ‰æ–°æ•°æ®
 				((PullToRefreshListView) listView).onRefreshComplete();
-				if (!NetHelper.networkIsAvailable(getApplicationContext())
-						&& curPageIndex > 1) {// ÏÂÀ­²¢ÇÒÃ»ÓĞÍøÂç
-					Toast.makeText(getApplicationContext(),
+				if (!NetHelper.networkIsAvailable(getActivity().getApplicationContext())
+						&& curPageIndex > 1) {// ä¸‹æ‹‰å¹¶ä¸”æ²¡æœ‰ç½‘ç»œ
+					Toast.makeText(getActivity().getApplicationContext(),
 							R.string.sys_network_error, Toast.LENGTH_SHORT)
 							.show();
 					// listView.removeFooterView(viewFooter);
 				}
 				return;
 			}
-
+			
 			int size = result.size();
 			if (size >= Config.BLOG_PAGE_SIZE
 					&& listView.getFooterViewsCount() == 0) {
 				listView.addFooterView(viewFooter);
 			}
 
-			// ±£´æµ½Êı¾İ¿â
+			// ä¿å­˜åˆ°æ•°æ®åº“
 			if (!isLocalData) {
 				dbHelper.SynchronyData2DB(result);
 			}
 			dbHelper.Close();
 
-			if (curPageIndex == -1) {// ÉÏÀ­Ë¢ĞÂ
+			if (curPageIndex == -1) {// ä¸Šæ‹‰åˆ·æ–°
 				adapter.InsertData(result);
-			} else if (curPageIndex == 0) {// Ê×´Î¼ÓÔØ
+			} else if (curPageIndex == 0) {// é¦–æ¬¡åŠ è½½
 				listNews = result;
-
+				
 				newsBody_progressBar.setVisibility(View.GONE);
-				adapter = new NewsListAdapter(getApplicationContext(), listNews);
+				adapter = new NewsListAdapter(getActivity().getApplicationContext(), listNews);
 				listView.setAdapter(adapter);
-
-				// ´«µİ²ÎÊı
+				
+				// ä¼ é€’å‚æ•°
 				((PullToRefreshListView) listView).SetDataRow(listNews.size());
 				((PullToRefreshListView) listView)
-						.SetPageSize(Config.NEWS_PAGE_SIZE);
-			} else if (curPageIndex == 1) {// Ë¢ĞÂ
+				.SetPageSize(Config.NEWS_PAGE_SIZE);
+			} else if (curPageIndex == 1) {// åˆ·æ–°
 				if (adapter != null && adapter.GetData() != null) {
 					adapter.GetData().clear();
 					adapter.AddMoreData(result);
 				} else {
-					adapter = new NewsListAdapter(getApplicationContext(),
+					adapter = new NewsListAdapter(getActivity().getApplicationContext(),
 							listNews);
 					listView.setAdapter(adapter);
 				}
 				newsBody_progressBar.setVisibility(View.GONE);
-			} else {// ÏÂÀ­
+			} else {// ä¸‹æ‹‰
 				adapter.AddMoreData(result);
 			}
-
-			if (isRefresh) {// Ë¢ĞÂÊ±´¦Àí
+			
+			if (isRefresh) {// åˆ·æ–°æ—¶å¤„ç†
 				((PullToRefreshListView) listView).onRefreshComplete();
 			}
 		}
 		@Override
 		protected void onPreExecute() {
-			// Ö÷Ìå½ø¶ÈÌõ
+			// ä¸»ä½“è¿›åº¦æ¡
 			if (listView.getCount() == 0) {
 				newsBody_progressBar.setVisibility(View.VISIBLE);
 			}
-			// ÓÒÉÏ½Ç
+			// å³ä¸Šè§’
 			news_progress_bar.setVisibility(View.VISIBLE);
 			refresh_btn.setVisibility(View.GONE);
 
-			if (!isRefresh) {// µ×²¿¿Ø¼ş£¬Ë¢ĞÂÊ±²»×ö´¦Àí
-				TextView tvFooterMore = (TextView) findViewById(R.id.tvFooterMore);
+			if (!isRefresh) {// åº•éƒ¨æ§ä»¶ï¼Œåˆ·æ–°æ—¶ä¸åšå¤„ç†
+				TextView tvFooterMore = (TextView) getView().findViewById(R.id.tvFooterMore);
 				tvFooterMore.setText(R.string.pull_to_refresh_refreshing_label);
 				tvFooterMore.setVisibility(View.VISIBLE);
-				ProgressBar list_footer_progress = (ProgressBar) findViewById(R.id.list_footer_progress);
+				ProgressBar list_footer_progress = (ProgressBar) getView().findViewById(R.id.list_footer_progress);
 				list_footer_progress.setVisibility(View.VISIBLE);
 			}
 		}
@@ -355,9 +371,9 @@ public class NewsActivity extends BaseMainActivity {
 		protected void onProgressUpdate(Integer... values) {
 		}
 	}
-	// ****************************************ÒÔÏÂÎª²Ëµ¥²Ù×÷
+	// ****************************************ä»¥ä¸‹ä¸ºèœå•æ“ä½œ
 	/**
-	 * Ìø×ªµ½ÆÀÂÛ
+	 * è·³è½¬åˆ°è¯„è®º
 	 * 
 	 * @param v
 	 */
@@ -371,14 +387,14 @@ public class NewsActivity extends BaseMainActivity {
 		int commentCount = Integer.parseInt(tvNewsComment.getText().toString());
 		String newsTitle = tvNewsTitle.getText().toString();
 		String newsUrl = tvNewsUrl.getText().toString();
-		// »¹Ã»ÓĞÆÀÂÛ
+		// è¿˜æ²¡æœ‰è¯„è®º
 		if (commentCount == 0) {
-			Toast.makeText(getApplicationContext(), R.string.sys_empty_comment,
+			Toast.makeText(getActivity().getApplicationContext(), R.string.sys_empty_comment,
 					Toast.LENGTH_SHORT).show();
 			return;
 		}
 		Intent intent = new Intent();
-		intent.setClass(NewsActivity.this, CommentActivity.class);
+		intent.setClass(getActivity(), CommentActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putInt("contentId", newsId);
 		bundle.putInt("commentType", 1);// Comment.EnumCommentType.News.ordinal());
@@ -390,15 +406,15 @@ public class NewsActivity extends BaseMainActivity {
 		startActivityForResult(intent, 0);
 	}
 	/**
-	 * ²é¿´ÏêÇé
+	 * æŸ¥çœ‹è¯¦æƒ…
 	 * 
 	 * @param v
 	 */
 	private void RedirectDetailActivity(View v) {
 		Intent intent = new Intent();
 		try {
-			// ´«µİ²ÎÊı
-			intent.setClass(NewsActivity.this, NewsDetailActivity.class);
+			// ä¼ é€’å‚æ•°
+			intent.setClass(getActivity(), NewsDetailActivity.class);
 			Bundle bundle = new Bundle();
 			TextView tvNewsId = (TextView) (v.findViewById(R.id.news_text_id));
 			TextView tvNewsTitle = (TextView) (v
@@ -410,14 +426,14 @@ public class NewsActivity extends BaseMainActivity {
 					.findViewById(R.id.news_text_comments));
 			TextView tvNewsView = (TextView) (v
 					.findViewById(R.id.news_text_view));
-
+			
 			String newsId = tvNewsId.getText().toString();
 			String newsTitle = tvNewsTitle.getText().toString();
 			String newsDate = tvNewsDate.getText().toString();
 			String newsUrl = tvNewsUrl.getText().toString();
 			int view = Integer.parseInt(tvNewsView.getText().toString());
 			int comment = Integer.parseInt(tvNewsComment.getText().toString());
-
+			
 			bundle.putString("newsId", newsId);
 			bundle.putString("newsTitle", newsTitle);
 			bundle.putString("date", newsDate);
@@ -427,15 +443,16 @@ public class NewsActivity extends BaseMainActivity {
 
 			Log.d("newsId", newsId.toString());
 			intent.putExtras(bundle);
-
+			
 			startActivityForResult(intent, 0);
-			tvNewsTitle.setTextColor(R.color.gray);
+			tvNewsTitle.setTextColor(res.getColor(R.color.gray));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
+	
 	/**
-	 * ÔÚä¯ÀÀÆ÷ÖĞ²é¿´
+	 * åœ¨æµè§ˆå™¨ä¸­æŸ¥çœ‹
 	 * 
 	 * @param v
 	 */
@@ -447,7 +464,7 @@ public class NewsActivity extends BaseMainActivity {
 		startActivity(it);
 	}
 	/**
-	 * ·ÖÏíµ½
+	 * åˆ†äº«åˆ°
 	 * 
 	 * @param v
 	 */
@@ -458,15 +475,16 @@ public class NewsActivity extends BaseMainActivity {
 		String newsUrl = tvNewsUrl.getText().toString();
 		Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.setType("text/plain");
-		intent.putExtra(Intent.EXTRA_SUBJECT, "ÇëÑ¡Ôñ·ÖÏíµ½¡­");
-		String shareContent = "¡¶" + newsTitle + "¡·£¬Ô­ÎÄÁ´½Ó£º" + newsUrl + " ·ÖÏí×Ô£º"
-				+ res.getString(R.string.app_name) + "Android¿Í»§¶Ë("
+		intent.putExtra(Intent.EXTRA_SUBJECT, "è¯·é€‰æ‹©åˆ†äº«åˆ°â€¦");
+		String shareContent = "ã€Š" + newsTitle + "ã€‹ï¼ŒåŸæ–‡é“¾æ¥ï¼š" + newsUrl + " åˆ†äº«è‡ªï¼š"
+				+ res.getString(R.string.app_name) + "Androidå®¢æˆ·ç«¯("
 				+ res.getString(R.string.app_homepage) + ")";
 		intent.putExtra(Intent.EXTRA_TEXT, shareContent);
 		startActivity(Intent.createChooser(intent, newsTitle));
 	}
+    
 	/**
-	 * ¸üĞÂListViewÎªÒÑ¶Á×´Ì¬
+	 * æ›´æ–°ListViewä¸ºå·²è¯»çŠ¶æ€
 	 * @author walknigp
 	 *
 	 */
@@ -474,22 +492,22 @@ public class NewsActivity extends BaseMainActivity {
 		@Override
 		public void onReceive(Context content, Intent intent) {
 			/*Bundle bundle=intent.getExtras();
-			int[] newsIdArr=bundle.getIntArray("newsIdArray");
-			for(int i=0,len=listView.getChildCount();i<len;i++){
-				View view=listView.getChildAt(i);
-				TextView tvId=(TextView)view.findViewById(R.id.news_text_id);
-				int newsId=Integer.parseInt(tvId.getText().toString());
-				
-				ImageView icoDown=(ImageView)view.findViewById(R.id.icon_downloaded);
-				TextView tvTitle=(TextView)view.findViewById(R.id.news_text_title);
-				
-				for(int j=0,size=newsIdArr.length;j<size;j++){
-					if(newsId==newsIdArr[j]){
-						icoDown.setVisibility(View.VISIBLE);//ÒÑ¾­ÀëÏß
-						tvTitle.setTextColor(R.color.gray);//ÒÑ¶Á
-					}
-				}
-			}*/
-		}		
+                        int[] newsIdArr=bundle.getIntArray("newsIdArray");
+                        for(int i=0,len=listView.getChildCount();i<len;i++){
+                                View view=listView.getChildAt(i);
+                                TextView tvId=(TextView)view.findViewById(R.id.news_text_id);
+                                int newsId=Integer.parseInt(tvId.getText().toString());
+                                
+                                ImageView icoDown=(ImageView)view.findViewById(R.id.icon_downloaded);
+                                TextView tvTitle=(TextView)view.findViewById(R.id.news_text_title);
+                                
+                                for(int j=0,size=newsIdArr.length;j<size;j++){
+                                        if(newsId==newsIdArr[j]){
+                                                icoDown.setVisibility(View.VISIBLE);//å·²ç»ç¦»çº¿
+                                                tvTitle.setTextColor(R.color.gray);//å·²è¯»
+                                        }
+                                }
+                        }*/
+		}                
 	}
 }

@@ -34,7 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- * ¶©ÔÄÄÚÈÝÏêÇé
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  * 
  * @author walkingp
  * @date 2012-3
@@ -42,34 +42,34 @@ import android.widget.Toast;
 public class RssDetailActivity extends BaseActivity
 		implements
 			OnGestureListener {
-	private String blogTitle;// ±êÌâ
-	private String blogAuthor;// ×÷Õß
-	private String blogDate;// ·¢±íÊ±¼ä
-	private String blogUrl;// ÎÄÕÂÁ´½Ó
-	private String blogContent;// ÎÄÕÂÄÚÈÝ
+	private String blogTitle;// ï¿½ï¿½ï¿½ï¿½
+	private String blogAuthor;// ï¿½ï¿½ï¿½ï¿½
+	private String blogDate;// ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+	private String blogUrl;// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	private String blogContent;// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-	static final int MENU_FORMAT_HTML = Menu.FIRST;// ¸ñÊ½»¯ÔÄ¶Á
-	static final int MENU_READ_MODE = Menu.FIRST + 1;// ÇÐ»»ÔÄ¶ÁÄ£Ê½
+	static final int MENU_FORMAT_HTML = Menu.FIRST;// ï¿½ï¿½Ê½ï¿½ï¿½ï¿½Ä¶ï¿½
+	static final int MENU_READ_MODE = Menu.FIRST + 1;// ï¿½Ð»ï¿½ï¿½Ä¶ï¿½Ä£Ê½
 
 	final String mimeType = "text/html";
 	final String encoding = "utf-8";
 
-	private Button blog_button_back;// ·µ»Ø
+	private Button blog_button_back;// ï¿½ï¿½ï¿½ï¿½
 	WebView webView;
 	ProgressBar blogBody_progressBar;
-	RelativeLayout rl_blog_detail;// Í·²¿µ¼º½
+	RelativeLayout rl_blog_detail;// Í·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-	boolean isFullScreen = false;// ÊÇ·ñÈ«ÆÁ
+	boolean isFullScreen = false;// ï¿½Ç·ï¿½È«ï¿½ï¿½
 
-	private GestureDetector gestureScanner;// ÊÖÊÆ
+	private GestureDetector gestureScanner;// ï¿½ï¿½ï¿½ï¿½
 
-	Resources res;// ×ÊÔ´
-	SharedPreferences sharePreferencesSettings;// ÉèÖÃ
-	TextView tvSeekBar;// SeekBarÏÔÊ¾ÎÄ±¾¿ò
+	Resources res;// ï¿½ï¿½Ô´
+	SharedPreferences sharePreferencesSettings;// ï¿½ï¿½ï¿½ï¿½
+	TextView tvSeekBar;// SeekBarï¿½ï¿½Ê¾ï¿½Ä±ï¿½ï¿½ï¿½
 	SeekBar seekBar;// SeekBar
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// ·ÀÖ¹ÐÝÃß
+		// ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
 				WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		this.setContentView(R.layout.rss_detail);
@@ -82,15 +82,15 @@ public class RssDetailActivity extends BaseActivity
 		MarkAsReaded();
 	}
 	/**
-	 * ²Ù×÷Êý¾Ý¿â
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½
 	 */
 	private void MarkAsReaded() {
 	}
 	/**
-	 * ³õÊ¼»¯
+	 * ï¿½ï¿½Ê¼ï¿½ï¿½
 	 */
 	private void InitialData() {
-		// ´«µÝ¹ýÀ´µÄÖµ
+		// ï¿½ï¿½ï¿½Ý¹ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
 		blogTitle = getIntent().getStringExtra("title");
 		blogAuthor = getIntent().getStringExtra("author");
 		blogDate = getIntent().getStringExtra("date");
@@ -99,16 +99,16 @@ public class RssDetailActivity extends BaseActivity
 
 		TextView txtAppTitle = (TextView) findViewById(R.id.txtAppTitle);
 		txtAppTitle.setText(blogTitle);
-		// Í·²¿
+		// Í·ï¿½ï¿½
 		rl_blog_detail = (RelativeLayout) findViewById(R.id.rl_blog_detail);
-		// Ë«»÷È«ÆÁ
+		// Ë«ï¿½ï¿½È«ï¿½ï¿½
 		rl_blog_detail.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				return gestureScanner.onTouchEvent(event);
 			}
 		});
-		// ·µ»Ø
+		// ï¿½ï¿½ï¿½ï¿½
 		blog_button_back = (Button) findViewById(R.id.blog_button_back);
 		blog_button_back.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -117,20 +117,20 @@ public class RssDetailActivity extends BaseActivity
 		});
 		try {
 			webView = (WebView) findViewById(R.id.rss_body_webview_content);
-			webView.getSettings().setDefaultTextEncodingName("utf-8");// ±ÜÃâÖÐÎÄÂÒÂë
+			webView.getSettings().setDefaultTextEncodingName("utf-8");// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			webView.addJavascriptInterface(this, "javatojs");
 			webView.setSelected(true);
 			webView.setScrollBarStyle(0);
 			WebSettings webSetting = webView.getSettings();
 			webSetting.setJavaScriptEnabled(true);
-			webSetting.setPluginsEnabled(true);
+//			webSetting.setPluginsEnabled(true);
 			webSetting.setNeedInitialFocus(false);
 			webSetting.setSupportZoom(true);
 
 			webSetting.setDefaultFontSize(14);
 			webSetting.setCacheMode(WebSettings.LOAD_DEFAULT
 					| WebSettings.LOAD_CACHE_ELSE_NETWORK);
-			// Ë«»÷È«ÆÁ
+			// Ë«ï¿½ï¿½È«ï¿½ï¿½
 			webView.setOnTouchListener(new OnTouchListener() {
 				@Override
 				public boolean onTouch(View v, MotionEvent event) {
@@ -138,7 +138,7 @@ public class RssDetailActivity extends BaseActivity
 				}
 			});
 			int scalePercent = 120;
-			// ÉÏÒ»´Î±£´æµÄËõ·Å±ÈÀý
+			// ï¿½ï¿½Ò»ï¿½Î±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å±ï¿½ï¿½ï¿½
 			float webviewScale = sharePreferencesSettings.getFloat(
 					res.getString(R.string.preferences_webview_zoom_scale),
 					(float) 1.2);
@@ -148,10 +148,10 @@ public class RssDetailActivity extends BaseActivity
 			blogBody_progressBar = (ProgressBar) findViewById(R.id.blogBody_progressBar);
 			blogBody_progressBar.setVisibility(View.VISIBLE);
 
-			// ÉÏÒ»´ÎÈ«ÆÁ±£´æ×´Ì¬
+			// ï¿½ï¿½Ò»ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬
 			isFullScreen = sharePreferencesSettings.getBoolean(
 					res.getString(R.string.preferences_is_fullscreen), false);
-			// ³õÊ¼ÊÇ·ñÈ«ÆÁ
+			// ï¿½ï¿½Ê¼ï¿½Ç·ï¿½È«ï¿½ï¿½
 			if (isFullScreen) {
 				setFullScreen();
 			}
@@ -162,7 +162,7 @@ public class RssDetailActivity extends BaseActivity
 					Toast.LENGTH_SHORT).show();
 		}
 
-		// ¼àÌýÆÁÄ»¶¯×÷ÊÂ¼þ È«ÆÁ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä»ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ È«ï¿½ï¿½
 		gestureScanner = new GestureDetector(this);
 		gestureScanner.setIsLongpressEnabled(true);
 		gestureScanner
@@ -174,7 +174,7 @@ public class RssDetailActivity extends BaseActivity
 							quitFullScreen();
 						}
 						isFullScreen = !isFullScreen;
-						// ±£´æÅäÖÃ
+						// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 						sharePreferencesSettings
 								.edit()
 								.putBoolean(
@@ -190,17 +190,17 @@ public class RssDetailActivity extends BaseActivity
 					}
 				});
 	}
-	// ³¤°´²Ëµ¥
+	// ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		if (v.getId() == R.id.blog_body_webview_content) {
-			menu.setHeaderTitle("ÇëÑ¡Ôñ²Ù×÷");
-			menu.add(0, MENU_FORMAT_HTML, 0, "²é¿´ÄÚÈÝ");
-			menu.add(0, MENU_READ_MODE, 1, "ÇÐ»»µ½Ä£Ê½");
+			menu.setHeaderTitle("ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½");
+			menu.add(0, MENU_FORMAT_HTML, 0, "ï¿½é¿´ï¿½ï¿½ï¿½ï¿½");
+			menu.add(0, MENU_READ_MODE, 1, "ï¿½Ð»ï¿½ï¿½ï¿½Ä£Ê½");
 		}
 	}
 	/**
-	 * ±£´æËõ·Å±ÈÀý
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å±ï¿½ï¿½ï¿½
 	 */
 	public void onDestroy() {
 		float webviewScale = webView.getScale();
@@ -212,13 +212,13 @@ public class RssDetailActivity extends BaseActivity
 		super.onDestroy();
 	}
 	/**
-	 * ¶àÏß³ÌÆô¶¯
+	 * ï¿½ï¿½ï¿½ß³ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @author walkingp
 	 * 
 	 */
 	public class PageTask extends AsyncTask<String, Integer, String> {
-		// ¿É±ä³¤µÄÊäÈë²ÎÊý£¬ÓëAsyncTask.exucute()¶ÔÓ¦
+		// ï¿½É±ä³¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½AsyncTask.exucute()ï¿½ï¿½Ó¦
 		@Override
 		protected String doInBackground(String... params) {
 
@@ -239,7 +239,7 @@ public class RssDetailActivity extends BaseActivity
 			super.onCancelled();
 		}
 		/**
-		 * ¼ÓÔØÄÚÈÝ
+		 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		 */
 		@Override
 		protected void onPostExecute(String _blogContent) {
@@ -252,8 +252,8 @@ public class RssDetailActivity extends BaseActivity
 				Log.e("error", e.toString());
 			}
 
-			String blogInfo = "×÷Õß: " + blogAuthor + "   ·¢±íÊ±¼ä:" + blogDate;
-			// ¸ñÊ½»¯html
+			String blogInfo = "ï¿½ï¿½ï¿½ï¿½: " + blogAuthor + "   ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½:" + blogDate;
+			// ï¿½ï¿½Ê½ï¿½ï¿½html
 			_blogContent = AppUtil.FormatContent(getApplicationContext(),
 					_blogContent);
 
@@ -274,7 +274,7 @@ public class RssDetailActivity extends BaseActivity
 		}
 	}
 	/**
-	 * ¼ÓÔØÄÚÈÝ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param webView
 	 * @param content
@@ -284,7 +284,7 @@ public class RssDetailActivity extends BaseActivity
 				Config.ENCODE_TYPE, null);
 	}
 	/**
-	 * ²Ëµ¥
+	 * ï¿½Ëµï¿½
 	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -293,16 +293,16 @@ public class RssDetailActivity extends BaseActivity
 		return super.onCreateOptionsMenu(menu);
 	}
 	/**
-	 * È«ÆÁ
+	 * È«ï¿½ï¿½
 	 */
 	private void setFullScreen() {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		// Òþ²Øµ¼º½
+		// ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½
 		rl_blog_detail.setVisibility(View.GONE);
 	}
 	/**
-	 * ÍË³öÈ«ÆÁ
+	 * ï¿½Ë³ï¿½È«ï¿½ï¿½
 	 */
 	private void quitFullScreen() {
 		final WindowManager.LayoutParams attrs = getWindow().getAttributes();
@@ -310,32 +310,32 @@ public class RssDetailActivity extends BaseActivity
 		getWindow().setAttributes(attrs);
 		getWindow()
 				.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-		// ÏÔÊ¾µ¼º½
+		// ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
 		rl_blog_detail.setVisibility(View.VISIBLE);
 	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.menu_blog_back :// ·µ»ØÁÐ±í
+			case R.id.menu_blog_back :// ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
 				RssDetailActivity.this.setResult(0, getIntent());
 				RssDetailActivity.this.finish();
 				break;
-			case R.id.menu_blog_comment :// ²é¿´ÆÀÂÛ
+			case R.id.menu_blog_comment :// ï¿½é¿´ï¿½ï¿½ï¿½ï¿½
 				break;
-			case R.id.menu_blog_share :// ·ÖÏí
+			case R.id.menu_blog_share :// ï¿½ï¿½ï¿½ï¿½
 				Intent intent = new Intent(Intent.ACTION_SEND);
 				intent.setType("text/plain");
 				intent.putExtra(Intent.EXTRA_SUBJECT, blogTitle);
-				String shareContent = "¡¶" + blogTitle + "¡·,×÷Õß£º" + blogAuthor
-						+ "£¬Ô­ÎÄÁ´½Ó£º" + blogUrl + " ·ÖÏí×Ô£º"
-						+ res.getString(R.string.app_name) + "Android¿Í»§¶Ë("
+				String shareContent = "ï¿½ï¿½" + blogTitle + "ï¿½ï¿½,ï¿½ï¿½ï¿½ß£ï¿½" + blogAuthor
+						+ "ï¿½ï¿½Ô­ï¿½ï¿½ï¿½ï¿½ï¿½Ó£ï¿½" + blogUrl + " ï¿½ï¿½ï¿½ï¿½ï¿½Ô£ï¿½"
+						+ res.getString(R.string.app_name) + "Androidï¿½Í»ï¿½ï¿½ï¿½("
 						+ res.getString(R.string.app_homepage) + ")";
 				intent.putExtra(Intent.EXTRA_TEXT, shareContent);
 				startActivity(Intent.createChooser(intent, blogTitle));
 				break;
-			case R.id.menu_blog_author :// ²©Ö÷
+			case R.id.menu_blog_author :// ï¿½ï¿½ï¿½ï¿½
 				break;
-			case R.id.menu_blog_browser :// ²é¿´ÍøÒ³
+			case R.id.menu_blog_browser :// ï¿½é¿´ï¿½ï¿½Ò³
 				Uri blogUri = Uri.parse(blogUrl);
 				Intent it = new Intent(Intent.ACTION_VIEW, blogUri);
 				startActivity(it);

@@ -36,40 +36,43 @@ import com.cnblogs.android.core.UserHelper;
 import com.cnblogs.android.dal.CommentDalHelper;
 import com.cnblogs.android.entity.Comment;
 import com.cnblogs.android.utility.NetHelper;
+
 /**
- * ÆÀÂÛ£¨²©¿ÍÆÀÂÛºÍĞÂÎÅÆÀÂÛ¹²ÓÃ£©
+ * è¯„è®ºï¼ˆåšå®¢è¯„è®ºå’Œæ–°é—»è¯„è®ºå…±ç”¨ï¼‰
+ * 
  * @author walkingp
  * @date:2011-12
- *
+ * 
  */
 public class CommentActivity extends BaseActivity {
 	List<Comment> listComment = new ArrayList<Comment>();
-	Comment.EnumCommentType commentType;// ÆÀÂÛÀàĞÍ£º²©¿Í|ĞÂÎÅ
-	int contentId;// Ö÷±àºÅ
-	String contentTitle;// ÄÚÈİ±êÌâ
-	String contentUrl;// ÄÚÈİµØÖ·
+	Comment.EnumCommentType commentType;// è¯„è®ºç±»å‹ï¼šåšå®¢|æ–°é—»
+	int contentId;// ä¸»ç¼–å·
+	String contentTitle;// å†…å®¹æ ‡é¢˜
+	String contentUrl;// å†…å®¹åœ°å€
 
 	CommentListAdapter adapter;
 
-	int pageIndex = 1;// Ò³Âë
+	int pageIndex = 1;// é¡µç 
 
 	ListView listView;
 
-	private Button comment_button_back;// ·µ»Ø
+	private Button comment_button_back;// è¿”å›
 
-	ProgressBar commentsMore_progressBar;// Ö÷Ìå½ø¶ÈÌõ
+	ProgressBar commentsMore_progressBar;// ä¸»ä½“è¿›åº¦æ¡
 
 	LinearLayout viewFooter;// footer view
-	TextView tvFooterMore;// µ×²¿¸ü¶àÏÔÊ¾
-	ProgressBar list_footer_progress;// µ×²¿½ø¶ÈÌõ
+	TextView tvFooterMore;// åº•éƒ¨æ›´å¤šæ˜¾ç¤º
+	ProgressBar list_footer_progress;// åº•éƒ¨è¿›åº¦æ¡
 
 	private int lastItem;
 
-	static final int MENU_VIEW_AUTHOR = Menu.FIRST;// ²é¿´ÆÀÂÛÕßÖ÷Ò³
-	static final int MENU_COPY = Menu.FIRST + 1;// ¸´ÖÆµ½¼ôÌù°å
-	static final int MENU_SHARE = Menu.FIRST + 2;// ·ÖÏíµ½¡­¡­
+	static final int MENU_VIEW_AUTHOR = Menu.FIRST;// æŸ¥çœ‹è¯„è®ºè€…ä¸»é¡µ
+	static final int MENU_COPY = Menu.FIRST + 1;// å¤åˆ¶åˆ°å‰ªè´´æ¿
+	static final int MENU_SHARE = Menu.FIRST + 2;// åˆ†äº«åˆ°â€¦â€¦
 
 	Resources res;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -80,11 +83,12 @@ public class CommentActivity extends BaseActivity {
 		BindControls();
 		new PageTask(0, true).execute();
 	}
+
 	/**
-	 * °ó¶¨ÊÂ¼ş
+	 * ç»‘å®šäº‹ä»¶
 	 */
 	private void BindControls() {
-		// ÉÏÀ­Ë¢ĞÂ
+		// ä¸Šæ‹‰åˆ·æ–°
 		((PullToRefreshListView) listView)
 				.setOnRefreshListener(new OnRefreshListener() {
 					@Override
@@ -92,10 +96,10 @@ public class CommentActivity extends BaseActivity {
 						new PageTask(-1, true).execute();
 					}
 				});
-		// ÏÂÀ­Ë¢ĞÂ
+		// ä¸‹æ‹‰åˆ·æ–°
 		listView.setOnScrollListener(new OnScrollListener() {
 			/**
-			 * ÏÂÀ­µ½×îºóÒ»ĞĞ
+			 * ä¸‹æ‹‰åˆ°æœ€åä¸€è¡Œ
 			 */
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -115,19 +119,20 @@ public class CommentActivity extends BaseActivity {
 				lastItem = firstVisibleItem - 2 + visibleItemCount;
 			}
 		});
-		// ³¤°´ÊÂ¼ş
+		// é•¿æŒ‰äº‹ä»¶
 		listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
 			@Override
 			public void onCreateContextMenu(ContextMenu menu, View v,
 					ContextMenuInfo menuInfo) {
-				menu.setHeaderTitle("ÇëÑ¡Ôñ²Ù×÷");
-				menu.add(0, MENU_VIEW_AUTHOR, 0, "²é¿´ÆÀÂÛÕßÖ÷Ò³");
-				menu.add(0, MENU_COPY, 0, "¸´ÖÆµ½¼ôÌù°å");
-				menu.add(0, MENU_SHARE, 0, "·ÖÏíµ½¡­¡­");
+				menu.setHeaderTitle("è¯·é€‰æ‹©æ“ä½œ");
+				menu.add(0, MENU_VIEW_AUTHOR, 0, "æŸ¥çœ‹è¯„è®ºè€…ä¸»é¡µ");
+				menu.add(0, MENU_COPY, 0, "å¤åˆ¶åˆ°å‰ªè´´æ¿");
+				menu.add(0, MENU_SHARE, 0, "åˆ†äº«åˆ°â€¦â€¦");
 			}
 		});
 	}
-	// ³¤°´²Ëµ¥ÏìÓ¦º¯Êı
+
+	// é•¿æŒ‰èœå•å“åº”å‡½æ•°
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		int itemIndex = item.getItemId();
@@ -135,20 +140,21 @@ public class CommentActivity extends BaseActivity {
 				.getMenuInfo();
 		View v = menuInfo.targetView;
 		switch (itemIndex) {
-			case MENU_VIEW_AUTHOR :// ²é¿´Ö÷Ò³
-				RedirectAuthorActivity(v);
-				break;
-			case MENU_COPY :// ¿½±´µ½¼ôÌù°å
-				CopyText(v);
-				break;
-			case MENU_SHARE :// ·ÖÏíµ½
-				ShareTo(v);
-				break;
+		case MENU_VIEW_AUTHOR:// æŸ¥çœ‹ä¸»é¡µ
+			RedirectAuthorActivity(v);
+			break;
+		case MENU_COPY:// æ‹·è´åˆ°å‰ªè´´æ¿
+			CopyText(v);
+			break;
+		case MENU_SHARE:// åˆ†äº«åˆ°
+			ShareTo(v);
+			break;
 		}
 		return super.onContextItemSelected(item);
 	}
+
 	/**
-	 * ³õÊ¼»¯ÁĞ±í
+	 * åˆå§‹åŒ–åˆ—è¡¨
 	 */
 	private void InitialControls() {
 		int type = getIntent().getIntExtra("commentType", 0);
@@ -161,12 +167,12 @@ public class CommentActivity extends BaseActivity {
 		commentsMore_progressBar = (ProgressBar) findViewById(R.id.commentList_progressBar);
 		commentsMore_progressBar.setVisibility(View.VISIBLE);
 
-		// µ×²¿view
+		// åº•éƒ¨view
 		LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		viewFooter = (LinearLayout) mInflater.inflate(R.layout.listview_footer,
 				null, false);
 
-		// ·µ»Ø
+		// è¿”å›
 		comment_button_back = (Button) findViewById(R.id.comment_button_back);
 		comment_button_back.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -174,8 +180,9 @@ public class CommentActivity extends BaseActivity {
 			}
 		});
 	}
+
 	/**
-	 * ¶àÏß³ÌÆô¶¯£¨ÓÃÓÚÉÏÀ­¼ÓÔØ¡¢³õÊ¼»¯¡¢ÏÂÔØ¼ÓÔØ¡¢Ë¢ĞÂ£©
+	 * å¤šçº¿ç¨‹å¯åŠ¨ï¼ˆç”¨äºä¸Šæ‹‰åŠ è½½ã€åˆå§‹åŒ–ã€ä¸‹è½½åŠ è½½ã€åˆ·æ–°ï¼‰
 	 * 
 	 */
 	public class PageTask extends AsyncTask<String, Integer, List<Comment>> {
@@ -183,7 +190,8 @@ public class CommentActivity extends BaseActivity {
 				getApplicationContext());
 		boolean isRefresh = false;
 		int curPageIndex = 0;
-		boolean isLocalData = false;// ÊÇ·ñÊÇ´Ó±¾µØ¶ÁÈ¡µÄÊı¾İ
+		boolean isLocalData = false;// æ˜¯å¦æ˜¯ä»æœ¬åœ°è¯»å–çš„æ•°æ®
+
 		public PageTask(int page, boolean isRefresh) {
 			curPageIndex = page;
 			this.isRefresh = isRefresh;
@@ -196,55 +204,53 @@ public class CommentActivity extends BaseActivity {
 			if (_pageIndex <= 0) {
 				_pageIndex = 1;
 			}
-			// ÓÅÏÈ¶ÁÈ¡±¾µØÊı¾İ
+			// ä¼˜å…ˆè¯»å–æœ¬åœ°æ•°æ®
 			List<Comment> listCommentLocal = dbHelper.GetCommentListByPage(
 					_pageIndex, Config.COMMENT_PAGE_SIZE, contentId,
 					commentType);
 
-			if (isNetworkAvailable) {// ÓĞÍøÂçÇé¿ö
+			if (isNetworkAvailable) {// æœ‰ç½‘ç»œæƒ…å†µ
 				List<Comment> listCommentNew = CommentHelper.GetCommentList(
 						contentId, _pageIndex, commentType);
 				switch (curPageIndex) {
-					case -1 :// ÉÏÀ­\
-						List<Comment> listTmp = new ArrayList<Comment>();
-						if (listComment != null && listComment.size() > 0) {
-							if (listCommentNew != null
-									&& listCommentNew.size() > 0) {
-								int size = listCommentNew.size();
-								for (int i = 0; i < size; i++) {
-									if (!listComment.contains(listCommentNew
-											.get(i))) {// ±ÜÃâ³öÏÖÖØ¸´
-										listTmp.add(listCommentNew.get(i));
-									}
-								}
-							}
-						}
-						return listTmp;
-					case 0 :// Ê×´Î¼ÓÔØ
-					case 1 :// Ë¢ĞÂ
+				case -1:// ä¸Šæ‹‰\
+					List<Comment> listTmp = new ArrayList<Comment>();
+					if (listComment != null && listComment.size() > 0) {
 						if (listCommentNew != null && listCommentNew.size() > 0) {
-							return listCommentNew;
-						}
-						break;
-					default :// ÏÂÀ­
-						List<Comment> listT = new ArrayList<Comment>();
-						if (listComment != null && listComment.size() > 0) {// ±ÜÃâÊ×Ò³ÎŞÊı¾İÊ±
-							if (listCommentNew != null
-									&& listCommentNew.size() > 0) {
-								int size = listCommentNew.size();
-								for (int i = 0; i < size; i++) {
-									if (!listComment.contains(listCommentNew
-											.get(i))) {// ±ÜÃâ³öÏÖÖØ¸´
-										listT.add(listCommentNew.get(i));
-									}
+							int size = listCommentNew.size();
+							for (int i = 0; i < size; i++) {
+								if (!listComment
+										.contains(listCommentNew.get(i))) {// é¿å…å‡ºç°é‡å¤
+									listTmp.add(listCommentNew.get(i));
 								}
 							}
 						}
-						return listT;
+					}
+					return listTmp;
+				case 0:// é¦–æ¬¡åŠ è½½
+				case 1:// åˆ·æ–°
+					if (listCommentNew != null && listCommentNew.size() > 0) {
+						return listCommentNew;
+					}
+					break;
+				default:// ä¸‹æ‹‰
+					List<Comment> listT = new ArrayList<Comment>();
+					if (listComment != null && listComment.size() > 0) {// é¿å…é¦–é¡µæ— æ•°æ®æ—¶
+						if (listCommentNew != null && listCommentNew.size() > 0) {
+							int size = listCommentNew.size();
+							for (int i = 0; i < size; i++) {
+								if (!listComment
+										.contains(listCommentNew.get(i))) {// é¿å…å‡ºç°é‡å¤
+									listT.add(listCommentNew.get(i));
+								}
+							}
+						}
+					}
+					return listT;
 				}
-			} else {// ÎŞÍøÂçÇé¿ö
+			} else {// æ— ç½‘ç»œæƒ…å†µ
 				isLocalData = true;
-				if (curPageIndex == -1) {// ÉÏÀ­²»¼ÓÔØÊı¾İ
+				if (curPageIndex == -1) {// ä¸Šæ‹‰ä¸åŠ è½½æ•°æ®
 					return null;
 				}
 				return listCommentLocal;
@@ -257,16 +263,17 @@ public class CommentActivity extends BaseActivity {
 		protected void onCancelled() {
 			super.onCancelled();
 		}
+
 		/**
-		 * ¼ÓÔØÄÚÈİ
+		 * åŠ è½½å†…å®¹
 		 */
 		@Override
 		protected void onPostExecute(List<Comment> result) {
-			// ÍøÂç²»¿ÉÓÃ²¢ÇÒ±¾µØÃ»ÓĞ±£´æÊı¾İ
-			if (result == null || result.size() == 0) {// Ã»ÓĞĞÂÊı¾İ
+			// ç½‘ç»œä¸å¯ç”¨å¹¶ä¸”æœ¬åœ°æ²¡æœ‰ä¿å­˜æ•°æ®
+			if (result == null || result.size() == 0) {// æ²¡æœ‰æ–°æ•°æ®
 				((PullToRefreshListView) listView).onRefreshComplete();
 				if (!NetHelper.networkIsAvailable(getApplicationContext())
-						&& curPageIndex > 1) {// ÏÂÀ­²¢ÇÒÃ»ÓĞÍøÂç
+						&& curPageIndex > 1) {// ä¸‹æ‹‰å¹¶ä¸”æ²¡æœ‰ç½‘ç»œ
 					Toast.makeText(getApplicationContext(),
 							R.string.sys_network_error, Toast.LENGTH_SHORT)
 							.show();
@@ -279,14 +286,14 @@ public class CommentActivity extends BaseActivity {
 					&& listView.getFooterViewsCount() == 0) {
 				listView.addFooterView(viewFooter);
 			}
-			// ±£´æµ½Êı¾İ¿â
+			// ä¿å­˜åˆ°æ•°æ®åº“
 			if (!isLocalData) {
 				dbHelper.SynchronyData2DB(result);
 			}
 
-			if (curPageIndex == -1) {// ÉÏÀ­Ë¢ĞÂ
+			if (curPageIndex == -1) {// ä¸Šæ‹‰åˆ·æ–°
 				adapter.InsertData(result);
-			} else if (curPageIndex == 0) {// Ê×´Î¼ÓÔØ
+			} else if (curPageIndex == 0) {// é¦–æ¬¡åŠ è½½
 				listComment = result;
 
 				commentsMore_progressBar.setVisibility(View.GONE);
@@ -294,13 +301,13 @@ public class CommentActivity extends BaseActivity {
 						listComment, pageIndex);
 				listView.setAdapter(adapter);
 
-				// ´«µİ²ÎÊı
+				// ä¼ é€’å‚æ•°
 				((PullToRefreshListView) listView).SetDataRow(listComment
 						.size());
 				((PullToRefreshListView) listView)
 						.SetPageSize(Config.COMMENT_PAGE_SIZE);
-			} else if (curPageIndex == 1) {// Ë¢ĞÂ
-				try {// ±ÜÃâÊ×Ò³ÎŞÍøÂç¼ÓÔØ£¬°´Ë¢ĞÂ°´Å¥
+			} else if (curPageIndex == 1) {// åˆ·æ–°
+				try {// é¿å…é¦–é¡µæ— ç½‘ç»œåŠ è½½ï¼ŒæŒ‰åˆ·æ–°æŒ‰é’®
 					if (adapter != null && adapter.GetData() != null) {
 						adapter.GetData().clear();
 					} else if (result != null) {
@@ -311,22 +318,23 @@ public class CommentActivity extends BaseActivity {
 					adapter.AddMoreData(result);
 				} catch (Exception ex) {
 				}
-			} else {// ÏÂÀ­
+			} else {// ä¸‹æ‹‰
 				adapter.AddMoreData(result);
 			}
 
-			if (isRefresh) {// Ë¢ĞÂÊ±´¦Àí
+			if (isRefresh) {// åˆ·æ–°æ—¶å¤„ç†
 				((PullToRefreshListView) listView).onRefreshComplete();
 			}
 		}
+
 		@Override
 		protected void onPreExecute() {
-			// Ö÷Ìå½ø¶ÈÌõ
+			// ä¸»ä½“è¿›åº¦æ¡
 			if (listView.getCount() == 0) {
 				commentsMore_progressBar.setVisibility(View.VISIBLE);
 			}
 
-			if (!isRefresh) {// µ×²¿¿Ø¼ş£¬Ë¢ĞÂÊ±²»×ö´¦Àí
+			if (!isRefresh) {// åº•éƒ¨æ§ä»¶ï¼Œåˆ·æ–°æ—¶ä¸åšå¤„ç†
 				TextView tvFooterMore = (TextView) findViewById(R.id.tvFooterMore);
 				if (tvFooterMore != null) {
 					tvFooterMore
@@ -342,13 +350,14 @@ public class CommentActivity extends BaseActivity {
 		protected void onProgressUpdate(Integer... values) {
 		}
 	}
+
 	/**
-	 * Ìø×ªµ½²©Ö÷ËùÓĞËæ±Ê
+	 * è·³è½¬åˆ°åšä¸»æ‰€æœ‰éšç¬”
 	 * 
 	 * @param v
 	 */
 	private void RedirectAuthorActivity(View v) {
-		// ²©¿ÍÃû
+		// åšå®¢å
 		TextView tvAuthor = (TextView) (v.findViewById(R.id.comment_user_name));
 		String blogTitle = tvAuthor.getText().toString();
 		if (blogTitle == "") {
@@ -356,7 +365,7 @@ public class CommentActivity extends BaseActivity {
 					Toast.LENGTH_SHORT);
 			return;
 		}
-		// ÓÃ»§Ãû
+		// ç”¨æˆ·å
 		TextView tvUrl = (TextView) (v.findViewById(R.id.comment_user_url));
 		String homeUrl = tvUrl.getText().toString();
 		String userName = UserHelper.GetHomeUrlName(homeUrl);
@@ -369,15 +378,16 @@ public class CommentActivity extends BaseActivity {
 		Intent intent = new Intent();
 		intent.setClass(CommentActivity.this, AuthorBlogActivity.class);
 		Bundle bundle = new Bundle();
-		bundle.putString("author", userName);// ÓÃ»§Ãû
-		bundle.putString("blogName", blogTitle);// ²©¿Í±êÌâ
+		bundle.putString("author", userName);// ç”¨æˆ·å
+		bundle.putString("blogName", blogTitle);// åšå®¢æ ‡é¢˜
 
 		intent.putExtras(bundle);
 
 		startActivityForResult(intent, 0);
 	}
+
 	/**
-	 * ·ÖÏíµ½
+	 * åˆ†äº«åˆ°
 	 * 
 	 * @param v
 	 */
@@ -387,14 +397,15 @@ public class CommentActivity extends BaseActivity {
 		Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.setType("text/plain");
 		intent.putExtra(Intent.EXTRA_SUBJECT, contentTitle);
-		String shareContent = "¡¶" + contentTitle + "¡·,ÆÀÂÛÄÚÈİ£º" + text + " Ô­ÎÄÁ´½Ó£º"
-				+ contentUrl + " ·ÖÏí×Ô£º" + res.getString(R.string.app_name)
-				+ "Android¿Í»§¶Ë(" + res.getString(R.string.app_homepage) + ")";
+		String shareContent = "ã€Š" + contentTitle + "ã€‹,è¯„è®ºå†…å®¹ï¼š" + text + " åŸæ–‡é“¾æ¥ï¼š"
+				+ contentUrl + " åˆ†äº«è‡ªï¼š" + res.getString(R.string.app_name)
+				+ "Androidå®¢æˆ·ç«¯(" + res.getString(R.string.app_homepage) + ")";
 		intent.putExtra(Intent.EXTRA_TEXT, shareContent);
 		startActivity(Intent.createChooser(intent, contentTitle));
 	}
+
 	/**
-	 * ¸´ÖÆµ½¼ôÌù°å
+	 * å¤åˆ¶åˆ°å‰ªè´´æ¿
 	 * 
 	 * @param v
 	 */

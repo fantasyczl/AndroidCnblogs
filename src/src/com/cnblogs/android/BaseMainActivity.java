@@ -22,47 +22,42 @@ import com.cnblogs.android.services.DownloadServices;
 import com.cnblogs.android.utility.AppUtil;
 import com.cnblogs.android.utility.NetHelper;
 /**
- * Îå¸ötabÖ÷Activity¼Ì³Ğ´ËActivity
+ * äº”ä¸ªtabä¸»Activityç»§æ‰¿æ­¤Activity
  * 
  * @author walkingp
  * @date 2012-2-18
  */
 public class BaseMainActivity extends BaseActivity {
-	private static final int DIALOG_OFFLINE_DOWNLOAD_GUID = 0;// ÀëÏßÏÂÔØ
-	private AlertDialog dialogOfflineDownload;// ¶Ô»°¿ò
+	private static final int DIALOG_OFFLINE_DOWNLOAD_GUID = 0;// ç¦»çº¿ä¸‹è½½
+	private AlertDialog dialogOfflineDownload;// å¯¹è¯æ¡†
 
-	TextView tvSeekBar;// SeekBarÏÔÊ¾ÎÄ±¾¿ò
+	TextView tvSeekBar;// SeekBaræ˜¾ç¤ºæ–‡æœ¬æ¡†
 	SeekBar seekBar;// SeekBar
-	CheckBox chkBlog;// ÏÂÔØ²©¿Í
-	CheckBox chkNews;// ÏÂÔØĞÂÎÅ
+	CheckBox chkBlog;// ä¸‹è½½åšå®¢
+	CheckBox chkNews;// ä¸‹è½½æ–°é—»
 	
 	public boolean IsShowQuitHints=true;
 	/**
-	 * °´ÏÂ¼üÅÌÉÏ·µ»Ø°´Å¥
+	 * æŒ‰ä¸‹é”®ç›˜ä¸Šè¿”å›æŒ‰é’®
 	 */
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && IsShowQuitHints) {//ºóÍË
+		if (keyCode == KeyEvent.KEYCODE_BACK && IsShowQuitHints) {//ï¿½ï¿½ï¿½ï¿½
 			AppUtil.QuitHintDialog(this);
 
-			return true;
-		}else if(keyCode==KeyEvent.KEYCODE_SEARCH){//ËÑË÷
-			Intent intent = new Intent(BaseMainActivity.this,SearchActivity.class);
-			intent.putExtra("isShowQuitHints", false);
-			startActivity(intent);
 			return true;
 		}else {		
 			return super.onKeyDown(keyCode, event);
 		}
 	}
 	/**
-	 * ´´½¨¶Ô»°¿ò
+	 * åˆ›å»ºå¯¹è¯æ¡†
 	 */
 	protected Dialog onCreateDialog(int dialogGuid) {
 		Context mContext = BaseMainActivity.this;
 		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		AlertDialog alertDialog = null;
 		switch (dialogGuid) {
-			case DIALOG_OFFLINE_DOWNLOAD_GUID :// Ö÷ÏßÏÂÔØ
+			case DIALOG_OFFLINE_DOWNLOAD_GUID :// ä¸»çº¿ä¸‹è½½
 				LayoutInflater inflater = LayoutInflater.from(mContext);
 				View layout = inflater.inflate(
 						R.layout.dialog_offline_download, null);
@@ -80,7 +75,7 @@ public class BaseMainActivity extends BaseActivity {
 				chkBlog = (CheckBox) layout.findViewById(R.id.chkBlog);
 				chkNews = (CheckBox) layout.findViewById(R.id.chkNews);
 				seekBar.setOnSeekBarChangeListener(seekBarListener);
-				// µ±Ç°ÏÂÔØÌõÊı
+				// å½“å‰ä¸‹è½½æ¡æ•°
 				int seekValue = seekBar.getProgress();
 				String text = getApplicationContext().getString(
 						R.string.dialog_select_nums_tips);
@@ -93,7 +88,7 @@ public class BaseMainActivity extends BaseActivity {
 		return alertDialog;
 	}
 	/**
-	 * Ñ¡Ôñ¶Ô»°¿ò
+	 * é€‰æ‹©å¯¹è¯æ¡†
 	 * 
 	 * @param dialog
 	 * @param which
@@ -104,8 +99,8 @@ public class BaseMainActivity extends BaseActivity {
 		public void onClick(DialogInterface dialog, int which) {
 			if (dialog == dialogOfflineDownload) {
 				switch (which) {
-					case Dialog.BUTTON_POSITIVE :// ¿ªÊ¼ÏÂÔØ
-						if (!NetHelper.networkIsAvailable(getApplicationContext())) {// ÍøÂç²»¿ÉÓÃ
+					case Dialog.BUTTON_POSITIVE :// å¼€å§‹ä¸‹è½½
+						if (!NetHelper.networkIsAvailable(getApplicationContext())) {// ï¿½ï¿½ï¿½ç²»ï¿½ï¿½ï¿½ï¿½
 							Toast.makeText(getApplicationContext(),R.string.sys_network_error,Toast.LENGTH_SHORT).show();
 							return;
 						}
@@ -141,14 +136,14 @@ public class BaseMainActivity extends BaseActivity {
 								Toast.LENGTH_SHORT).show();
 						startService(intent);
 						break;
-					case Dialog.BUTTON_NEGATIVE :// È¡Ïû
+					case Dialog.BUTTON_NEGATIVE :// å–æ¶ˆ
 						break;
 				}
 			}
 		}
 	};
 	/**
-	 * ÍÏ¶¯SeekBarÊÂ¼ş
+	 * æ‹–åŠ¨SeekBaräº‹ä»¶
 	 */
 	OnSeekBarChangeListener seekBarListener = new OnSeekBarChangeListener() {
 
@@ -156,7 +151,7 @@ public class BaseMainActivity extends BaseActivity {
 		public void onProgressChanged(SeekBar seekBar, int progress,
 				boolean fromUser) {
 			int seekValue = seekBar.getProgress();
-			// Ö»¿ÉÑ¡Ôñ10µÄ±¶Êı
+			// Ö»åªå¯é€‰æ‹©10çš„å€æ•°
 			int consult = seekValue / 10;
 			if (seekValue < consult * 10 - 5) {
 				seekValue = (consult - 1) * 10;
@@ -184,7 +179,7 @@ public class BaseMainActivity extends BaseActivity {
 
 	};
 	/**
-	 * ´´½¨²Ëµ¥
+	 * åˆ›å»ºèœå•
 	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -192,28 +187,28 @@ public class BaseMainActivity extends BaseActivity {
 		return true;
 	}
 	/**
-	 * Ê¹ÓÃ²Ëµ¥
+	 * ä½¿ç”¨èœå•
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.menu_main_offline :// ÀëÏßÏÂÔØ
+			case R.id.menu_main_offline :// ç¦»çº¿ä¸‹è½½
 				showDialog(DIALOG_OFFLINE_DOWNLOAD_GUID);
 				break;
-			case R.id.menu_main_about :// ¹ØÓÚ
+			case R.id.menu_main_about :// å…³äº
 				RedirectAboutActivity();
 				break;
-			case R.id.menu_main_config :// ½øÈëÅäÖÃ
+			case R.id.menu_main_config :// è¿›å…¥é…ç½®
 				RedirectSettingActivity();
 				break;
-			case R.id.menu_main_fav :// ÊÕ²Ø
+			case R.id.menu_main_fav :// æ”¶è—
 				RedirectMyFavActivity();
 				break;
 		}
 		return false;
 	}
 	/**
-	 * Ìø×ªµ½¹ØÓÚ
+	 * è·³è½¬åˆ°å…³äº
 	 */
 	private void RedirectAboutActivity() {
 		Intent intent = new Intent();
@@ -225,7 +220,7 @@ public class BaseMainActivity extends BaseActivity {
 		startActivity(intent);
 	}
 	/**
-	 * Ìø×ªµ½¹ØÓÚ
+	 * è·³è½¬åˆ°å…³äº
 	 */
 	private void RedirectSettingActivity() {
 		Intent intent = new Intent();

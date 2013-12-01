@@ -5,14 +5,14 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.KeyEvent;
 /**
- * »ùÀà£¬´ó²¿·ÖActivity¼Ì³Ğ×Ô´ËÀà
+ * åŸºç±»ï¼Œå¤§éƒ¨åˆ†Activityç»§æ‰¿è‡ªæ­¤ç±»
  * @author walkingp
  * @date:2011-11
  *
  */
 public class BaseActivity extends Activity {
 	/**
-	 * ºáÊúÆÁ
+	 * æ¨ªç«–å±
 	 */
 	@Override
 	protected void onResume() {
@@ -28,18 +28,5 @@ public class BaseActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	}
-	/**
-	 * °´ÏÂ¼üÅÌÉÏ·µ»Ø°´Å¥
-	 */
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if(keyCode==KeyEvent.KEYCODE_SEARCH){//ËÑË÷
-			Intent intent = new Intent(BaseActivity.this,SearchActivity.class);
-			intent.putExtra("isShowQuitHints", false);
-			startActivity(intent);
-			return true;
-		}else {		
-			return super.onKeyDown(keyCode, event);
-		}
 	}
 }

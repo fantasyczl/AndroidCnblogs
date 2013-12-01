@@ -45,282 +45,309 @@ import com.cnblogs.android.entity.RssList;
 import com.cnblogs.android.entity.Users;
 import com.cnblogs.android.services.DownloadServices;
 import com.cnblogs.android.utility.NetHelper;
+
 /**
- * ´ËÒ³°üº¬×÷ÕßµÄ²©¿ÍÒ³
+ * æ­¤é¡µåŒ…å«ä½œè€…çš„åšå®¢é¡µ
+ * 
  * @author walkingp
  * @date:2011-11
- *
+ * 
  */
-public class AuthorBlogActivity extends BaseActivity{
+public class AuthorBlogActivity extends BaseActivity {
 	List<Blog> listBlog = new ArrayList<Blog>();
 	private AsyncImageLoader asyncImageLoader;
 	AuthorBlogListAdapter adapter;
-	
-	int pageIndex=1;//Ò³Âë
-	
-	ListView listView;
-	
-	ProgressBar blogBody_progressBar;//¼ÓÔØ
-	ImageButton blog_refresh_btn;//Ë¢ĞÂ°´Å¥
-	private Button blog_button_back;//·µ»Ø
-	ProgressBar blog_progress_bar;//¼ÓÔØ°´Å¥
-	
-	private LinearLayout viewFooter;//footer view
-	TextView tvFooterMore;//µ×²¿¸ü¶àÏÔÊ¾
-	ProgressBar list_footer_progress;//µ×²¿½ø¶ÈÌõ
-	
-	private String author;//²©Ö÷ÓÃ»§Ãû
-	private String blogName;//²©¿ÍÃû
-	private int blogCount;//²©¿ÍÊıÁ¿ 
 
-	Button btn_rss;//¶©ÔÄ°´Å¥
+	int pageIndex = 1;// é¡µç 
+
+	ListView listView;
+
+	ProgressBar blogBody_progressBar;// åŠ è½½
+	ImageButton blog_refresh_btn;// åˆ·æ–°æŒ‰é’®
+	private Button blog_button_back;// è¿”å›
+	ProgressBar blog_progress_bar;// åŠ è½½æŒ‰é’®
+
+	private LinearLayout viewFooter;// footer view
+	TextView tvFooterMore;// åº•éƒ¨æ›´å¤šæ˜¾ç¤º
+	ProgressBar list_footer_progress;// åº•éƒ¨è¿›åº¦æ¡
+
+	private String author;// åšä¸»ç”¨æˆ·å
+	private String blogName;// åšå®¢å
+	private int blogCount;// åšå®¢æ•°é‡
+
+	Button btn_rss;// è®¢é˜…æŒ‰é’®
 	private int lastItem;
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {		
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.author_blog_layout);
-		 
+
 		InitialControls();
-		BindEvent();		
-		
-		new PageTask(0,true).execute();
+		BindEvent();
+
+		new PageTask(0, true).execute();
 	}
+
 	/**
-	 * °ó¶¨ÊÂ¼ş
+	 * ç»‘å®šäº‹ä»¶
 	 */
-	private void BindEvent(){
-		//Ë¢ĞÂ
-		blog_refresh_btn.setOnClickListener(new OnClickListener(){
+	private void BindEvent() {
+		// åˆ·æ–°
+		blog_refresh_btn.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				new PageTask(1,true).execute();
+				new PageTask(1, true).execute();
 			}
 		});
-		//ÉÏÀ­Ë¢ĞÂ
-		((PullToRefreshListView) listView).setOnRefreshListener(new OnRefreshListener() {
-			@Override
-            public void onRefresh() {
-				new PageTask(-1,true).execute();
-            }
-		});
-		//ÏÂÀ­Ë¢ĞÂ
+		// ä¸Šæ‹‰åˆ·æ–°
+		((PullToRefreshListView) listView)
+				.setOnRefreshListener(new OnRefreshListener() {
+					@Override
+					public void onRefresh() {
+						new PageTask(-1, true).execute();
+					}
+				});
+		// ä¸‹æ‹‰åˆ·æ–°
 		listView.setOnScrollListener(new OnScrollListener() {
 			/**
-			 * ÏÂÀ­µ½×îºóÒ»ĞĞ
+			 * ä¸‹æ‹‰åˆ°æœ€åä¸€è¡Œ
 			 */
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				if (lastItem == adapter.getCount() && scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-					pageIndex=pageIndex+1;
-					new PageTask(pageIndex,false).execute();
+				if (lastItem == adapter.getCount()
+						&& scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
+					pageIndex = pageIndex + 1;
+					new PageTask(pageIndex, false).execute();
 				}
 			}
-			
+
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
 				lastItem = firstVisibleItem - 2 + visibleItemCount;
 			}
 		});
-		// µã»÷Ìø×ª
+		// ç‚¹å‡»è·³è½¬
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v,
 					int position, long id) {
 
 				Intent intent = new Intent();
-				try{
-					//´«µİ²ÎÊı
-					intent.setClass(AuthorBlogActivity.this,BlogDetailActivity.class);
-					Bundle bundle=new Bundle();
-					TextView tvBlogId=(TextView)(v.findViewById(R.id.recommend_text_id));
-					TextView tvBlogTitle=(TextView)(v.findViewById(R.id.recommend_text_title));
-					TextView tvBlogAuthor=(TextView)(v.findViewById(R.id.recommend_text_author));
-					TextView tvBlogDate=(TextView)(v.findViewById(R.id.recommend_text_date));
-					TextView tvBlogUrl=(TextView)(v.findViewById(R.id.recommend_text_url));
-					TextView tvBlogViewCount=(TextView)(v.findViewById(R.id.recommend_text_view));
-					TextView tvBlogCommentCount=(TextView)(v.findViewById(R.id.recommend_text_comments));
-					
-					int blogId=Integer.parseInt(tvBlogId.getText().toString());
-					String blogTitle=tvBlogTitle.getText().toString();
-					String blogAuthor=tvBlogAuthor.getText().toString();
-					String blogDate=tvBlogDate.getText().toString();
-					String blogUrl=tvBlogUrl.getText().toString();
-					int viewsCount=Integer.parseInt(tvBlogViewCount.getText().toString());
-					int commentCount=Integer.parseInt(tvBlogCommentCount.getText().toString());
-					
+				try {
+					// ä¼ é€’å‚æ•°
+					intent.setClass(AuthorBlogActivity.this,
+							BlogDetailActivity.class);
+					Bundle bundle = new Bundle();
+					TextView tvBlogId = (TextView) (v
+							.findViewById(R.id.recommend_text_id));
+					TextView tvBlogTitle = (TextView) (v
+							.findViewById(R.id.recommend_text_title));
+					TextView tvBlogAuthor = (TextView) (v
+							.findViewById(R.id.recommend_text_author));
+					TextView tvBlogDate = (TextView) (v
+							.findViewById(R.id.recommend_text_date));
+					TextView tvBlogUrl = (TextView) (v
+							.findViewById(R.id.recommend_text_url));
+					TextView tvBlogViewCount = (TextView) (v
+							.findViewById(R.id.recommend_text_view));
+					TextView tvBlogCommentCount = (TextView) (v
+							.findViewById(R.id.recommend_text_comments));
+
+					int blogId = Integer
+							.parseInt(tvBlogId.getText().toString());
+					String blogTitle = tvBlogTitle.getText().toString();
+					String blogAuthor = tvBlogAuthor.getText().toString();
+					String blogDate = tvBlogDate.getText().toString();
+					String blogUrl = tvBlogUrl.getText().toString();
+					int viewsCount = Integer.parseInt(tvBlogViewCount.getText()
+							.toString());
+					int commentCount = Integer.parseInt(tvBlogCommentCount
+							.getText().toString());
+
 					bundle.putInt("blogId", blogId);
 					bundle.putString("blogTitle", blogTitle);
-					bundle.putString("author",blogAuthor );
-					bundle.putString("date",blogDate);
+					bundle.putString("author", blogAuthor);
+					bundle.putString("date", blogDate);
 					bundle.putString("blogUrl", blogUrl);
 					bundle.putInt("view", viewsCount);
 					bundle.putInt("comment", commentCount);
-					
+
 					Log.d("blogId", String.valueOf(blogId));
 					intent.putExtras(bundle);
-					
+
 					startActivityForResult(intent, 0);
-				}catch(Exception ex){
+				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
 			}
-		});		
+		});
 	}
+
 	/**
-	 * ³õÊ¼»¯ÁĞ±í
+	 * åˆå§‹åŒ–åˆ—è¡¨
 	 */
-	private void InitialControls(){
-		//´«µİ¹ıÀ´µÄÖµ
-		author=getIntent().getStringExtra("author");//²©Ö÷
-		blogName=getIntent().getStringExtra("blogName");//²©¿ÍÃû
-		
+	private void InitialControls() {
+		// ä¼ é€’è¿‡æ¥çš„å€¼
+		author = getIntent().getStringExtra("author");// åšä¸»
+		blogName = getIntent().getStringExtra("blogName");// åšå®¢å
+
 		listView = (ListView) findViewById(R.id.author_blog_list);
-		blogBody_progressBar=(ProgressBar)findViewById(R.id.author_blogList_progressBar);
+		blogBody_progressBar = (ProgressBar) findViewById(R.id.author_blogList_progressBar);
 		blogBody_progressBar.setVisibility(View.VISIBLE);
-		//Ë¢ĞÂ
-		blog_refresh_btn=(ImageButton)findViewById(R.id.author_blog_refresh_btn);
-		blog_progress_bar=(ProgressBar)findViewById(R.id.author_blog_progressBar);
-		//·µ»Ø
-		blog_button_back=(Button)findViewById(R.id.author_blog_button_back);
-		blog_button_back.setOnClickListener(new OnClickListener(){
+		// åˆ·æ–°
+		blog_refresh_btn = (ImageButton) findViewById(R.id.author_blog_refresh_btn);
+		blog_progress_bar = (ProgressBar) findViewById(R.id.author_blog_progressBar);
+		// è¿”å›
+		blog_button_back = (Button) findViewById(R.id.author_blog_button_back);
+		blog_button_back.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				AuthorBlogActivity.this.finish();
 			}
 		});
 
-		//µ×²¿view
+		// åº•éƒ¨view
 		LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		viewFooter = (LinearLayout)mInflater.inflate(R.layout.listview_footer, null, false);
-		
-		//»ñµÃÓÃ»§¶ÔÏó
-		final Users entity=UserHelper.GetUserDetail(author);
-		if(entity==null){
-			Toast.makeText(getApplicationContext(), R.string.sys_no_author, Toast.LENGTH_SHORT).show();
+		viewFooter = (LinearLayout) mInflater.inflate(R.layout.listview_footer,
+				null, false);
+
+		// è·å¾—ç”¨æˆ·å¯¹è±¡
+		final Users entity = UserHelper.GetUserDetail(author);
+		if (entity == null) {
+			Toast.makeText(getApplicationContext(), R.string.sys_no_author,
+					Toast.LENGTH_SHORT).show();
 			return;
 		}
-		//²©Ö÷
-		TextView txtAuthorName=(TextView)findViewById(R.id.author_name);
+		// åšä¸»
+		TextView txtAuthorName = (TextView) findViewById(R.id.author_name);
 		txtAuthorName.setText(blogName);
-		//²©¿ÍµØÖ·
-		TextView txtAuthorUrl=(TextView)findViewById(R.id.author_url);
-		final String url=entity.GetBlogUrl();
+		// åšå®¢åœ°å€
+		TextView txtAuthorUrl = (TextView) findViewById(R.id.author_url);
+		final String url = entity.GetBlogUrl();
 		txtAuthorUrl.setText(url);
-		txtAuthorUrl.setOnClickListener(new OnClickListener(){
+		txtAuthorUrl.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Uri blogUri=Uri.parse(url);
-    	    	Intent it = new Intent(Intent.ACTION_VIEW, blogUri);
-    	    	startActivity(it);
-			}			
+				Uri blogUri = Uri.parse(url);
+				Intent it = new Intent(Intent.ACTION_VIEW, blogUri);
+				startActivity(it);
+			}
 		});
-		//²©ÎÄÊıÁ¿
-		blogCount=entity.GetBlogCount();
-		TextView txtBlogCount=(TextView)findViewById(R.id.author_blog_count);
-		txtBlogCount.setText("(¹²ÓĞ" + blogCount + "ÆªËæ±Ê)");
-		//Í·Ïñ
-		final ImageView imgAvatar=(ImageView)findViewById(R.id.author_image_icon);
+		// åšæ–‡æ•°é‡
+		blogCount = entity.GetBlogCount();
+		TextView txtBlogCount = (TextView) findViewById(R.id.author_blog_count);
+		txtBlogCount.setText("(å…±æœ‰" + blogCount + "ç¯‡éšç¬”)");
+		// å¤´åƒ
+		final ImageView imgAvatar = (ImageView) findViewById(R.id.author_image_icon);
 		asyncImageLoader = new AsyncImageLoader(getApplicationContext());
 		String tag = entity.GetAvator();
-		if(tag!=null){
-			if (tag.contains("?")) {// ½Ø¶Ï?ºóµÄ×Ö·û´®£¬±ÜÃâÎŞĞ§Í¼Æ¬
+		if (tag != null) {
+			if (tag.contains("?")) {// æˆªæ–­?åçš„å­—ç¬¦ä¸²ï¼Œé¿å…æ— æ•ˆå›¾ç‰‡
 				tag = tag.substring(0, tag.indexOf("?"));
 			}
 			Drawable cachedImage = asyncImageLoader.loadDrawable(
-				ImageCacher.EnumImageType.Avatar, tag, new ImageCallback() {
-					public void imageLoaded(Drawable imageDrawable, String tag) {
-						if (imageDrawable != null) {
-							imgAvatar.setImageDrawable(imageDrawable);
-						} else {
-							try {
-								imgAvatar.setImageResource(R.drawable.sample_face);
-							} catch (Exception ex) {
-		
+					ImageCacher.EnumImageType.Avatar, tag, new ImageCallback() {
+						public void imageLoaded(Drawable imageDrawable,
+								String tag) {
+							if (imageDrawable != null) {
+								imgAvatar.setImageDrawable(imageDrawable);
+							} else {
+								try {
+									imgAvatar
+											.setImageResource(R.drawable.sample_face);
+								} catch (Exception ex) {
+
+								}
 							}
 						}
-					}
-			});
+					});
 			if (cachedImage != null) {
 				imgAvatar.setImageDrawable(cachedImage);
 			}
 		}
 
-		// ÊÇ·ñÒÑ¾­¶©ÔÄ
-		btn_rss=(Button)findViewById(R.id.btn_rss);
+		// æ˜¯å¦å·²ç»è®¢é˜…
+		btn_rss = (Button) findViewById(R.id.btn_rss);
 		RssListDalHelper helper = new RssListDalHelper(this);
 		final boolean isRssed = helper.ExistByAuthorName(author);
-		
+
 		btn_rss.setTag(isRssed);
-		final Users userEntity=entity;
+		final Users userEntity = entity;
 		OnClickListener listener = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// ¶©ÔÄ È¡Ïû¶©ÔÄ
-					String url = entity.GetBlogUrl();
-					RssList entity = new RssList();
-					// entity.SetAddTime(new java.util.Date());
-					entity.SetAuthor(author);//×¢Òâ´Ë´¦ÊÇÓÃ»§Ãû£¬²»ÊÇ²©¿ÍÃû
-					entity.SetCateId(0);
-					entity.SetCateName("");
-					entity.SetDescription(userEntity.GetBlogUrl());
-					entity.SetGuid(String.valueOf(userEntity.GetUserId()));
-					entity.SetImage(userEntity.GetAvator());
-					entity.SetIsActive(true);
-					entity.SetIsCnblogs(true);
-					entity.SetLink(url);
-					entity.SetOrderNum(0);
-					entity.SetTitle(blogName);
-					
-					// ¹ã²¥
-					Intent intent = new Intent();
-					Bundle bundle = new Bundle();
-					bundle.putStringArray("rsslist", 
-							new String[]{entity.GetAuthor(),entity.GetDescription(),entity.GetGuid(),
-								entity.GetTitle(),entity.GetImage(),entity.GetLink(),
-								entity.GetIsCnblogs() ? "1" : "0"
-							});
+				// è®¢é˜… å–æ¶ˆè®¢é˜…
+				String url = entity.GetBlogUrl();
+				RssList entity = new RssList();
+				// entity.SetAddTime(new java.util.Date());
+				entity.SetAuthor(author);// æ³¨æ„æ­¤å¤„æ˜¯ç”¨æˆ·åï¼Œä¸æ˜¯åšå®¢å
+				entity.SetCateId(0);
+				entity.SetCateName("");
+				entity.SetDescription(userEntity.GetBlogUrl());
+				entity.SetGuid(String.valueOf(userEntity.GetUserId()));
+				entity.SetImage(userEntity.GetAvator());
+				entity.SetIsActive(true);
+				entity.SetIsCnblogs(true);
+				entity.SetLink(url);
+				entity.SetOrderNum(0);
+				entity.SetTitle(blogName);
 
-					RssListDalHelper helper = new RssListDalHelper(getApplicationContext());
+				// å¹¿æ’­
+				Intent intent = new Intent();
+				Bundle bundle = new Bundle();
+				bundle.putStringArray(
+						"rsslist",
+						new String[] { entity.GetAuthor(),
+								entity.GetDescription(), entity.GetGuid(),
+								entity.GetTitle(), entity.GetImage(),
+								entity.GetLink(),
+								entity.GetIsCnblogs() ? "1" : "0" });
 
-					boolean _isRssed =Boolean.parseBoolean(btn_rss.getTag().toString());
-					if (_isRssed) {// ÍË¶©
-						helper.Delete(entity.GetLink());
+				RssListDalHelper helper = new RssListDalHelper(
+						getApplicationContext());
 
-						btn_rss.setBackgroundResource(R.drawable.drawable_btn_rss);
-						btn_rss.setText(R.string.btn_rss);
-						btn_rss.setTextColor(R.color.gray);
-						btn_rss.setTag(false);
-						
-						bundle.putBoolean("isrss", false);
+				boolean _isRssed = Boolean.parseBoolean(btn_rss.getTag()
+						.toString());
+				if (_isRssed) {// é€€è®¢
+					helper.Delete(entity.GetLink());
 
-						Toast.makeText(getApplicationContext(), "ÍË¶©³É¹¦", Toast.LENGTH_SHORT)
-								.show();
-					} else {// ¶©ÔÄ
-						helper.Insert(entity);
+					btn_rss.setBackgroundResource(R.drawable.drawable_btn_rss);
+					btn_rss.setText(R.string.btn_rss);
+					btn_rss.setTextColor(getResources().getColor(R.color.gray));
+					btn_rss.setTag(false);
 
-						btn_rss.setBackgroundResource(R.drawable.btn_rssed);
-						btn_rss.setText(R.string.btn_unrss);
-						btn_rss.setTextColor(R.color.darkblue);
-						btn_rss.setTag(true);
+					bundle.putBoolean("isrss", false);
 
-						bundle.putBoolean("isrss", true);
-						Toast.makeText(getApplicationContext(), "¶©ÔÄ³É¹¦", Toast.LENGTH_SHORT)
-								.show();
-					}
-					// ·¢ËÍ¹ã²¥
-					intent.putExtras(bundle);
-					intent.setAction("android.cnblogs.com.update_rsslist");
-					AuthorBlogActivity.this.sendBroadcast(intent);
+					Toast.makeText(getApplicationContext(), "é€€è®¢æˆåŠŸ",
+							Toast.LENGTH_SHORT).show();
+				} else {// è®¢é˜…
+					helper.Insert(entity);
+
+					btn_rss.setBackgroundResource(R.drawable.btn_rssed);
+					btn_rss.setText(R.string.btn_unrss);
+					btn_rss.setTextColor(getResources().getColor(R.color.darkblue));
+					btn_rss.setTag(true);
+
+					bundle.putBoolean("isrss", true);
+					Toast.makeText(getApplicationContext(), "è®¢é˜…æˆåŠŸ",
+							Toast.LENGTH_SHORT).show();
 				}
+				// å‘é€å¹¿æ’­
+				intent.putExtras(bundle);
+				intent.setAction("android.cnblogs.com.update_rsslist");
+				AuthorBlogActivity.this.sendBroadcast(intent);
+			}
 		};
 		btn_rss.setOnClickListener(listener);
 		if (isRssed) {
 			btn_rss.setBackgroundResource(R.drawable.btn_rssed);
 			btn_rss.setText(R.string.btn_unrss);
-			btn_rss.setTextColor(R.color.gray);
+			btn_rss.setTextColor(getResources().getColor(R.color.gray));
 		}
 	}
+
 	/**
-	 * ²Ëµ¥
+	 * èœå•
 	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -328,114 +355,124 @@ public class AuthorBlogActivity extends BaseActivity{
 		inflater.inflate(R.menu.author_blog_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.author_blog_offline://ÀëÏßÏÂÔØ
-				if (!NetHelper.networkIsAvailable(getApplicationContext())) {// ÍøÂç²»¿ÉÓÃ
-					Toast.makeText(getApplicationContext(),R.string.sys_network_error,Toast.LENGTH_SHORT).show();
-					return false;
-				}
-				DownloadServices.EnumDataType dataType = DownloadServices.EnumDataType.AuthorBlog;
-				Intent intent = new Intent(AuthorBlogActivity.this,DownloadServices.class);
-				intent.putExtra("type", dataType.ordinal());
-				intent.putExtra("author", author);
-				intent.putExtra("size", blogCount);
-				Toast.makeText(getApplicationContext(),R.string.offline_notification_start_toast,Toast.LENGTH_SHORT).show();
-				startService(intent);
-				break;
+		case R.id.author_blog_offline:// ç¦»çº¿ä¸‹è½½
+			if (!NetHelper.networkIsAvailable(getApplicationContext())) {// ç½‘ç»œä¸å¯ç”¨
+				Toast.makeText(getApplicationContext(),
+						R.string.sys_network_error, Toast.LENGTH_SHORT).show();
+				return false;
+			}
+			DownloadServices.EnumDataType dataType = DownloadServices.EnumDataType.AuthorBlog;
+			Intent intent = new Intent(AuthorBlogActivity.this,
+					DownloadServices.class);
+			intent.putExtra("type", dataType.ordinal());
+			intent.putExtra("author", author);
+			intent.putExtra("size", blogCount);
+			Toast.makeText(getApplicationContext(),
+					R.string.offline_notification_start_toast,
+					Toast.LENGTH_SHORT).show();
+			startService(intent);
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	/**
-	 * ¶àÏß³ÌÆô¶¯£¨ÓÃÓÚÉÏÀ­¼ÓÔØ¡¢³õÊ¼»¯¡¢ÏÂÔØ¼ÓÔØ¡¢Ë¢ĞÂ£©
-	 *
-	 */
-    public class PageTask extends AsyncTask<String, Integer, List<Blog>> {
-    	boolean isRefresh=false;
-    	int curPageIndex=0;
-    	boolean isLocalData = false;// ÊÇ·ñÊÇ´Ó±¾µØ¶ÁÈ¡µÄÊı¾İ
-		BlogDalHelper dbHelper = new BlogDalHelper(getApplicationContext());
-        public PageTask(int page,boolean isRefresh)
-        {
-        	curPageIndex=page;
-        	this.isRefresh=isRefresh;
-        }
-        
-        protected List<Blog> doInBackground(String... params) {
-        	boolean isNetworkAvailable = NetHelper.networkIsAvailable(getApplicationContext());
-        	int _pageIndex=curPageIndex;
-        	if(_pageIndex<=0){
-        		_pageIndex=1;
-        	}
 
-			// ÓÅÏÈ¶ÁÈ¡±¾µØÊı¾İ
-			List<Blog> listBlogLocal = dbHelper.GetBlogListByAuthor(author,_pageIndex,Config.BLOG_PAGE_SIZE);
-			if (isNetworkAvailable) {// ÓĞÍøÂçÇé¿ö
-				List<Blog> listBlogNew = BlogHelper.GetAuthorBlogList(author, _pageIndex);
+	/**
+	 * å¤šçº¿ç¨‹å¯åŠ¨ï¼ˆç”¨äºä¸Šæ‹‰åŠ è½½ã€åˆå§‹åŒ–ã€ä¸‹è½½åŠ è½½ã€åˆ·æ–°ï¼‰
+	 * 
+	 */
+	public class PageTask extends AsyncTask<String, Integer, List<Blog>> {
+		boolean isRefresh = false;
+		int curPageIndex = 0;
+		boolean isLocalData = false;// æ˜¯å¦æ˜¯ä»æœ¬åœ°è¯»å–çš„æ•°æ®
+		BlogDalHelper dbHelper = new BlogDalHelper(getApplicationContext());
+
+		public PageTask(int page, boolean isRefresh) {
+			curPageIndex = page;
+			this.isRefresh = isRefresh;
+		}
+
+		protected List<Blog> doInBackground(String... params) {
+			boolean isNetworkAvailable = NetHelper
+					.networkIsAvailable(getApplicationContext());
+			int _pageIndex = curPageIndex;
+			if (_pageIndex <= 0) {
+				_pageIndex = 1;
+			}
+
+			// ä¼˜å…ˆè¯»å–æœ¬åœ°æ•°æ®
+			List<Blog> listBlogLocal = dbHelper.GetBlogListByAuthor(author,
+					_pageIndex, Config.BLOG_PAGE_SIZE);
+			if (isNetworkAvailable) {// æœ‰ç½‘ç»œæƒ…å†µ
+				List<Blog> listBlogNew = BlogHelper.GetAuthorBlogList(author,
+						_pageIndex);
 				switch (curPageIndex) {
-					case -1 :// ÉÏÀ­\
-						List<Blog> listTmp = new ArrayList<Blog>();
-						if (listBlog != null && listBlog.size() > 0) {// ±ÜÃâÊ×Ò³ÎŞÊı¾İÊ±
-							if (listBlogNew != null && listBlogNew.size() > 0) {
-								int size = listBlogNew.size();
-								for (int i = 0; i < size; i++) {
-									if (!listBlog.contains(listBlogNew.get(i))) {// ±ÜÃâ³öÏÖÖØ¸´
-										listTmp.add(listBlogNew.get(i));
-									}
-								}
-							}
-						}
-						return listTmp;
-					case 0 :// Ê×´Î¼ÓÔØ
-					case 1 :// Ë¢ĞÂ
+				case -1:// ä¸Šæ‹‰\
+					List<Blog> listTmp = new ArrayList<Blog>();
+					if (listBlog != null && listBlog.size() > 0) {// é¿å…é¦–é¡µæ— æ•°æ®æ—¶
 						if (listBlogNew != null && listBlogNew.size() > 0) {
-							return listBlogNew;
-						}
-						break;
-					default :// ÏÂÀ­
-						List<Blog> listT = new ArrayList<Blog>();
-						if (listBlog != null && listBlog.size() > 0) {// ±ÜÃâÊ×Ò³ÎŞÊı¾İÊ±
-							if (listBlogNew != null && listBlogNew.size() > 0) {
-								int size = listBlogNew.size();
-								for (int i = 0; i < size; i++) {
-									if (!listBlog.contains(listBlogNew.get(i))) {// ±ÜÃâ³öÏÖÖØ¸´
-										listT.add(listBlogNew.get(i));
-									}
+							int size = listBlogNew.size();
+							for (int i = 0; i < size; i++) {
+								if (!listBlog.contains(listBlogNew.get(i))) {// é¿å…å‡ºç°é‡å¤
+									listTmp.add(listBlogNew.get(i));
 								}
 							}
 						}
-						return listT;
+					}
+					return listTmp;
+				case 0:// é¦–æ¬¡åŠ è½½
+				case 1:// åˆ·æ–°
+					if (listBlogNew != null && listBlogNew.size() > 0) {
+						return listBlogNew;
+					}
+					break;
+				default:// ä¸‹æ‹‰
+					List<Blog> listT = new ArrayList<Blog>();
+					if (listBlog != null && listBlog.size() > 0) {// é¿å…é¦–é¡µæ— æ•°æ®æ—¶
+						if (listBlogNew != null && listBlogNew.size() > 0) {
+							int size = listBlogNew.size();
+							for (int i = 0; i < size; i++) {
+								if (!listBlog.contains(listBlogNew.get(i))) {// é¿å…å‡ºç°é‡å¤
+									listT.add(listBlogNew.get(i));
+								}
+							}
+						}
+					}
+					return listT;
 				}
-			} else {// ÎŞÍøÂçÇé¿ö
+			} else {// æ— ç½‘ç»œæƒ…å†µ
 				isLocalData = true;
-				if (curPageIndex == -1) {// ÉÏÀ­²»¼ÓÔØÊı¾İ
+				if (curPageIndex == -1) {// ä¸Šæ‹‰ä¸åŠ è½½æ•°æ®
 					return null;
 				}
 				return listBlogLocal;
 			}
 
 			return null;
-        }
+		}
 
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-        }
-    	/**
-    	 * ¼ÓÔØÄÚÈİ
-    	 */
-        @Override
-        protected void onPostExecute(List<Blog> result) {
-			// ÓÒÉÏ½Ç
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+		}
+
+		/**
+		 * åŠ è½½å†…å®¹
+		 */
+		@Override
+		protected void onPostExecute(List<Blog> result) {
+			// å³ä¸Šè§’
 			blog_progress_bar.setVisibility(View.GONE);
 			blog_refresh_btn.setVisibility(View.VISIBLE);
 
-			// ÍøÂç²»¿ÉÓÃ²¢ÇÒ±¾µØÃ»ÓĞ±£´æÊı¾İ
-			if (result == null || result.size() == 0) {// Ã»ÓĞĞÂÊı¾İ
+			// ç½‘ç»œä¸å¯ç”¨å¹¶ä¸”æœ¬åœ°æ²¡æœ‰ä¿å­˜æ•°æ®
+			if (result == null || result.size() == 0) {// æ²¡æœ‰æ–°æ•°æ®
 				((PullToRefreshListView) listView).onRefreshComplete();
 				if (!NetHelper.networkIsAvailable(getApplicationContext())
-						&& curPageIndex > 1) {// ÏÂÀ­²¢ÇÒÃ»ÓĞÍøÂç
+						&& curPageIndex > 1) {// ä¸‹æ‹‰å¹¶ä¸”æ²¡æœ‰ç½‘ç»œ
 					Toast.makeText(getApplicationContext(),
 							R.string.sys_network_error, Toast.LENGTH_SHORT)
 							.show();
@@ -449,66 +486,69 @@ public class AuthorBlogActivity extends BaseActivity{
 				listView.addFooterView(viewFooter);
 			}
 
-			// ±£´æµ½Êı¾İ¿â
+			// ä¿å­˜åˆ°æ•°æ®åº“
 			if (!isLocalData) {
 				dbHelper.SynchronyData2DB(result);
 			}
 
-			if (curPageIndex == -1) {// ÉÏÀ­Ë¢ĞÂ
+			if (curPageIndex == -1) {// ä¸Šæ‹‰åˆ·æ–°
 				adapter.InsertData(result);
-			} else if (curPageIndex == 0) {// Ê×´Î¼ÓÔØ
+			} else if (curPageIndex == 0) {// é¦–æ¬¡åŠ è½½
 				listBlog = result;// dbHelper.GetTopBlogList();
 
 				blogBody_progressBar.setVisibility(View.GONE);
-				adapter = new AuthorBlogListAdapter(getApplicationContext(),listBlog);
+				adapter = new AuthorBlogListAdapter(getApplicationContext(),
+						listBlog);
 				listView.setAdapter(adapter);
 
-				// ´«µİ²ÎÊı
+				// ä¼ é€’å‚æ•°
 				((PullToRefreshListView) listView).SetDataRow(listBlog.size());
 				((PullToRefreshListView) listView)
 						.SetPageSize(Config.BLOG_PAGE_SIZE);
-			} else if (curPageIndex == 1) {// Ë¢ĞÂ
-				try {// ±ÜÃâÊ×Ò³ÎŞÍøÂç¼ÓÔØ£¬°´Ë¢ĞÂ°´Å¥
+			} else if (curPageIndex == 1) {// åˆ·æ–°
+				try {// é¿å…é¦–é¡µæ— ç½‘ç»œåŠ è½½ï¼ŒæŒ‰åˆ·æ–°æŒ‰é’®
 					if (adapter != null && adapter.GetData() != null) {
 						adapter.GetData().clear();
 						adapter.AddMoreData(result);
 					} else if (result != null) {
-						adapter = new AuthorBlogListAdapter(getApplicationContext(),result);
+						adapter = new AuthorBlogListAdapter(
+								getApplicationContext(), result);
 						listView.setAdapter(adapter);
 					}
 					blogBody_progressBar.setVisibility(View.GONE);
 				} catch (Exception ex) {
 					// Log.e("BlogActivity", ex.getMessage());
 				}
-			} else {// ÏÂÀ­
+			} else {// ä¸‹æ‹‰
 				adapter.AddMoreData(result);
 			}
 
-			if (isRefresh) {// Ë¢ĞÂÊ±´¦Àí
+			if (isRefresh) {// åˆ·æ–°æ—¶å¤„ç†
 				((PullToRefreshListView) listView).onRefreshComplete();
 			}
 		}
-        @Override
-        protected void onPreExecute() {
-        	//Ö÷Ìå½ø¶ÈÌõ
-    		if(listView.getCount()==0){
-    			blogBody_progressBar.setVisibility(View.VISIBLE);
-    		}
-        	//ÓÒÉÏ½Ç
-    		blog_progress_bar.setVisibility(View.VISIBLE);
-    		blog_refresh_btn.setVisibility(View.GONE);
-    		
-    		if(!isRefresh){//µ×²¿¿Ø¼ş£¬Ë¢ĞÂÊ±²»×ö´¦Àí
-	    		TextView tvFooterMore=(TextView)findViewById(R.id.tvFooterMore);
-	    		tvFooterMore.setText(R.string.pull_to_refresh_refreshing_label);
-	    		tvFooterMore.setVisibility(View.VISIBLE);
-	    		ProgressBar list_footer_progress=(ProgressBar)findViewById(R.id.list_footer_progress);
-	    		list_footer_progress.setVisibility(View.VISIBLE);
-    		}
-        }
 
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-        }
-     }
+		@Override
+		protected void onPreExecute() {
+			// ä¸»ä½“è¿›åº¦æ¡
+			if (listView.getCount() == 0) {
+				blogBody_progressBar.setVisibility(View.VISIBLE);
+			}
+			// å³ä¸Šè§’
+			blog_progress_bar.setVisibility(View.VISIBLE);
+			blog_refresh_btn.setVisibility(View.GONE);
+
+			if (!isRefresh) {// åº•éƒ¨æ§ä»¶ï¼Œåˆ·æ–°æ—¶ä¸åšå¤„ç†
+				TextView tvFooterMore = (TextView) findViewById(R.id.tvFooterMore);
+				tvFooterMore.setText(R.string.pull_to_refresh_refreshing_label);
+				tvFooterMore.setVisibility(View.VISIBLE);
+				ProgressBar list_footer_progress = (ProgressBar) findViewById(R.id.list_footer_progress);
+				list_footer_progress.setVisibility(View.VISIBLE);
+			}
+		}
+
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+		}
+	}
 }

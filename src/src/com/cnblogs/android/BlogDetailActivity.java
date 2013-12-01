@@ -41,459 +41,458 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- * ²©¿ÍÏêÏ¸ÄÚÈİ
+ * åšå®¢è¯¦ç»†å†…å®¹
  * @author walkingp
  * @date:2011-12
  *
  */
-public class BlogDetailActivity extends BaseActivity
-		implements
-			OnGestureListener {
-	private int blogId;// ²©¿Í±àºÅ
-	private String blogTitle;// ±êÌâ
-	private String blogAuthor;// ×÷Õß
-	private String blogDate;// ·¢±íÊ±¼ä
-	private String blogUrl;// ÎÄÕÂÁ´½Ó
-	private int blogViewCount;// ä¯ÀÀ´ÎÊı
-	private int blogCommentCount;// ÆÀÂÛ´ÎÊı
+public class BlogDetailActivity extends BaseActivity implements OnGestureListener {
+	private int blogId;// åšå®¢ç¼–å·
+    private String blogTitle;// æ ‡é¢˜
+    private String blogAuthor;// ä½œè€…
+    private String blogDate;// å‘è¡¨æ—¶é—´
+    private String blogUrl;// æ–‡ç« é“¾æ¥
+    private int blogViewCount;// æµè§ˆæ¬¡æ•°
+    private int blogCommentCount;// è¯„è®ºæ¬¡æ•°
 
-	static final int MENU_FORMAT_HTML = Menu.FIRST;// ¸ñÊ½»¯ÔÄ¶Á
-	static final int MENU_READ_MODE = Menu.FIRST + 1;// ÇĞ»»ÔÄ¶ÁÄ£Ê½
+    static final int MENU_FORMAT_HTML = Menu.FIRST;// æ ¼å¼åŒ–é˜…è¯»
+    static final int MENU_READ_MODE = Menu.FIRST + 1;// åˆ‡æ¢é˜…è¯»æ¨¡å¼
 
-	final String mimeType = "text/html";
-	final String encoding = "utf-8";
+    final String mimeType = "text/html";
+    final String encoding = "utf-8";
 
-	private Button comment_btn;// ÆÀÂÛ°´Å¥
-	private Button blog_button_back;// ·µ»Ø
-	WebView webView;
-	ProgressBar blogBody_progressBar;
-	RelativeLayout rl_blog_detail;// Í·²¿µ¼º½
+    private Button comment_btn;// è¯„è®ºæŒ‰é’®
+    private Button blog_button_back;// è¿”å›
+    WebView webView;
+    ProgressBar blogBody_progressBar;
+    RelativeLayout rl_blog_detail;// å¤´éƒ¨å¯¼èˆª
 
-	boolean isFullScreen = false;// ÊÇ·ñÈ«ÆÁ
+    boolean isFullScreen = false;// æ˜¯å¦å…¨å±
 
-	private GestureDetector gestureScanner;// ÊÖÊÆ
+    private GestureDetector gestureScanner;// æ‰‹åŠ¿
 
-	Resources res;// ×ÊÔ´
-	SharedPreferences sharePreferencesSettings;// ÉèÖÃ
-	TextView tvSeekBar;// SeekBarÏÔÊ¾ÎÄ±¾¿ò
-	SeekBar seekBar;// SeekBar
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		// ·ÀÖ¹ĞİÃß
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
-				WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		this.setContentView(R.layout.blog_detail);
+    Resources res;// èµ„æº
+    SharedPreferences sharePreferencesSettings;// è®¾ç½®
+    TextView tvSeekBar;// SeekBaræ˜¾ç¤ºæ–‡æœ¬æ¡†
+    SeekBar seekBar;// SeekBar
+    
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+    	super.onCreate(savedInstanceState);
+    	// é˜²æ­¢ä¼‘çœ 
+    	getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+                            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    	this.setContentView(R.layout.blog_detail);
 
-		res = this.getResources();
-		sharePreferencesSettings = getSharedPreferences(
-				res.getString(R.string.preferences_key), MODE_PRIVATE);
+    	res = this.getResources();
+    	sharePreferencesSettings = getSharedPreferences(
+    			res.getString(R.string.preferences_key), MODE_PRIVATE);
 
-		InitialData();
-	}
-	/**
-	 * ²Ù×÷Êı¾İ¿â
-	 */
-	private void MarkAsReaded() {
-		// ¸üĞÂÎªÒÑ¶Á
-		BlogDalHelper helper = new BlogDalHelper(getApplicationContext());
-		helper.MarkAsReaded(blogId);
-		// ¹ã²¥
-		Intent intent = new Intent();
-		Bundle bundle = new Bundle();
-		bundle.putIntArray("blogIdArray", new int[]{blogId});
-		intent.putExtras(bundle);
-		intent.setAction("android.cnblogs.com.update_bloglist");
-		this.sendBroadcast(intent);
-	}
-	/**
-	 * ³õÊ¼»¯
-	 */
-	private void InitialData() {
-		// ´«µİ¹ıÀ´µÄÖµ
-		blogId = getIntent().getIntExtra("blogId", 0);
-		blogTitle = getIntent().getStringExtra("blogTitle");
-		blogAuthor = getIntent().getStringExtra("author");
-		blogDate = getIntent().getStringExtra("date");
-		blogUrl = getIntent().getStringExtra("blogUrl");
-		blogViewCount = getIntent().getIntExtra("view", 0);
-		blogCommentCount = getIntent().getIntExtra("comment", 0);
-		// Í·²¿
-		rl_blog_detail = (RelativeLayout) findViewById(R.id.rl_blog_detail);
-		// Ë«»÷È«ÆÁ
-		rl_blog_detail.setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				return gestureScanner.onTouchEvent(event);
-			}
-		});
-		// ´ò¿ªÆÀÂÛ
-		comment_btn = (Button) findViewById(R.id.blog_comment_btn);
-		String commentsCountString = (blogCommentCount == 0)
-				? "ÔİÎŞÆÀÂÛ"
-				: blogCommentCount + "ÌõÆÀÂÛ";
-		comment_btn.setText(commentsCountString);
-		comment_btn.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				RedirectCommentActivity();
-			}
-		});
-		// ·µ»Ø
-		blog_button_back = (Button) findViewById(R.id.blog_button_back);
-		blog_button_back.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				BlogDetailActivity.this.finish();
-			}
-		});
-		try {
-			webView = (WebView) findViewById(R.id.blog_body_webview_content);
-			webView.getSettings().setDefaultTextEncodingName("utf-8");// ±ÜÃâÖĞÎÄÂÒÂë
-			webView.addJavascriptInterface(this, "javatojs");
-			webView.setSelected(true);
-			webView.setScrollBarStyle(0);
-			WebSettings webSetting = webView.getSettings();
-			webSetting.setJavaScriptEnabled(true);
-			webSetting.setPluginsEnabled(true);
-			webSetting.setNeedInitialFocus(false);
-			webSetting.setSupportZoom(true);
+    	InitialData();
+    }
+    /**
+     * æ“ä½œæ•°æ®åº“
+     */
+    private void MarkAsReaded() {
+    	// æ›´æ–°ä¸ºå·²è¯»
+    	BlogDalHelper helper = new BlogDalHelper(getApplicationContext());
+    	helper.MarkAsReaded(blogId);
+    	// å¹¿æ’­
+    	Intent intent = new Intent();
+    	Bundle bundle = new Bundle();
+    	bundle.putIntArray("blogIdArray", new int[]{blogId});
+    	intent.putExtras(bundle);
+    	intent.setAction("android.cnblogs.com.update_bloglist");
+    	this.sendBroadcast(intent);
+    }
+    /**
+     * åˆå§‹åŒ–
+     */
+    private void InitialData() {
+    	// ä¼ é€’è¿‡æ¥çš„å€¼
+    	blogId = getIntent().getIntExtra("blogId", 0);
+    	blogTitle = getIntent().getStringExtra("blogTitle");
+    	blogAuthor = getIntent().getStringExtra("author");
+    	blogDate = getIntent().getStringExtra("date");
+    	blogUrl = getIntent().getStringExtra("blogUrl");
+    	blogViewCount = getIntent().getIntExtra("view", 0);
+    	blogCommentCount = getIntent().getIntExtra("comment", 0);
+    	// å¤´éƒ¨
+    	rl_blog_detail = (RelativeLayout) findViewById(R.id.rl_blog_detail);
+    	// åŒå‡»å…¨å±
+    	rl_blog_detail.setOnTouchListener(new OnTouchListener() {
+    		@Override
+    		public boolean onTouch(View v, MotionEvent event) {
+    			return gestureScanner.onTouchEvent(event);
+    		}
+    	});
+    	// æ‰“å¼€è¯„è®º
+    	comment_btn = (Button) findViewById(R.id.blog_comment_btn);
+    	String commentsCountString = (blogCommentCount == 0) ? "æš‚æ— è¯„è®º"
+    					: blogCommentCount + "æ¡è¯„è®º";
+    	comment_btn.setText(commentsCountString);
+    	comment_btn.setOnClickListener(new OnClickListener() {
+    		public void onClick(View v) {
+    			RedirectCommentActivity();
+    		}
+    	});
+    	
+    	// è¿”å›
+    	blog_button_back = (Button) findViewById(R.id.blog_button_back);
+    	blog_button_back.setOnClickListener(new OnClickListener() {
+    		public void onClick(View v) {
+    			BlogDetailActivity.this.finish();
+    		}
+    	});
+    	try {
+    		webView = (WebView) findViewById(R.id.blog_body_webview_content);
+    		webView.getSettings().setDefaultTextEncodingName("utf-8");// é¿å…ä¸­æ–‡ä¹±ç 
+//    		webView.addJavascriptInterface(this, "javatojs");
+    		webView.setSelected(true);
+    		webView.setScrollBarStyle(0);
+    		WebSettings webSetting = webView.getSettings();
+    		webSetting.setJavaScriptEnabled(true);
+//    		webSetting.setPluginsEnabled(true);
+    		webSetting.setNeedInitialFocus(false);
+    		webSetting.setSupportZoom(true);
+    		
+    		webSetting.setDefaultFontSize(14);
+    		webSetting.setCacheMode(WebSettings.LOAD_DEFAULT | WebSettings.LOAD_CACHE_ELSE_NETWORK);
+    		// åŒå‡»å…¨å±
+    		webView.setOnTouchListener(new OnTouchListener() {
+    			@Override
+    			public boolean onTouch(View v, MotionEvent event) {
+    				return gestureScanner.onTouchEvent(event);
+    			}
+    		});
+    		int scalePercent = 110;
+    		// ä¸Šä¸€æ¬¡ä¿å­˜çš„ç¼©æ”¾æ¯”ä¾‹
+    		float webviewScale = sharePreferencesSettings.getFloat(
+    				res.getString(R.string.preferences_webview_zoom_scale),
+    				(float) 1.1);
+    		scalePercent = (int) (webviewScale * 100);
+    		webView.setInitialScale(scalePercent);
+    		
+    		blogBody_progressBar = (ProgressBar) findViewById(R.id.blogBody_progressBar);
 
-			webSetting.setDefaultFontSize(14);
-			webSetting.setCacheMode(WebSettings.LOAD_DEFAULT
-					| WebSettings.LOAD_CACHE_ELSE_NETWORK);
-			// Ë«»÷È«ÆÁ
-			webView.setOnTouchListener(new OnTouchListener() {
-				@Override
-				public boolean onTouch(View v, MotionEvent event) {
-					return gestureScanner.onTouchEvent(event);
-				}
-			});
-			int scalePercent = 110;
-			// ÉÏÒ»´Î±£´æµÄËõ·Å±ÈÀı
-			float webviewScale = sharePreferencesSettings.getFloat(
-					res.getString(R.string.preferences_webview_zoom_scale),
-					(float) 1.1);
-			scalePercent = (int) (webviewScale * 100);
-			webView.setInitialScale(scalePercent);
+    		// ä¸Šä¸€æ¬¡å…¨å±ä¿å­˜çŠ¶æ€
+    		isFullScreen = sharePreferencesSettings.getBoolean(
+    				res.getString(R.string.preferences_is_fullscreen), false);
+    		// åˆå§‹æ˜¯å¦å…¨å±
+    		if (isFullScreen) {
+    			setFullScreen();
+    		}
+    		String url = Config.URL_GET_BLOG_DETAIL.replace("{0}",
+    				String.valueOf(blogId));// ç½‘å€
+    		PageTask task = new PageTask();
+    		task.execute(url);
+    	} catch (Exception ex) {
+    		Toast.makeText(getApplicationContext(), R.string.sys_error,
+    				Toast.LENGTH_SHORT).show();
+    	}
 
-			blogBody_progressBar = (ProgressBar) findViewById(R.id.blogBody_progressBar);
+    	// ç›‘å¬å±å¹•åŠ¨ä½œäº‹ä»¶ å…¨å±
+    	gestureScanner = new GestureDetector(this);
+    	gestureScanner.setIsLongpressEnabled(true);
+    	gestureScanner
+    	.setOnDoubleTapListener(new GestureDetector.OnDoubleTapListener() {
+    		public boolean onDoubleTap(MotionEvent e) {
+    			if (!isFullScreen) {
+    				setFullScreen();
+    			} else {
+    				quitFullScreen();
+    			}
+    			isFullScreen = !isFullScreen;
+    			// ä¿å­˜é…ç½®
+    			sharePreferencesSettings
+    			.edit()
+    			.putBoolean(
+    					res.getString(R.string.preferences_is_fullscreen),
+    					isFullScreen).commit();
+    			return false;
+    		}
+    		public boolean onDoubleTapEvent(MotionEvent e) {
+    			return false;
+    		}
+    		public boolean onSingleTapConfirmed(MotionEvent e) {
+    			return false;
+    		}
+    	});
+    }
+    // é•¿æŒ‰èœå•
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                    ContextMenuInfo menuInfo) {
+            if (v.getId() == R.id.blog_body_webview_content) {
+                    menu.setHeaderTitle("è¯·é€‰æ‹©æ“ä½œ");
+                    menu.add(0, MENU_FORMAT_HTML, 0, "æŸ¥çœ‹å†…å®¹");
+                    menu.add(0, MENU_READ_MODE, 1, "åˆ‡æ¢åˆ°æ¨¡å¼");
+            }
+    }
+    /**
+     * ä¿å­˜ç¼©æ”¾æ¯”ä¾‹
+     */
+    public void onDestroy() {
+    	float webviewScale = webView.getScale();
+    	sharePreferencesSettings
+    	.edit()
+    	.putFloat(
+    			res.getString(R.string.preferences_webview_zoom_scale),
+    			webviewScale).commit();
+    	super.onDestroy();
+    }
+    /**
+     * æ‰“å¼€è¯„è®º
+     * 
+     */
+    private void RedirectCommentActivity() {
+    	// è¿˜æ²¡æœ‰è¯„è®º
+    	if (blogCommentCount == 0) {
+    		Toast.makeText(getApplicationContext(), R.string.sys_empty_comment,
+    				Toast.LENGTH_SHORT).show();
+    		return;
+    	}
+    	Intent intent = new Intent();
+    	intent.setClass(BlogDetailActivity.this, CommentActivity.class);
+    	Bundle bundle = new Bundle();
+    	bundle.putInt("contentId", blogId);
+    	bundle.putInt("commentType", 0);// Comment.EnumCommentType.News.ordinal());
+    	bundle.putString("title", blogTitle);
+    	bundle.putString("url", blogUrl);
 
-			// ÉÏÒ»´ÎÈ«ÆÁ±£´æ×´Ì¬
-			isFullScreen = sharePreferencesSettings.getBoolean(
-					res.getString(R.string.preferences_is_fullscreen), false);
-			// ³õÊ¼ÊÇ·ñÈ«ÆÁ
-			if (isFullScreen) {
-				setFullScreen();
-			}
-			String url = Config.URL_GET_BLOG_DETAIL.replace("{0}",
-					String.valueOf(blogId));// ÍøÖ·
-			PageTask task = new PageTask();
-			task.execute(url);
-		} catch (Exception ex) {
-			Toast.makeText(getApplicationContext(), R.string.sys_error,
-					Toast.LENGTH_SHORT).show();
-		}
+    	intent.putExtras(bundle);
 
-		// ¼àÌıÆÁÄ»¶¯×÷ÊÂ¼ş È«ÆÁ
-		gestureScanner = new GestureDetector(this);
-		gestureScanner.setIsLongpressEnabled(true);
-		gestureScanner
-				.setOnDoubleTapListener(new GestureDetector.OnDoubleTapListener() {
-					public boolean onDoubleTap(MotionEvent e) {
-						if (!isFullScreen) {
-							setFullScreen();
-						} else {
-							quitFullScreen();
-						}
-						isFullScreen = !isFullScreen;
-						// ±£´æÅäÖÃ
-						sharePreferencesSettings
-								.edit()
-								.putBoolean(
-										res.getString(R.string.preferences_is_fullscreen),
-										isFullScreen).commit();
-						return false;
-					}
-					public boolean onDoubleTapEvent(MotionEvent e) {
-						return false;
-					}
-					public boolean onSingleTapConfirmed(MotionEvent e) {
-						return false;
-					}
-				});
-	}
-	// ³¤°´²Ëµ¥
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
-		if (v.getId() == R.id.blog_body_webview_content) {
-			menu.setHeaderTitle("ÇëÑ¡Ôñ²Ù×÷");
-			menu.add(0, MENU_FORMAT_HTML, 0, "²é¿´ÄÚÈİ");
-			menu.add(0, MENU_READ_MODE, 1, "ÇĞ»»µ½Ä£Ê½");
-		}
-	}
-	/**
-	 * ±£´æËõ·Å±ÈÀı
-	 */
-	public void onDestroy() {
-		float webviewScale = webView.getScale();
-		sharePreferencesSettings
-				.edit()
-				.putFloat(
-						res.getString(R.string.preferences_webview_zoom_scale),
-						webviewScale).commit();
-		super.onDestroy();
-	}
-	/**
-	 * ´ò¿ªÆÀÂÛ
-	 * 
-	 */
-	private void RedirectCommentActivity() {
-		// »¹Ã»ÓĞÆÀÂÛ
-		if (blogCommentCount == 0) {
-			Toast.makeText(getApplicationContext(), R.string.sys_empty_comment,
-					Toast.LENGTH_SHORT).show();
-			return;
-		}
-		Intent intent = new Intent();
-		intent.setClass(BlogDetailActivity.this, CommentActivity.class);
-		Bundle bundle = new Bundle();
-		bundle.putInt("contentId", blogId);
-		bundle.putInt("commentType", 0);// Comment.EnumCommentType.News.ordinal());
-		bundle.putString("title", blogTitle);
-		bundle.putString("url", blogUrl);
+    	startActivityForResult(intent, 0);
+    }
+    /**
+     * è·³è½¬åˆ°åšä¸»
+     */
+    private void RedirectAuthorActivity() {
+    	String userName = UserHelper.GetBlogUrlName(blogUrl);// ä¸»é¡µç”¨æˆ·å
+    	if (userName.equals("")) {
+    		Toast.makeText(getApplicationContext(), R.string.sys_no_author,
+    				Toast.LENGTH_SHORT).show();
+    		return;
+    	}
+    	Intent intent = new Intent();
+    	intent.setClass(BlogDetailActivity.this, AuthorBlogActivity.class);
+    	Bundle bundle = new Bundle();
+    	bundle.putString("author", userName);// ç”¨æˆ·å
+    	bundle.putString("blogName", blogAuthor);// åšå®¢æ ‡é¢˜
+    	
+    	intent.putExtras(bundle);
+    	
+    	startActivityForResult(intent, 0);
+    }	
+    /**
+     * å¤šçº¿ç¨‹å¯åŠ¨
+     * 
+     * @author walkingp
+     * 
+     */
+    public class PageTask extends AsyncTask<String, Integer, String> {
+    	// å¯å˜é•¿çš„è¾“å…¥å‚æ•°ï¼Œä¸AsyncTask.exucute()å¯¹åº”
+    	@Override
+    	protected String doInBackground(String... params) {
 
-		intent.putExtras(bundle);
+    		try {
+    			String _blogContent = BlogHelper.GetBlogById(blogId,getApplicationContext());
+    			//ä¸‹è½½å›¾ç‰‡ï¼ˆåªæœ‰æœ¬åœ°å®Œæ•´ä¿å­˜å›¾ç‰‡æ—¶æ‰ä¸‹è½½ï¼‰
+    			/*Context context=getApplicationContext();
+                            BlogDalHelper helper = new BlogDalHelper(context);                                
+                            Blog entity = helper.GetBlogEntity(blogId);                                
+                            boolean isNetworkAvailable = NetHelper.networkIsAvailable(getApplicationContext());
+                            if(isNetworkAvailable && (entity==null || !entity.GetIsFullText())){
+                                    ImageCacher imageCacher=new ImageCacher(getApplicationContext());
+                                    imageCacher.DownloadHtmlImage(ImageCacher.EnumImageType.Blog, _blogContent);
+    
+                                    _blogContent=ImageCacher.FormatLocalHtmlWithImg(ImageCacher.EnumImageType.Blog, _blogContent);
+                            }*/
+    			return _blogContent;
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    		}
 
-		startActivityForResult(intent, 0);
-	}
-	/**
-	 * Ìø×ªµ½²©Ö÷
-	 */
-	private void RedirectAuthorActivity() {
-		String userName = UserHelper.GetBlogUrlName(blogUrl);// Ö÷Ò³ÓÃ»§Ãû
-		if (userName.equals("")) {
-			Toast.makeText(getApplicationContext(), R.string.sys_no_author,
-					Toast.LENGTH_SHORT).show();
-			return;
-		}
-		Intent intent = new Intent();
-		intent.setClass(BlogDetailActivity.this, AuthorBlogActivity.class);
-		Bundle bundle = new Bundle();
-		bundle.putString("author", userName);// ÓÃ»§Ãû
-		bundle.putString("blogName", blogAuthor);// ²©¿Í±êÌâ
+    		return "";
+    	}
 
-		intent.putExtras(bundle);
+    	@Override
+    	protected void onCancelled() {
+    		super.onCancelled();
+    	}
+    	/**
+    	 * åŠ è½½å†…å®¹
+    	 */
+    	@Override
+    	protected void onPostExecute(String _blogContent) {
+    		String htmlContent = "";
+    		try {
+    			InputStream in = getAssets().open("NewsDetail.html");
+    			byte[] temp = NetHelper.readInputStream(in);
+    			htmlContent = new String(temp);
+    		} catch (Exception e) {
+    			Log.e("error", e.toString());
+    		}
 
-		startActivityForResult(intent, 0);
-	}
-	/**
-	 * ¶àÏß³ÌÆô¶¯
-	 * 
-	 * @author walkingp
-	 * 
-	 */
-	public class PageTask extends AsyncTask<String, Integer, String> {
-		// ¿É±ä³¤µÄÊäÈë²ÎÊı£¬ÓëAsyncTask.exucute()¶ÔÓ¦
-		@Override
-		protected String doInBackground(String... params) {
+    		String blogInfo = "ä½œè€…: " + blogAuthor + "   å‘è¡¨æ—¶é—´:" + blogDate
+    				+ "  æŸ¥çœ‹:" + blogViewCount;
+    		// æ ¼å¼åŒ–html
+    		_blogContent = AppUtil.FormatContent(getApplicationContext(),
+    				_blogContent);
+    		
+    		htmlContent = htmlContent.replace("#title#", blogTitle)
+    				.replace("#time#", blogInfo)
+    				.replace("#content#", _blogContent);
+    		LoadWebViewContent(webView, htmlContent);
+    		blogBody_progressBar.setVisibility(View.GONE);
+    		if(!_blogContent.equals("")){
+    			//æ›´æ–°ä¸ºå·²è¯»
+    			MarkAsReaded();
+    		}
+    	}
 
-			try {
-				String _blogContent = BlogHelper.GetBlogById(blogId,getApplicationContext());
-				//ÏÂÔØÍ¼Æ¬£¨Ö»ÓĞ±¾µØÍêÕû±£´æÍ¼Æ¬Ê±²ÅÏÂÔØ£©
-				/*Context context=getApplicationContext();
-				BlogDalHelper helper = new BlogDalHelper(context);				
-				Blog entity = helper.GetBlogEntity(blogId);				
-				boolean isNetworkAvailable = NetHelper.networkIsAvailable(getApplicationContext());
-				if(isNetworkAvailable && (entity==null || !entity.GetIsFullText())){
-					ImageCacher imageCacher=new ImageCacher(getApplicationContext());
-					imageCacher.DownloadHtmlImage(ImageCacher.EnumImageType.Blog, _blogContent);
-	
-					_blogContent=ImageCacher.FormatLocalHtmlWithImg(ImageCacher.EnumImageType.Blog, _blogContent);
-				}*/
-				return _blogContent;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+    	@Override
+    	protected void onPreExecute() {
+    		blogBody_progressBar.setVisibility(View.VISIBLE);
+    	}
 
-			return "";
-		}
+    	@Override
+    	protected void onProgressUpdate(Integer... values) {
+    	}
+    }
+    /**
+     * åŠ è½½å†…å®¹
+     * 
+     * @param webView
+     * @param content
+     */
+    private void LoadWebViewContent(WebView webView, String content) {
+    	webView.loadDataWithBaseURL(Config.LOCAL_PATH, content, "text/html",
+    			Config.ENCODE_TYPE, null);
+    }
+    /**
+     * èœå•
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	MenuInflater inflater = getMenuInflater();
+    	inflater.inflate(R.menu.blog_detail_menu, menu);
+    	return super.onCreateOptionsMenu(menu);
+    }	
+    /**
+     * å…¨å±
+     */
+    private void setFullScreen() {
+    	getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+    			WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    	// éšè—å¯¼èˆª
+    	rl_blog_detail.setVisibility(View.GONE);
+    }
+    /**
+     * é€€å‡ºå…¨å±
+     */
+    private void quitFullScreen() {
+    	final WindowManager.LayoutParams attrs = getWindow().getAttributes();
+    	attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    	getWindow().setAttributes(attrs);
+    	getWindow()
+    	.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+    	// æ˜¾ç¤ºå¯¼èˆª
+    	rl_blog_detail.setVisibility(View.VISIBLE);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch (item.getItemId()) {
+    	case R.id.menu_blog_back :// è¿”å›åˆ—è¡¨
+    		BlogDetailActivity.this.setResult(0, getIntent());
+    		BlogDetailActivity.this.finish();
+    		break;
+    	case R.id.menu_blog_comment :// æŸ¥çœ‹è¯„è®º
+    		RedirectCommentActivity();
+    		break;
+    	case R.id.menu_blog_share :// åˆ†äº«
+    		Intent intent = new Intent(Intent.ACTION_SEND);
+    		intent.setType("text/plain");
+    		intent.putExtra(Intent.EXTRA_SUBJECT, blogTitle);
+    		String shareContent = "ã€Š" + blogTitle + "ã€‹,ä½œè€…ï¼š" + blogAuthor
+    				+ "ï¼ŒåŸæ–‡é“¾æ¥ï¼š" + blogUrl + " åˆ†äº«è‡ªï¼š"
+    				+ res.getString(R.string.app_name) + "Androidå®¢æˆ·ç«¯("
+    				+ res.getString(R.string.app_homepage) + ")";
+    		intent.putExtra(Intent.EXTRA_TEXT, shareContent);
+    		startActivity(Intent.createChooser(intent, blogTitle));
+    		break;
+    	case R.id.menu_blog_add_fav:// æ·»åŠ æ”¶è—
+    		new AddFavTask().execute(blogId);
+    		break;
+    	case R.id.menu_blog_author :// åšä¸»
+    		RedirectAuthorActivity();
+    		break;
+    	case R.id.menu_blog_browser :// æŸ¥çœ‹ç½‘é¡µ
+    		Uri blogUri = Uri.parse(blogUrl);
+    		Intent it = new Intent(Intent.ACTION_VIEW, blogUri);
+    		startActivity(it);
+    		break;
+    	}
+    	return super.onOptionsItemSelected(item);
+    }
+    /**
+     * æ·»åŠ æ”¶è—
+     *
+     */
+    public class AddFavTask extends AsyncTask<Integer,String,EnumResultType.EnumActionResultType>{
+    	int contentId;
+    	@Override
+    	protected EnumResultType.EnumActionResultType doInBackground(Integer... params) {
+    		contentId=params[0];
+    		EnumResultType.EnumActionResultType result= FavListHelper.AddFav(contentId, FavList.EnumContentType.Blog, getApplicationContext());
+    		return result;
+    	}
+    	@Override
+    	protected void onPostExecute(EnumResultType.EnumActionResultType result) {
+    		if(result.equals(EnumResultType.EnumActionResultType.Succ)){//æˆåŠŸ
+    			// å¹¿æ’­
+    			Intent intent = new Intent();
+    			Bundle bundle = new Bundle();
+    			bundle.putInt("contentId",contentId);
+    			bundle.putInt("contentType", FavList.EnumContentType.Blog.ordinal());
+    			bundle.putBoolean("isfav", true);
+    			intent.putExtras(bundle);
+    			intent.setAction("android.cnblogs.com.update_favlist");
+    			sendBroadcast(intent);
+    			Toast.makeText(getApplicationContext(), R.string.fav_succ, Toast.LENGTH_SHORT).show();
+    		}else if(result.equals(EnumResultType.EnumActionResultType.Exist)){
+    			Toast.makeText(getApplicationContext(), R.string.sys_fav_exist, Toast.LENGTH_SHORT).show();
+    		}else{
+    			Toast.makeText(getApplicationContext(), R.string.fav_fail, Toast.LENGTH_SHORT).show();
+    		}
+    	}
+    }
+    @Override
+    public boolean onDown(MotionEvent e) {
+    	// TODO Auto-generated method stub
+    	return false;
+    }
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+    		float velocityY) {
+    	// TODO Auto-generated method stub
+    	return false;
+    }
+    @Override
+    public void onLongPress(MotionEvent e) {
+    	// TODO Auto-generated method stub
 
-		@Override
-		protected void onCancelled() {
-			super.onCancelled();
-		}
-		/**
-		 * ¼ÓÔØÄÚÈİ
-		 */
-		@Override
-		protected void onPostExecute(String _blogContent) {
-			String htmlContent = "";
-			try {
-				InputStream in = getAssets().open("NewsDetail.html");
-				byte[] temp = NetHelper.readInputStream(in);
-				htmlContent = new String(temp);
-			} catch (Exception e) {
-				Log.e("error", e.toString());
-			}
+    }
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
+    		float distanceY) {
+    	return false;
+    }
+    @Override
+    public void onShowPress(MotionEvent e) {
 
-			String blogInfo = "×÷Õß: " + blogAuthor + "   ·¢±íÊ±¼ä:" + blogDate
-					+ "  ²é¿´:" + blogViewCount;
-			// ¸ñÊ½»¯html
-			_blogContent = AppUtil.FormatContent(getApplicationContext(),
-					_blogContent);
-
-			htmlContent = htmlContent.replace("#title#", blogTitle)
-					.replace("#time#", blogInfo)
-					.replace("#content#", _blogContent);
-			LoadWebViewContent(webView, htmlContent);
-			blogBody_progressBar.setVisibility(View.GONE);
-			if(!_blogContent.equals("")){
-				//¸üĞÂÎªÒÑ¶Á
-				MarkAsReaded();
-			}
-		}
-
-		@Override
-		protected void onPreExecute() {
-			blogBody_progressBar.setVisibility(View.VISIBLE);
-		}
-
-		@Override
-		protected void onProgressUpdate(Integer... values) {
-		}
-	}
-	/**
-	 * ¼ÓÔØÄÚÈİ
-	 * 
-	 * @param webView
-	 * @param content
-	 */
-	private void LoadWebViewContent(WebView webView, String content) {
-		webView.loadDataWithBaseURL(Config.LOCAL_PATH, content, "text/html",
-				Config.ENCODE_TYPE, null);
-	}
-	/**
-	 * ²Ëµ¥
-	 */
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.blog_detail_menu, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
-	/**
-	 * È«ÆÁ
-	 */
-	private void setFullScreen() {
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		// Òş²Øµ¼º½
-		rl_blog_detail.setVisibility(View.GONE);
-	}
-	/**
-	 * ÍË³öÈ«ÆÁ
-	 */
-	private void quitFullScreen() {
-		final WindowManager.LayoutParams attrs = getWindow().getAttributes();
-		attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		getWindow().setAttributes(attrs);
-		getWindow()
-				.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-		// ÏÔÊ¾µ¼º½
-		rl_blog_detail.setVisibility(View.VISIBLE);
-	}
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.menu_blog_back :// ·µ»ØÁĞ±í
-				BlogDetailActivity.this.setResult(0, getIntent());
-				BlogDetailActivity.this.finish();
-				break;
-			case R.id.menu_blog_comment :// ²é¿´ÆÀÂÛ
-				RedirectCommentActivity();
-				break;
-			case R.id.menu_blog_share :// ·ÖÏí
-				Intent intent = new Intent(Intent.ACTION_SEND);
-				intent.setType("text/plain");
-				intent.putExtra(Intent.EXTRA_SUBJECT, blogTitle);
-				String shareContent = "¡¶" + blogTitle + "¡·,×÷Õß£º" + blogAuthor
-						+ "£¬Ô­ÎÄÁ´½Ó£º" + blogUrl + " ·ÖÏí×Ô£º"
-						+ res.getString(R.string.app_name) + "Android¿Í»§¶Ë("
-						+ res.getString(R.string.app_homepage) + ")";
-				intent.putExtra(Intent.EXTRA_TEXT, shareContent);
-				startActivity(Intent.createChooser(intent, blogTitle));
-				break;
-			case R.id.menu_blog_add_fav:// Ìí¼ÓÊÕ²Ø
-				new AddFavTask().execute(blogId);
-				break;
-			case R.id.menu_blog_author :// ²©Ö÷
-				RedirectAuthorActivity();
-				break;
-			case R.id.menu_blog_browser :// ²é¿´ÍøÒ³
-				Uri blogUri = Uri.parse(blogUrl);
-				Intent it = new Intent(Intent.ACTION_VIEW, blogUri);
-				startActivity(it);
-				break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-	/**
-	 * Ìí¼ÓÊÕ²Ø
-	 *
-	 */
-	public class AddFavTask extends AsyncTask<Integer,String,EnumResultType.EnumActionResultType>{
-		int contentId;
-		@Override
-		protected EnumResultType.EnumActionResultType doInBackground(Integer... params) {
-			contentId=params[0];
-			EnumResultType.EnumActionResultType result= FavListHelper.AddFav(contentId, FavList.EnumContentType.Blog, getApplicationContext());
-			return result;
-		}
-		@Override
-		protected void onPostExecute(EnumResultType.EnumActionResultType result) {
-			if(result.equals(EnumResultType.EnumActionResultType.Succ)){//³É¹¦
-				// ¹ã²¥
-				Intent intent = new Intent();
-				Bundle bundle = new Bundle();
-				bundle.putInt("contentId",contentId);
-				bundle.putInt("contentType", FavList.EnumContentType.Blog.ordinal());
-				bundle.putBoolean("isfav", true);
-				intent.putExtras(bundle);
-				intent.setAction("android.cnblogs.com.update_favlist");
-				sendBroadcast(intent);
-				Toast.makeText(getApplicationContext(), R.string.fav_succ, Toast.LENGTH_SHORT).show();
-			}else if(result.equals(EnumResultType.EnumActionResultType.Exist)){
-				Toast.makeText(getApplicationContext(), R.string.sys_fav_exist, Toast.LENGTH_SHORT).show();
-			}else{
-				Toast.makeText(getApplicationContext(), R.string.fav_fail, Toast.LENGTH_SHORT).show();
-			}
-		}
-	}
-	@Override
-	public boolean onDown(MotionEvent e) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
-	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-			float velocityY) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
-	public void onLongPress(MotionEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-	@Override
-	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
-			float distanceY) {
-		return false;
-	}
-	@Override
-	public void onShowPress(MotionEvent e) {
-
-	}
-	@Override
-	public boolean onSingleTapUp(MotionEvent e) {
-		return false;
-	}
+    }
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+    	return false;
+    }
 }

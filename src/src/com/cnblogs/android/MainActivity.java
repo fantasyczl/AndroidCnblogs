@@ -1,39 +1,32 @@
 package com.cnblogs.android;
-import android.app.TabActivity;
-import android.content.Intent;
+
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTabHost;
 import android.widget.CompoundButton;
-import android.widget.RadioButton;
-import android.widget.TabHost;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-/**
- * 主Activity，放置5个Tab
- * @author walkingp
- * @date:2011-12
- *
- */
-public class MainActivity extends TabActivity
-		implements
-			OnCheckedChangeListener {
-	/** Called when the activity is first created. */
-	private TabHost tabHost;
-	private Intent intentBlog;// Blog
-	private Intent intentNews;// News
-	private Intent intentSearch;// search
-	private Intent intentRss;// RSS
-	private Intent intentMore;// More
+import android.widget.RadioButton;
+import android.widget.TabHost.TabSpec;
 
+import com.cnblogs.android.fragment.BlogFragment;
+import com.cnblogs.android.fragment.MoreFragment;
+import com.cnblogs.android.fragment.NewsFragment;
+import com.cnblogs.android.fragment.RssFragment;
+import com.cnblogs.android.fragment.SearchFragment;
+
+public class MainActivity extends FragmentActivity  implements OnCheckedChangeListener {
+	private FragmentTabHost mTabHost;
 	private RadioButton rbBlog;
 	private RadioButton rbNews;
 	private RadioButton rbRss;
 	private RadioButton rbSearch;
 	private RadioButton rbMore;
 
-    public String whichTab = "";// 当前选中Tab
+    public String whichTab = "";
 
-	Resources res;// 资源
+	Resources res;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,19 +34,11 @@ public class MainActivity extends TabActivity
 
 		res = this.getResources();
 
-		intentBlog = new Intent(this, BlogActivity.class);
-		intentNews = new Intent(this, NewsActivity.class);
-		intentRss = new Intent(this, MyRssActivity.class);
-		intentSearch = new Intent(this, SearchActivity.class);
-		intentMore = new Intent(this, MoreActivity.class);
-
 		InitialRadios();
 		InitialTab();
-		InitialSelectedTab();
+		initialSelectedTab();
 	}
-	/**
-	 * 初始化单选按钮
-	 */
+
 	private void InitialRadios() {
 		rbBlog = (RadioButton) findViewById(R.id.TabBlog);
 		rbBlog.setOnCheckedChangeListener(this);
@@ -66,30 +51,33 @@ public class MainActivity extends TabActivity
 		rbMore = (RadioButton) findViewById(R.id.TabMore);
 		rbMore.setOnCheckedChangeListener(this);
 	}
-	/**
-	 * 初始化Tab
-	 */
-	private void InitialTab() {
-		tabHost = this.getTabHost();
 
-		// tabHost.addTab(buildTabSpec("search", R.string.main_search,
-		// R.drawable.icon, intentSearch));//fix tabHost bug:set the first tab
-		// as default tab
-		tabHost.addTab(buildTabSpec("blog", R.string.main_home,
-				R.drawable.icon, intentBlog));
-		tabHost.addTab(buildTabSpec("news", R.string.main_news,
-				R.drawable.icon, intentNews));
-		tabHost.addTab(buildTabSpec("rss", R.string.main_rss, R.drawable.icon,
-				intentRss));
-		tabHost.addTab(buildTabSpec("search", R.string.main_search,
-				R.drawable.icon, intentSearch));
-		tabHost.addTab(buildTabSpec("more", R.string.main_more,
-				R.drawable.icon, intentMore));
+	private void InitialTab() {
+		mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
+		mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
+
+		TabSpec blogSpec = mTabHost.newTabSpec("blog");
+		blogSpec.setIndicator(getString(R.string.main_home), res.getDrawable(R.drawable.icon));
+		mTabHost.addTab(blogSpec, BlogFragment.class, null);
+		
+		TabSpec newsSpec = mTabHost.newTabSpec("news");
+		newsSpec.setIndicator(getString(R.string.main_news), res.getDrawable(R.drawable.icon));
+		mTabHost.addTab(newsSpec, NewsFragment.class, null);
+		
+		TabSpec rssSpec = mTabHost.newTabSpec("rss");
+		rssSpec.setIndicator(getString(R.string.main_rss), res.getDrawable(R.drawable.icon));
+		mTabHost.addTab(rssSpec, RssFragment.class, null);
+		
+		TabSpec searchSpec = mTabHost.newTabSpec("search");
+		searchSpec.setIndicator(getString(R.string.main_search), res.getDrawable(R.drawable.icon));
+		mTabHost.addTab(searchSpec, SearchFragment.class, null);
+		
+		TabSpec moreSpec = mTabHost.newTabSpec("more");
+		moreSpec.setIndicator(getString(R.string.main_more), res.getDrawable(R.drawable.icon));
+		mTabHost.addTab(moreSpec, MoreFragment.class, null);
 	}
-	/**
-	 * 设置默认选中Tab
-	 */
-	private void InitialSelectedTab() {
+
+	private void initialSelectedTab() {
 		SharedPreferences settings = getSharedPreferences(res.getString(R.string.preferences_key), MODE_PRIVATE);
 		whichTab = settings.getString(res.getString(R.string.preferences_current_tab), "blog");
 		if (whichTab.equals("blog"))
@@ -103,23 +91,8 @@ public class MainActivity extends TabActivity
 		else if (whichTab.equals("more"))
 			rbMore.setChecked(true);
 	}
-	/**
-	 * 公用初始化Tab
-	 */
-	private TabHost.TabSpec buildTabSpec(String tag, int resLabel, int resIcon,
-			final Intent content) {
-		return tabHost
-				.newTabSpec(tag)
-				.setIndicator(getString(resLabel),
-						getResources().getDrawable(resIcon))
-				.setContent(content);
-	}
-	/**
-	 * 设置当前Tab被选中后的Activity
-	 * 
-	 * @param buttonView
-	 * @param isChecked
-	 */
+
+
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		if (!isChecked) {
 			return;
@@ -127,34 +100,33 @@ public class MainActivity extends TabActivity
 		switch (buttonView.getId()) {
 			case R.id.TabBlog :
 				whichTab = "blog";
-				tabHost.setCurrentTabByTag("blog");
+				mTabHost.setCurrentTabByTag("blog");
 				break;
 			case R.id.TabNews :
 				whichTab = "news";
-				tabHost.setCurrentTabByTag("news");
+				mTabHost.setCurrentTabByTag("news");
 				break;
 			case R.id.TabRss :
 				whichTab = "rss";
-				tabHost.setCurrentTabByTag("rss");
+				mTabHost.setCurrentTabByTag("rss");
 				break;
 			case R.id.TabSearch :
 				whichTab = "search";
-				tabHost.setCurrentTabByTag("search");
+				mTabHost.setCurrentTabByTag("search");
 				break;
 			case R.id.TabMore :
 				whichTab = "more";
-				tabHost.setCurrentTabByTag("more");
+				mTabHost.setCurrentTabByTag("more");
 				break;
 		}
 	}
-	// 存储关闭时的tab
+
 	protected void onDestroy() {
-		SharedPreferences settings = getSharedPreferences(
-				res.getString(R.string.preferences_key), MODE_PRIVATE);
+		SharedPreferences settings = getSharedPreferences( getString(R.string.preferences_key), MODE_PRIVATE);
 		SharedPreferences.Editor editor = settings.edit();
-		editor.putString(res.getString(R.string.preferences_current_tab),
-				whichTab);
+		editor.putString( getString(R.string.preferences_current_tab), whichTab);
 		editor.commit();
+		
 		super.onDestroy();
 	}
 }

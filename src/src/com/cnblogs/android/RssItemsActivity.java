@@ -24,28 +24,24 @@ import com.cnblogs.android.adapter.RssItemsAdapter;
 import com.cnblogs.android.core.RssItemHelper;
 import com.cnblogs.android.entity.RssItem;
 /**
- * ¶©ÔÄÀ¸Ä¿
- * @author walkingp
- * @date:2012-3
- *
  */
 public class RssItemsActivity extends BaseActivity {
 	List<RssItem> listBlog = new ArrayList<RssItem>();
 
 	ListView listView;
-	private RssItemsAdapter adapter;// Êý¾ÝÔ´
+	private RssItemsAdapter adapter;
 	List<RssItem> listRss;
 
 	String itemTitle, itemUrl;
 
-	Button btnBack;// ·µ»Ø
-	ProgressBar bodyProgressBar;// Ö÷ÌâListView¼ÓÔØ¿ò
-	ImageButton btnRefresh;// Ë¢ÐÂ°´Å¥
-	ProgressBar topProgressBar;// ¼ÓÔØ°´Å¥
+	Button btnBack;
+	ProgressBar bodyProgressBar;// ï¿½ï¿½ï¿½ï¿½ListViewï¿½ï¿½ï¿½Ø¿ï¿½
+	ImageButton btnRefresh;// Ë¢ï¿½Â°ï¿½Å¥
+	ProgressBar topProgressBar;// ï¿½ï¿½ï¿½Ø°ï¿½Å¥
 
-	TextView txtAppTitle;// ±êÌâ
-	TextView txtNoData;// Ã»ÓÐÊý¾Ý
-	Resources res;// ×ÊÔ´
+	TextView txtAppTitle;// ï¿½ï¿½ï¿½ï¿½
+	TextView txtNoData;// Ã»ï¿½ï¿½ï¿½ï¿½ï¿½
+	Resources res;// ï¿½ï¿½Ô´
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,7 +54,7 @@ public class RssItemsActivity extends BaseActivity {
 		new PageTask().execute();
 	}
 	/**
-	 * ³õÊ¼»¯ÁÐ±í
+	 * ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½Ð±ï¿½
 	 */
 	private void InitialControls() {
 		listView = (ListView) findViewById(R.id.rss_list);
@@ -71,31 +67,31 @@ public class RssItemsActivity extends BaseActivity {
 		txtNoData = (TextView) findViewById(R.id.txtNoData);
 	}
 	/**
-	 * ³õÊ¼»¯Êý¾Ý
+	 * ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	void InitialData() {
 		itemTitle = getIntent().getStringExtra("title");
 		itemUrl = getIntent().getStringExtra("url");
 	}
 	/**
-	 * °ó¶¨ÊÂ¼þ
+	 * ï¿½ï¿½ï¿½Â¼ï¿½
 	 */
 	private void BindControls() {
 		txtAppTitle.setText(itemTitle);
-		// Ìø»Ø
+		// ï¿½ï¿½ï¿½
 		btnBack.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				RssItemsActivity.this.finish();
 			}
 		});
-		// Ë¢ÐÂ
+		// Ë¢ï¿½ï¿½
 		btnRefresh.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				new PageTask().execute();
 			}
 		});
-		// µã»÷Ìø×ª
+		// ï¿½ï¿½ï¿½ï¿½ï¿½×ª
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v,
@@ -123,7 +119,7 @@ public class RssItemsActivity extends BaseActivity {
 				startActivity(intent);
 			}
 		});
-		// ³¤°´ÊÂ¼þ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½
 		listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
 			@Override
 			public void onCreateContextMenu(ContextMenu menu, View v,
@@ -135,7 +131,7 @@ public class RssItemsActivity extends BaseActivity {
 		});
 	}
 	/**
-	 * Òì²½ÏÂÔØ
+	 * ï¿½ì²½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @author walkingp
 	 * 

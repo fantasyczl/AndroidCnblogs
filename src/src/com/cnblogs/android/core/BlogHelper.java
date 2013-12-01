@@ -14,6 +14,9 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 import android.content.Context;
+import android.nfc.Tag;
+import android.util.Log;
+
 import com.cnblogs.android.dal.BlogDalHelper;
 import com.cnblogs.android.entity.*;
 import com.cnblogs.android.parser.BlogListXmlParser;
@@ -21,203 +24,203 @@ import com.cnblogs.android.parser.BlogXmlParser;
 import com.cnblogs.android.utility.NetHelper;
 
 /**
- * Blog²Ù×÷Àà
+ * Blogæ“ä½œç±»
  * 
  * @author walkingp
  * 
  */
 public class BlogHelper extends DefaultHandler {
 	/**
-	 * ÀëÏßÏÂÔØ
-	 * 
-	 * @param top
-	 * @return
-	 */
-	@SuppressWarnings("null")
-	public static List<Blog> DownloadOfflineBlogList(int top) {
-		int pageSize = top / Config.BLOG_PAGE_SIZE;
-		int lastNum = pageSize % Config.BLOG_PAGE_SIZE;
+	 * ç¦»çº¿ä¸‹è½½
+     * 
+     * @param top
+     * @return
+     */
+    @SuppressWarnings("null")
+    public static List<Blog> DownloadOfflineBlogList(int top) {
+    	int pageSize = top / Config.BLOG_PAGE_SIZE;
+    	int lastNum = pageSize % Config.BLOG_PAGE_SIZE;
 
-		List<Blog> listBlogs = null;
-		// ÏÂÔØÇ°¼¸Ò³
-		for (int i = 0; i < pageSize; i++) {
-			List<Blog> list = GetBlogList(i);
+    	List<Blog> listBlogs = null;
+    	// ä¸‹è½½å‰å‡ é¡µ
+    	for (int i = 0; i < pageSize; i++) {
+    		List<Blog> list = GetBlogList(i);
+    		
+    		listBlogs.addAll(list);
+    	}
+    	// ä¸‹è½½å‰©ä½™å†…å®¹
+    	List<Blog> list = GetBlogList(pageSize);// ä¸‹è½½æœ€åä¸€é¡µ
+    	for (int i = 0, len = list.size(); i < len; i++) {
+    		listBlogs.addAll(list);
+    		if (list.get(i).GetBlogId() == lastNum) {
+    			break;
+    		}
+    	}
+    	// å†…å®¹
+    	for (int i = 0, len = listBlogs.size(); i < len; i++) {
+    		String content = GetBlogContentByIdWithNet(listBlogs.get(i)
+    				.GetBlogId());
+    		listBlogs.get(i).SetBlogContent(content);
 
-			listBlogs.addAll(list);
-		}
-		// ÏÂÔØÊ£ÓàÄÚÈİ
-		List<Blog> list = GetBlogList(pageSize);// ÏÂÔØ×îºóÒ»Ò³
-		for (int i = 0, len = list.size(); i < len; i++) {
-			listBlogs.addAll(list);
-			if (list.get(i).GetBlogId() == lastNum) {
-				break;
-			}
-		}
-		// ÄÚÈİ
-		for (int i = 0, len = listBlogs.size(); i < len; i++) {
-			String content = GetBlogContentByIdWithNet(listBlogs.get(i)
-					.GetBlogId());
-			listBlogs.get(i).SetBlogContent(content);
+    		listBlogs.get(i).SetIsFullText(true);// æ›´æ–°å…¨æ–‡æ ‡å¿—
+    	}
 
-			listBlogs.get(i).SetIsFullText(true);// ¸üĞÂÈ«ÎÄ±êÖ¾
-		}
+    	return listBlogs;
+    }
+    /**
+     * æ ¹æ®é¡µç è¿”å›Blogå¯¹è±¡é›†åˆ
+     * 
+     * @return pageIndex:é¡µç ï¼Œä»1å¼€å§‹
+     */
+    public static ArrayList<Blog> GetBlogList(int pageIndex) {
+    	int pageSize = Config.BLOG_PAGE_SIZE;
+    	String url = Config.URL_GET_BLOG_LIST.replace("{pageIndex}",
+    			String.valueOf(pageIndex)).replace("{pageSize}",
+    					String.valueOf(pageSize));// æ•°æ®åœ°å€
+    	String dataString = NetHelper.GetContentFromUrl(url);
 
-		return listBlogs;
-	}
-	/**
-	 * ¸ù¾İÒ³Âë·µ»ØBlog¶ÔÏó¼¯ºÏ
-	 * 
-	 * @return pageIndex:Ò³Âë£¬´Ó1¿ªÊ¼
-	 */
-	public static ArrayList<Blog> GetBlogList(int pageIndex) {
-		int pageSize = Config.BLOG_PAGE_SIZE;
-		String url = Config.URL_GET_BLOG_LIST.replace("{pageIndex}",
-				String.valueOf(pageIndex)).replace("{pageSize}",
-				String.valueOf(pageSize));// Êı¾İµØÖ·
-		String dataString = NetHelper.GetContentFromUrl(url);
+    	ArrayList<Blog> list = ParseString(dataString);
 
-		ArrayList<Blog> list = ParseString(dataString);
+    	return list;
+    }
+    /**
+     * è¿”å›48å°æ—¶å†…é˜…è¯»æ’è¡ŒBlogå¯¹è±¡é›†åˆ
+     */
+    public static ArrayList<Blog> Get48HoursTopViewBlogList() {
+    	int size = Config.NUM_48HOURS_TOP_VIEW;
+    	String url = Config.URL_48HOURS_TOP_VIEW_LIST.replace("{size}",
+    			String.valueOf(size));// æ•°æ®åœ°å€
+    	String dataString = NetHelper.GetContentFromUrl(url);
 
-		return list;
-	}
-	/**
-	 * ·µ»Ø48Ğ¡Ê±ÄÚÔÄ¶ÁÅÅĞĞBlog¶ÔÏó¼¯ºÏ
-	 */
-	public static ArrayList<Blog> Get48HoursTopViewBlogList() {
-		int size = Config.NUM_48HOURS_TOP_VIEW;
-		String url = Config.URL_48HOURS_TOP_VIEW_LIST.replace("{size}",
-				String.valueOf(size));// Êı¾İµØÖ·
-		String dataString = NetHelper.GetContentFromUrl(url);
+    	ArrayList<Blog> list = ParseString(dataString);
 
-		ArrayList<Blog> list = ParseString(dataString);
+    	return list;
+    }
+    /**
+     * è¿”å›10å¤©å†…æ¨èæ’è¡ŒBlogå¯¹è±¡é›†åˆ
+     */
+    public static ArrayList<Blog> Get10DaysTopDiggBlogList() {
+    	int size = Config.NUM_TENDAYS_TOP_DIGG;
+    	String url = Config.URL_TENDAYS_TOP_DIGG_LIST.replace("{size}",
+    			String.valueOf(size));// æ•°æ®åœ°å€
+    	String dataString = NetHelper.GetContentFromUrl(url);
 
-		return list;
-	}
-	/**
-	 * ·µ»Ø10ÌìÄÚÍÆ¼öÅÅĞĞBlog¶ÔÏó¼¯ºÏ
-	 */
-	public static ArrayList<Blog> Get10DaysTopDiggBlogList() {
-		int size = Config.NUM_TENDAYS_TOP_DIGG;
-		String url = Config.URL_TENDAYS_TOP_DIGG_LIST.replace("{size}",
-				String.valueOf(size));// Êı¾İµØÖ·
-		String dataString = NetHelper.GetContentFromUrl(url);
+    	ArrayList<Blog> list = ParseString(dataString);
 
-		ArrayList<Blog> list = ParseString(dataString);
+    	return list;
+    }
+    /**
+     * æ ¹æ®åšå®¢ç”¨æˆ·ç¼–å·å’Œé¡µç è¿”å›Blogå¯¹è±¡é›†åˆ
+     * 
+     * @param userId
+     *            :ç”¨æˆ·ç¼–å·
+     * @param pageIndex
+     *            :é¡µç ï¼Œä»1å¼€å§‹
+     * @return
+     */
+    public static ArrayList<Blog> GetAuthorBlogList(String author, int pageIndex) {
+    	int pageSize = Config.BLOG_LIST_BY_AUTHOR_PAGE_SIZE;
+    	String url = Config.URL_GET_BLOG_LIST_BY_AUTHOR
+    			.replace("{author}", author)
+    			.replace("{pageIndex}", String.valueOf(pageIndex))
+    			.replace("{pageSize}", String.valueOf(pageSize));// æ•°æ®åœ°å€
+    	String dataString = NetHelper.GetContentFromUrl(url);
 
-		return list;
-	}
-	/**
-	 * ¸ù¾İ²©¿ÍÓÃ»§±àºÅºÍÒ³Âë·µ»ØBlog¶ÔÏó¼¯ºÏ
-	 * 
-	 * @param userId
-	 *            :ÓÃ»§±àºÅ
-	 * @param pageIndex
-	 *            :Ò³Âë£¬´Ó1¿ªÊ¼
-	 * @return
-	 */
-	public static ArrayList<Blog> GetAuthorBlogList(String author, int pageIndex) {
-		int pageSize = Config.BLOG_LIST_BY_AUTHOR_PAGE_SIZE;
-		String url = Config.URL_GET_BLOG_LIST_BY_AUTHOR
-				.replace("{author}", author)
-				.replace("{pageIndex}", String.valueOf(pageIndex))
-				.replace("{pageSize}", String.valueOf(pageSize));// Êı¾İµØÖ·
-		String dataString = NetHelper.GetContentFromUrl(url);
+    	ArrayList<Blog> list = ParseString(dataString);
 
-		ArrayList<Blog> list = ParseString(dataString);
+    	return list;
+    }
+    /**
+     * å°†å­—ç¬¦ä¸²è½¬æ¢ä¸ºBlogé›†åˆ
+     * 
+     * @return
+     */
+    private static ArrayList<Blog> ParseString(String dataString) {
+    	SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+    	ArrayList<Blog> listBlog = new ArrayList<Blog>();
+    	try {
+    		XMLReader xmlReader = saxParserFactory.newSAXParser()
+                                    .getXMLReader();
+    		BlogListXmlParser handler = new BlogListXmlParser(listBlog);
+    		xmlReader.setContentHandler(handler);
 
-		return list;
-	}
-	/**
-	 * ½«×Ö·û´®×ª»»ÎªBlog¼¯ºÏ
-	 * 
-	 * @return
-	 */
-	private static ArrayList<Blog> ParseString(String dataString) {
-		SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-		ArrayList<Blog> listBlog = new ArrayList<Blog>();
-		try {
-			XMLReader xmlReader = saxParserFactory.newSAXParser()
-					.getXMLReader();
-			BlogListXmlParser handler = new BlogListXmlParser(listBlog);
-			xmlReader.setContentHandler(handler);
+    		xmlReader.parse(new InputSource(new StringReader(dataString)));
+    		listBlog = handler.GetBlogList();
+    	} catch (SAXException e) {
+    		e.printStackTrace();
+    	} catch (ParserConfigurationException e) {
+    		e.printStackTrace();
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	}
 
-			xmlReader.parse(new InputSource(new StringReader(dataString)));
-			listBlog = handler.GetBlogList();
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    	return listBlog;
+    }
+    /**
+     * æ ¹æ®ç¼–å·è·å–åšå®¢å†…å®¹
+     * 
+     * @param blogId
+     * @return
+     */
+    public static String GetBlogContentByIdWithNet(int blogId) {
+    	String blogContent = "";
+    	String url = Config.URL_GET_BLOG_DETAIL.replace("{0}",
+    			String.valueOf(blogId));// ç½‘å€
+    	String xml = NetHelper.GetContentFromUrl(url);
+    	if (xml == "") {
+    		return "";
+    	}
+    	blogContent = ParseBlogString(xml);
+    	
+    	return blogContent;
+    }
+    /**
+     * æ ¹æ®ç¼–å·è·å–åšå®¢å†…å®¹(å…ˆå–æœ¬åœ°ï¼Œå†å–ç½‘ç»œ)
+     * 
+     * @param blogId
+     * @return
+     */
+    public static String GetBlogById(int blogId, Context context) {
+    	String blogContent = "";
+    	// ä¼˜å…ˆè€ƒè™‘æœ¬åœ°æ•°æ®
+    	BlogDalHelper helper = new BlogDalHelper(context);
+    	Blog entity = helper.GetBlogEntity(blogId);
+    	if (null == entity || entity.GetBlogContent().equals("")) {
+    		blogContent = GetBlogContentByIdWithNet(blogId);
+    		/*String _blogContent=ImageCacher.FormatLocalHtmlWithImg(ImageCacher.EnumImageType.Blog, blogContent);
+                    if (Config.IS_SYNCH2DB_AFTER_READ) {
+                            helper.SynchronyContent2DB(blogId, _blogContent);// åŒæ­¥è‡³æ•°æ®åº“
+                    }*/
+    	} else {
+    		blogContent = entity.GetBlogContent();
+    	}
 
-		return listBlog;
-	}
-	/**
-	 * ¸ù¾İ±àºÅ»ñÈ¡²©¿ÍÄÚÈİ
-	 * 
-	 * @param blogId
-	 * @return
-	 */
-	public static String GetBlogContentByIdWithNet(int blogId) {
-		String blogContent = "";
-		String url = Config.URL_GET_BLOG_DETAIL.replace("{0}",
-				String.valueOf(blogId));// ÍøÖ·
-		String xml = NetHelper.GetContentFromUrl(url);
-		if (xml == "") {
-			return "";
-		}
-		blogContent = ParseBlogString(xml);
+    	return blogContent;
+    }
+    /**
+     * å°†å­—ç¬¦ä¸²è½¬æ¢ä¸ºBlogé›†åˆ
+     * 
+     * @return
+     */
+    private static String ParseBlogString(String dataString) {
+    	SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+    	String blogContent = "";
+    	try {
+    		XMLReader xmlReader = saxParserFactory.newSAXParser()
+    				.getXMLReader();
+    		BlogXmlParser handler = new BlogXmlParser(blogContent);
+    		xmlReader.setContentHandler(handler);
 
-		return blogContent;
-	}
-	/**
-	 * ¸ù¾İ±àºÅ»ñÈ¡²©¿ÍÄÚÈİ(ÏÈÈ¡±¾µØ£¬ÔÙÈ¡ÍøÂç)
-	 * 
-	 * @param blogId
-	 * @return
-	 */
-	public static String GetBlogById(int blogId, Context context) {
-		String blogContent = "";
-		// ÓÅÏÈ¿¼ÂÇ±¾µØÊı¾İ
-		BlogDalHelper helper = new BlogDalHelper(context);
-		Blog entity = helper.GetBlogEntity(blogId);
-		if (null == entity || entity.GetBlogContent().equals("")) {
-			blogContent = GetBlogContentByIdWithNet(blogId);
-			/*String _blogContent=ImageCacher.FormatLocalHtmlWithImg(ImageCacher.EnumImageType.Blog, blogContent);
-			if (Config.IS_SYNCH2DB_AFTER_READ) {
-				helper.SynchronyContent2DB(blogId, _blogContent);// Í¬²½ÖÁÊı¾İ¿â
-			}*/
-		} else {
-			blogContent = entity.GetBlogContent();
-		}
+    		xmlReader.parse(new InputSource(new StringReader(dataString)));
+    		blogContent = handler.GetBlogContent();
+    	} catch (SAXException e) {
+    		e.printStackTrace();
+    	} catch (ParserConfigurationException e) {
+    		e.printStackTrace();
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	}
 
-		return blogContent;
-	}
-	/**
-	 * ½«×Ö·û´®×ª»»ÎªBlog¼¯ºÏ
-	 * 
-	 * @return
-	 */
-	private static String ParseBlogString(String dataString) {
-		SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-		String blogContent = "";
-		try {
-			XMLReader xmlReader = saxParserFactory.newSAXParser()
-					.getXMLReader();
-			BlogXmlParser handler = new BlogXmlParser(blogContent);
-			xmlReader.setContentHandler(handler);
-
-			xmlReader.parse(new InputSource(new StringReader(dataString)));
-			blogContent = handler.GetBlogContent();
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return blogContent;
-	}
+    	return blogContent;
+    }
 }

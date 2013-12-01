@@ -1,70 +1,70 @@
 package com.cnblogs.android.core;
 
 /**
- * ÅäÖÃÄÚĞÅÏ¢
+ * é…ç½®å†…ä¿¡æ¯
  * 
  * @author walkingp
  * 
  */
 public class Config {
-	public static final String TEMP_IMAGES_LOCATION = "/sdcard/cnblogs/images/";// ÁÙÊ±Í¼Æ¬ÎÄ¼ş
+	public static final String TEMP_IMAGES_LOCATION = "/sdcard/cnblogs/images/";// ä¸´æ—¶å›¾ç‰‡æ–‡ä»¶
 
-	public static final String CNBLOGS_URL = "http://www.cnblogs.com/";// ²©¿ÍÔ°ÓòÃû
+	public static final String CNBLOGS_URL = "http://www.cnblogs.com/";// åšå®¢å›­åŸŸå
 	
-	public static final String DB_FILE_NAME="cnblogs_db";//Êı¾İ¿âÎÄ¼şÃû
-	public static final String APP_PACKAGE_NAME="com.cnblogs.android";//³ÌĞò°üÃû
+	public static final String DB_FILE_NAME="cnblogs_db";//æ•°æ®åº“æ–‡ä»¶å
+	public static final String APP_PACKAGE_NAME="com.cnblogs.android";//ç¨‹åºåŒ…å
 
-	public static final String ENCODE_TYPE = "utf-8";// È«¾Ö±àÂë·½Ê½
+	public static final String ENCODE_TYPE = "utf-8";// å…¨å±€ç¼–ç æ–¹å¼
 
 	public static final String APP_UPDATE_URL = "http://android.walkingp.com/api/update_app.ashx?alias={alias}&action=update";
 
-	public static final int BLOG_PAGE_SIZE = 10;// ²©¿Í·ÖÒ³ÌõÊı
-	public static final String URL_GET_BLOG_LIST = "http://wcf.open.cnblogs.com/blog/sitehome/paged/{pageIndex}/{pageSize}";// ¸ù¾İÒ³Âë£¨´Ó1¿ªÊ¼)
-	public static final String URL_GET_BLOG_DETAIL = "http://wcf.open.cnblogs.com/blog/post/body/{0}";// ¸ù¾İ±àºÅÈ¡ÄÚÈİ
+	public static final int BLOG_PAGE_SIZE = 10;// åšå®¢åˆ†é¡µæ¡æ•°
+	public static final String URL_GET_BLOG_LIST = "http://wcf.open.cnblogs.com/blog/sitehome/paged/{pageIndex}/{pageSize}";// æ ¹æ®é¡µç ï¼ˆä»1å¼€å§‹)
+	public static final String URL_GET_BLOG_DETAIL = "http://wcf.open.cnblogs.com/blog/post/body/{0}";// æ ¹æ®ç¼–å·å–å†…å®¹
 
-	public static final String URL_48HOURS_TOP_VIEW_LIST="http://wcf.open.cnblogs.com/blog/48HoursTopViewPosts/{size}";//48Ğ¡Ê±ÔÄ¶ÁÅÅĞĞ
-	public static final int NUM_48HOURS_TOP_VIEW=20;//48Ğ¡Ê±ÔÄ¶ÁÅÅĞĞÊı¾İÌõÊı
-	public static final String URL_TENDAYS_TOP_DIGG_LIST="http://wcf.open.cnblogs.com/blog/TenDaysTopDiggPosts/{size}";//10ÌìÄÚÍÆ¼öÅÅĞĞ
-	public static final int NUM_TENDAYS_TOP_DIGG=20;//10ÌìÄÚÍÆ¼öÅÅĞĞÊı¾İÌõÊı
+	public static final String URL_48HOURS_TOP_VIEW_LIST="http://wcf.open.cnblogs.com/blog/48HoursTopViewPosts/{size}";//48å°æ—¶é˜…è¯»æ’è¡Œ
+	public static final int NUM_48HOURS_TOP_VIEW=20;//48å°æ—¶é˜…è¯»æ’è¡Œæ•°æ®æ¡æ•°
+	public static final String URL_TENDAYS_TOP_DIGG_LIST="http://wcf.open.cnblogs.com/blog/TenDaysTopDiggPosts/{size}";////10å¤©å†…æ¨èæ’è¡Œ
+	public static final int NUM_TENDAYS_TOP_DIGG=20;//10å¤©å†…æ¨èæ’è¡Œæ•°æ®æ¡æ•°
 	
 	
-	public static final int NEWS_PAGE_SIZE = 10;// ĞÂÎÅ·ÖÒ³ÌõÊı
-	public static final String URL_GET_NEWS_LIST = "http://wcf.open.cnblogs.com/news/recent/paged/{pageIndex}/{pageSize}";// ¸ù¾İÒ³Âë£¨´Ó1¿ªÊ¼)
-	public static final String URL_GET_NEWS_DETAIL = "http://wcf.open.cnblogs.com/news/item/{0}";// ¸ù¾İ±àºÅÈ¡ÄÚÈİ
+	public static final int NEWS_PAGE_SIZE = 10;// æ–°é—»åˆ†é¡µæ¡æ•°
+	public static final String URL_GET_NEWS_LIST = "http://wcf.open.cnblogs.com/news/recent/paged/{pageIndex}/{pageSize}";// æ ¹æ®é¡µç ï¼ˆä»1å¼€å§‹)
+	public static final String URL_GET_NEWS_DETAIL = "http://wcf.open.cnblogs.com/news/item/{0}";// æ ¹æ®ç¼–å·å–å†…å®¹
 	
-	public static final String URL_RECOMMEND_NEWS_LIST="http://wcf.open.cnblogs.com/news/recommend/paged/{pageIndex}/{pageSize}";//ÍÆ¼öĞÂÎÅ
+	public static final String URL_RECOMMEND_NEWS_LIST="http://wcf.open.cnblogs.com/news/recommend/paged/{pageIndex}/{pageSize}";//æ¨èæ–°é—»
 	
-	public static final int COMMENT_PAGE_SIZE = 10;// ÆÀÂÛ·ÖÒ³ÌõÊı
+	public static final int COMMENT_PAGE_SIZE = 10;// è¯„è®ºåˆ†é¡µæ¡æ•°
 	
-	public static final String URL_NEWS_GET_COMMENT_LIST = "http://wcf.open.cnblogs.com/news/item/{contentId}/comments/{pageIndex}/{pageSize}";// µÃµ½ĞÂÎÅÆÀÂÛ·ÖÒ³
-	public static final String URL_BLOG_GET_COMMENT_LIST = "http://wcf.open.cnblogs.com/blog/post/{contentId}/comments/{pageIndex}/{pageSize}";// µÃµ½²©¿ÍÆÀÂÛ·ÖÒ³
+	public static final String URL_NEWS_GET_COMMENT_LIST = "http://wcf.open.cnblogs.com/news/item/{contentId}/comments/{pageIndex}/{pageSize}";// å¾—åˆ°æ–°é—»è¯„è®ºåˆ†é¡µ
+	public static final String URL_BLOG_GET_COMMENT_LIST = "http://wcf.open.cnblogs.com/blog/post/{contentId}/comments/{pageIndex}/{pageSize}";// å¾—åˆ°åšå®¢è¯„è®ºåˆ†é¡µ
 	
-	public static final String URL_USER_SEARCH_AUTHOR_LIST = "http://wcf.open.cnblogs.com/blog/bloggers/search?t={username}";// ÓÃ»§ËÑË÷
+	public static final String URL_USER_SEARCH_AUTHOR_LIST = "http://wcf.open.cnblogs.com/blog/bloggers/search?t={username}";// ç”¨æˆ·æœç´¢
 	
-	public static final int NUM_RECOMMEND_USER=10;//ÍÆ¼ö²©¿Í·ÖÒ³ÌõÊı
-	public static final String URL_RECOMMEND_USER_LIST="http://wcf.open.cnblogs.com/blog/bloggers/recommend/{pageIndex}/{pageSize}";//ÍÆ¼ö²©¿ÍÅÅÃû
+	public static final int NUM_RECOMMEND_USER=10;//æ¨èåšå®¢åˆ†é¡µæ¡æ•°
+	public static final String URL_RECOMMEND_USER_LIST="http://wcf.open.cnblogs.com/blog/bloggers/recommend/{pageIndex}/{pageSize}";//æ¨èåšå®¢æ’å
 	
-	public static final int BLOG_LIST_BY_AUTHOR_PAGE_SIZE = 10;// ²©Ö÷ÎÄÕÂÁĞ±í·ÖÒ³
-	public static final String URL_GET_BLOG_LIST_BY_AUTHOR = "http://wcf.open.cnblogs.com/blog/u/{author}/posts/{pageIndex}/{pageSize}";// ²©Ö÷ÎÄÕÂÁĞ±í
+	public static final int BLOG_LIST_BY_AUTHOR_PAGE_SIZE = 10;// åšä¸»æ–‡ç« åˆ—è¡¨åˆ†é¡µ
+	public static final String URL_GET_BLOG_LIST_BY_AUTHOR = "http://wcf.open.cnblogs.com/blog/u/{author}/posts/{pageIndex}/{pageSize}";// åšä¸»æ–‡ç« åˆ—è¡¨
 
-	public static final String LOCAL_PATH = "file:///android_asset/";// ±¾µØhtml
-	// ĞÂÀËÎ¢²©api
+	public static final String LOCAL_PATH = "file:///android_asset/";// æœ¬åœ°html
+	// æ–°æµªå¾®åšapi
 	public static final String consumerKey = "4216444778";
 	public static final String consumerSecret = "1f6960b6dfe01c1ab71c417d29b439a8";
 	public static final String callBackUrl = "myapp://AboutActivity";
 
-	public static final String AuthorWeiboUserId = "1240794802";// ×Ô¼ºµÄĞÂÀËÎ¢²©ÓÃ»§±àºÅ
-	public static final String AuthorWeiboUserName = "walkingp";// ×÷ÕßµÄĞÂÀËÎ¢²©ÓÃ»§êÇ³Æ
+	public static final String AuthorWeiboUserId = "1240794802";// è‡ªå·±çš„æ–°æµªå¾®åšç”¨æˆ·ç¼–å·
+	public static final String AuthorWeiboUserName = "walkingp";// ä½œè€…çš„æ–°æµªå¾®åšç”¨æˆ·æ˜µç§°
 
-	public static final String DB_BLOG_TABLE = "BlogList";// ²©¿ÍÊı¾İ±íÃû
-	public static final String DB_NEWS_TABLE = "NewsList";// ĞÂÎÅÊı¾İ±íÃû
-	public static final String DB_COMMENT_TABLE = "CommentList";// ÆÀÂÛÊı¾İ±íÃû
-	public static final String DB_RSSLIST_TABLE = "RssList";// ¶©ÔÄ²©¿ÍÊı¾İ±íÃû
-	public static final String DB_RSSITEM_TABLE = "RssItem";// ¶©ÔÄÎÄÕÂÊı¾İ±íÃû
-	public static final String DB_FAV_TABLE="FavList";//ÊÕ²Ø±í
+	public static final String DB_BLOG_TABLE = "BlogList";// åšå®¢æ•°æ®è¡¨å
+	public static final String DB_NEWS_TABLE = "NewsList";// æ–°é—»æ•°æ®è¡¨å
+	public static final String DB_COMMENT_TABLE = "CommentList";// è¯„è®ºæ•°æ®è¡¨å
+	public static final String DB_RSSLIST_TABLE = "RssList";// è®¢é˜…åšå®¢æ•°æ®è¡¨å
+	public static final String DB_RSSITEM_TABLE = "RssItem";// è®¢é˜…æ–‡ç« æ•°æ®è¡¨å
+	public static final String DB_FAV_TABLE="FavList";//æ”¶è—è¡¨
 
-	public static final boolean IS_SYNCH2DB_AFTER_READ = true;// ÔÄ¶ÁÊ±ÊÇ·ñÍ¬²½µ½Êı¾İ¿â
+	public static final boolean IS_SYNCH2DB_AFTER_READ = true;// é˜…è¯»æ—¶æ˜¯å¦åŒæ­¥åˆ°æ•°æ®åº“
 
-	public static final String URL_RSS_CATE_URL = "http://m.walkingp.com/api/xml/cnblogs_rsscate.xml";// ±¸Ñ¡RSSÎÄ¼şµØÖ·
-	public static final String URL_RSS_LIST_URL = "http://m.walkingp.com/api/xml/cnblogs_rss_item_{0}.xml";// ±¸Ñ¡RSSÎÄ¼şµØÖ·
+	public static final String URL_RSS_CATE_URL = "http://m.walkingp.com/api/xml/cnblogs_rsscate.xml";// å¤‡é€‰RSSæ–‡ä»¶åœ°å€
+	public static final String URL_RSS_LIST_URL = "http://m.walkingp.com/api/xml/cnblogs_rss_item_{0}.xml";// å¤‡é€‰RSSæ–‡ä»¶åœ°å€
 }

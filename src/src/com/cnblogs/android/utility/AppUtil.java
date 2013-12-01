@@ -31,336 +31,333 @@ import android.util.Log;
 
 public class AppUtil {
 	/**
-	 * String×ª»»ÎªÊ±¼ä
-	 * @param str
-	 * @return
-	 */
-	public static Date ParseDate(String str){
-		SimpleDateFormat dateFormat =new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
-		Date addTime = null;
-		try {
-			addTime = dateFormat.parse(str);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		return addTime;
-	}
-	/**
-	 * ½«ÈÕÆÚ×ª»»Îª×Ö·û´®
-	 * @param date
-	 * @return
-	 */
-	public static String ParseDateToString(Date date){
-		return ParseDateToString(date,"yyyy-MM-dd HH:mm:ss");
-	}
-	/**
-	 * ½«ÈÕÆÚ×ª»»Îª×Ö·û´®£¨ÖØÔØ£©
-	 * @param date
-	 * @param format:Ê±¼ä¸ñÊ½£¬±ØĞë·ûºÏyyyy-MM-dd hh:mm:ss
-	 * @return
-	 */
-	public static String ParseDateToString(Date date,String format){
-		SimpleDateFormat dateFormat =new SimpleDateFormat(format);
-			
-		return dateFormat.format(date);
-	}
-	/**
-	 * ½«UMTÊ±¼ä×ª»»Îª±¾µØÊ±¼ä
-	 * @param str
-	 * @return
-	 * @throws ParseException 
-	 */
-	public static Date ParseUTCDate(String str){
-		//¸ñÊ½»¯2012-03-04T23:42:00+08:00
-		SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ",Locale.CHINA);
-		try {
-			Date date = formatter.parse(str);
-			
-			return date;
-		} catch (ParseException e) {
-			//¸ñÊ½»¯Sat, 17 Mar 2012 11:37:13 +0000
-			//Sat, 17 Mar 2012 22:13:41 +0800
-			try{
-				SimpleDateFormat formatter2=new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z",Locale.CHINA);
-				Date date2 = formatter2.parse(str);
-				
-				return date2;
-			}catch(ParseException ex){
-				return null;
-			}
-		}		
-	}
-	/**
-	 * »ñÈ¡ÍøÂçÍ¼Æ¬È¡Drawable
-	 * @param url
-	 * @return
-	 */
-	public static Drawable GetUrlDrawable(String url){
-		try{			
-			URL aryURI=new URL(url);
-			URLConnection conn=aryURI.openConnection();
-			InputStream is=conn.getInputStream();
-			Bitmap bmp=BitmapFactory.decodeStream(is);
-			return new BitmapDrawable(bmp);
-		}catch(Exception e){
-			Log.e("ERROR", "urlImage2Drawable·½·¨·¢ÉúÒì³££¬imageUrl£º" + url, e);
-			return null;
-		}
-	}
-	/**
-	 * ´ÓÍøÂçµØÖ··µ»ØBitmap
-	 * @param imageUrl
-	 * @return
-	 */
-	public static Bitmap GetBitmap(String imageUrl){   
-	    Bitmap mBitmap = null;   
-	    try {   
-	      URL url = new URL(imageUrl);   
-	      URLConnection conn=url.openConnection();
-	      InputStream is = conn.getInputStream();   
-	      mBitmap = BitmapFactory.decodeStream(is);   
-	    } catch (MalformedURLException e) {   
-	      e.printStackTrace();   
-	    } catch (IOException e) {   
-	      e.printStackTrace();   
-	    }   
-	    return mBitmap;   
-	}
-	/**
-	 * Drawable×ª»»ÎªBitmap
-	 * @param drawable
-	 * @return
-	 */
-	public static Bitmap DrawableToBitmap(Drawable drawable) {  
-	    try {  
-	        Bitmap bitmap = Bitmap  
-	                .createBitmap(  
-	                        drawable.getIntrinsicWidth(),  
-	                        drawable.getIntrinsicHeight(),  
-	                        drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888  
-	                                : Bitmap.Config.RGB_565);  
-	        Canvas canvas = new Canvas(bitmap);  
-	        // canvas.setBitmap(bitmap);  
-	        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable  
-	                .getIntrinsicHeight());  
-	        drawable.draw(canvas);  
-	  
-	        return bitmap;  
-	    } catch (OutOfMemoryError e) {  
-	        e.printStackTrace();  
-	        return null;  
-	    }  
-	} 
-	/**
-	 * ÍË³ö³ÌĞò
-	 * @param context
-	 */
+     * Stringè½¬æ¢ä¸ºæ—¶é—´
+     * @param str
+     * @return
+     */
+    public static Date ParseDate(String str){
+    	SimpleDateFormat dateFormat =new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
+    	Date addTime = null;
+    	try {
+    		addTime = dateFormat.parse(str);
+    	} catch (ParseException e) {
+    		e.printStackTrace();
+    	}
+    	return addTime;
+    }
+    /**
+     * å°†æ—¥æœŸè½¬æ¢ä¸ºå­—ç¬¦ä¸²
+     * @param date
+     * @return
+     */
+    public static String ParseDateToString(Date date){
+    	return ParseDateToString(date,"yyyy-MM-dd HH:mm:ss");
+    }
+    /**
+     * å°†æ—¥æœŸè½¬æ¢ä¸ºå­—ç¬¦ä¸²ï¼ˆé‡è½½ï¼‰
+     * @param date
+     * @param format:æ—¶é—´æ ¼å¼ï¼Œå¿…é¡»ç¬¦åˆyyyy-MM-dd hh:mm:ss
+     * @return
+     */
+    public static String ParseDateToString(Date date,String format){
+    	SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+                    
+    	return dateFormat.format(date);
+    }
+    /**
+     * å°†UMTæ—¶é—´è½¬æ¢ä¸ºæœ¬åœ°æ—¶é—´
+     * @param str
+     * @return
+     * @throws ParseException 
+     */
+    public static Date ParseUTCDate(String str){
+    	//æ ¼å¼åŒ–2012-03-04T23:42:00+08:00
+    	SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ",Locale.CHINA);
+    	try {
+    		Date date = formatter.parse(str);
+    		return date;
+    	} catch (ParseException e) {
+    		//æ ¼å¼åŒ–Sat, 17 Mar 2012 11:37:13 +0000
+    		//Sat, 17 Mar 2012 22:13:41 +0800
+    		try{
+    			SimpleDateFormat formatter2=new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z",Locale.CHINA);
+    			Date date2 = formatter2.parse(str);
+    			return date2;
+    		}catch(ParseException ex){
+    			return null;
+    		}
+    	}                
+    }
+    /**
+     * è·å–ç½‘ç»œå›¾ç‰‡å–Drawable
+     * @param url
+     * @return
+     */
+    public static Drawable GetUrlDrawable(String url){
+    	try{                        
+    		URL aryURI=new URL(url);
+    		URLConnection conn=aryURI.openConnection();
+    		InputStream is=conn.getInputStream();
+    		Bitmap bmp=BitmapFactory.decodeStream(is);
+    		return new BitmapDrawable(bmp);
+    	}catch(Exception e){
+    		Log.e("ERROR", "urlImage2Drawableæ–¹æ³•å‘ç”Ÿå¼‚å¸¸ï¼ŒimageUrlï¼š" + url, e);
+    		return null;
+    	}
+    }
+    /**
+     * ä»ç½‘ç»œåœ°å€è¿”å›Bitmap
+     * @param imageUrl
+     * @return
+     */
+    public static Bitmap GetBitmap(String imageUrl){   
+    	Bitmap mBitmap = null;   
+        try {   
+        	URL url = new URL(imageUrl);   
+        	URLConnection conn=url.openConnection();
+        	InputStream is = conn.getInputStream();   
+        	mBitmap = BitmapFactory.decodeStream(is);   
+        } catch (MalformedURLException e) {   
+        	e.printStackTrace();   
+        } catch (IOException e) {   
+        	e.printStackTrace();   
+        }   
+        return mBitmap;   
+    }
+    /**
+     * Drawableè½¬æ¢ä¸ºBitmap
+     * @param drawable
+     * @return
+     */
+    public static Bitmap DrawableToBitmap(Drawable drawable) {  
+    	try {  
+    		Bitmap bitmap = Bitmap  
+    				.createBitmap(  
+    						drawable.getIntrinsicWidth(),  
+                            drawable.getIntrinsicHeight(),  
+                            drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888  
+                            		: Bitmap.Config.RGB_565);  
+            Canvas canvas = new Canvas(bitmap);  
+            // canvas.setBitmap(bitmap);  
+            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable  
+            		.getIntrinsicHeight());  
+            drawable.draw(canvas);  
+      
+            return bitmap;  
+        } catch (OutOfMemoryError e) {  
+        	e.printStackTrace();  
+            return null;  
+        }  
+    } 
+    /**
+     * é€€å‡ºç¨‹åº
+     * @param context
+     */
     public static void QuitHintDialog(final Context context){
     	new AlertDialog.Builder(context)
-    	.setMessage(R.string.sys_ask_quit_app)
-    	.setTitle(R.string.com_dialog_title_quit)
-    	.setIcon(R.drawable.icon)
-    	.setPositiveButton(R.string.com_btn_ok,new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				try{
-					((Activity)context).finish();
-				}catch(Exception e){
-					Log.e("close","+++++++++++++³ö´í+++++++++");
-				}
-			}
-		})
-		.setNegativeButton(R.string.com_btn_cancel, new DialogInterface.OnClickListener() {				
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-			}
-		}).show();
+        .setMessage(R.string.sys_ask_quit_app)
+        .setTitle(R.string.com_dialog_title_quit)
+        .setIcon(R.drawable.icon)
+        .setPositiveButton(R.string.com_btn_ok,new DialogInterface.OnClickListener() {
+        	@Override
+        	public void onClick(DialogInterface dialog, int which) {
+        		try{
+        			((Activity)context).finish();
+        		}catch(Exception e){
+        			Log.e("close","+++++++++++++å‡ºé”™+++++++++");
+        		}
+        	}
+        })
+        .setNegativeButton(R.string.com_btn_cancel, new DialogInterface.OnClickListener() {                                
+        	@Override
+        	public void onClick(DialogInterface dialog, int which) {
+        	}
+        }).show();
     }
-	/** 
-	* »ñµÃÈí¼ş°æ±¾ºÅ
-	*/
-	public static int GetVersionCode(final Context con) {
-		int version = 1;
-		PackageManager packageManager = con.getPackageManager();
-		try {
-			PackageInfo packageInfo = packageManager.getPackageInfo(con.getPackageName(), 0);
-			version = packageInfo.versionCode;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return version;
-	}
-	/**
-	 * »ñµÃÈí¼şÃû³Æ
-	 * @param context
-	 * @return
-	 */
-	public static String GetVersionName(final Context context){
-		String versionName = "1.0.0";
-		PackageManager packageManager = context.getPackageManager();
-		try {
-			PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
-			versionName = packageInfo.versionName;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return versionName;
-	}
-	/**
-	 * ¹ıÂËhtmlÌØÊâ×Ö·û
-	 * @param str
-	 * @return
-	 */
-	public static String HtmlToText(String str){
-		str=str.replace("<br />", "\n");
-		str=str.replace("<br/>", "\n");
-		str=str.replace("&nbsp;&nbsp;", "\t");
-		str=str.replace("&nbsp;", " ");
-		str=str.replace("&#39;","\\");
-		str=str.replace("&quot;", "\\");
-		str=str.replace("&gt;",">");
-		str=str.replace("&lt;","<");
-		str=str.replace("&amp;", "&");
-		
-		return str;
-	}
-	/**
-	 * ½«Ê±¼ä×ª»»ÎªÖĞÎÄ
-	 * @param datetime
-	 * @return
-	 */
-	public static String DateToChineseString(Date datetime){
-		Date today=new Date();
-		long   seconds   =   (today.getTime()-   datetime.getTime())/1000; 
+    /** 
+    * è·å¾—è½¯ä»¶ç‰ˆæœ¬å·
+    */
+    public static int GetVersionCode(final Context con) {
+    	int version = 1;
+    	PackageManager packageManager = con.getPackageManager();
+    	try {
+    		PackageInfo packageInfo = packageManager.getPackageInfo(con.getPackageName(), 0);
+    		version = packageInfo.versionCode;
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return version;
+    }
+    /**
+     * è·å¾—è½¯ä»¶åç§°
+     * @param context
+     * @return
+     */
+    public static String GetVersionName(final Context context){
+    	String versionName = "1.0.0";
+    	PackageManager packageManager = context.getPackageManager();
+    	try {
+    		PackageInfo packageInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+    		versionName = packageInfo.versionName;
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return versionName;
+    }
+    /**
+     * è¿‡æ»¤htmlç‰¹æ®Šå­—ç¬¦
+     * @param str
+     * @return
+     */
+    public static String HtmlToText(String str){
+    	str=str.replace("<br />", "\n");
+    	str=str.replace("<br/>", "\n");
+    	str=str.replace("&nbsp;&nbsp;", "\t");
+    	str=str.replace("&nbsp;", " ");
+    	str=str.replace("&#39;","\\");
+    	str=str.replace("&quot;", "\\");
+    	str=str.replace("&gt;",">");
+    	str=str.replace("&lt;","<");
+    	str=str.replace("&amp;", "&");
+            
+    	return str;
+    }
+    /**
+     * å°†æ—¶é—´è½¬æ¢ä¸ºä¸­æ–‡
+     * @param datetime
+     * @return
+     */
+    public static String DateToChineseString(Date datetime){
+    	Date today=new Date();
+    	long   seconds   =   (today.getTime()-   datetime.getTime())/1000; 
 
-		long year=	seconds/(24*60*60*30*12);// Ïà²îÄêÊı
-		long   month  =   seconds/(24*60*60*30);//Ïà²îÔÂÊı
-		long   date   =   seconds/(24*60*60);     //Ïà²îµÄÌìÊı 
-		long   hour   =   (seconds-date*24*60*60)/(60*60);//Ïà²îµÄĞ¡Ê±Êı 
-		long   minute   =   (seconds-date*24*60*60-hour*60*60)/(60);//Ïà²îµÄ·ÖÖÓÊı 
-		long   second   =   (seconds-date*24*60*60-hour*60*60-minute*60);//Ïà²îµÄÃëÊı 
-		
-		if(year>0){
-			return year + "ÄêÇ°";
-		}
-		if(month>0){
-			return month + "ÔÂÇ°";
-		}
-		if(date>0){
-			return date + "ÌìÇ°";
-		}
-		if(hour>0){
-			return hour + "Ğ¡Ê±Ç°";
-		}
-		if(minute>0){
-			return minute + "·ÖÖÓÇ°";
-		}
-		if(second>0){
-			return second + "ÃëÇ°";
-		}
-		return "Î´ÖªÊ±¼ä";
-	}
-	/**
-	 * ÅĞ¶ÏÊÇ·ñcnblogsÄÚ²¿Á´½Ó£¬·µ»Ø0Ôò´ú±í²»ÊÇ
-	 * 	¸ñÊ½£ºhttp://www.cnblogs.com/walkingp/archive/2011/05/27/2059420.html
-	 * @param url
-	 * @return
-	 */
-	public static int GetCnblogsBlogLinkId(String url){
-		Pattern pattern=Pattern.compile("http://www.cnblogs.com/(.+?)/archive/(\\d+?)/(\\d+?)/(\\d+?)/(\\d+?).html");
-		Matcher m=pattern.matcher(url);
-		int id=0;
-		while(m.find()){
-			id=Integer.parseInt(m.group(5));
-		}
-		return id;
-	}
-	/**
-	 * ¸ñÊ½»¯ÄÚÈİ£¨ÓÃÓÚ²©¿ÍÄÚÈİ¼°ĞÂÎÅÄÚÈİ£©
-	 */	
-	public static String FormatContent(Context context, String html){
-		//ÊÇ·ñÍ¼Æ¬Ä£Ê½
-		boolean isImgMode=SettingActivity.IsPicReadMode(context);
-		
-		if(!isImgMode){
-			html=AppUtil.ReplaceImgTag(html);
-			html=AppUtil.ReplaceVideoTag(html);
-		}
-		
-		return html;
-	}
-	static final Pattern patternHtml=Pattern.compile("<.+?>");
-	/**
-	 * ÒÆ³ıhtml±ê¼Ç
-	 * @param html
-	 * @return
-	 */
-	public static String RemoveHtmlTag(String html){
-		Matcher m=patternHtml.matcher(html);
-		while(m.find()){
-			html= m.replaceAll("");
-		}
-		return html;
-	}
-	/**
-	 * ÅĞ¶ÏÊÇ·ñº¬ÓĞÍ¼Æ¬ÄÚÈİ
-	 * @param html
-	 * @return
-	 */
-	static final Pattern patternImg=Pattern.compile("<img(.+?)src=\"(.+?)\"(.+?)(onload=\"(.+?)\")?([^\"]+?)>");
-	public static boolean IsContainImg(String html){
-		Matcher m=patternImg.matcher(html);
-		while(m.find()){
-			return true;
-		}
-		return false;
-	}
-	/**
-	 * ÒÆ³ıÍ¼Æ¬±ê¼Ç
-	 * @param html
-	 * @return
-	 */
-	public static String RemoveImgTag(String html){
-		Matcher m=patternImg.matcher(html);
-		while(m.find()){
-			html= m.replaceAll("");
-		}
-		return html;
-	}
-	/**
-	 * Ìæ»»Í¼Æ¬±ê¼Ç
-	 * @param html
-	 * @return
-	 */
-	static final Pattern patternImgSrc=Pattern.compile("<img(.+?)src=\"(.+?)\"(.+?)>");
-	public static String ReplaceImgTag(String html){
-		Matcher m=patternImgSrc.matcher(html);
-		while(m.find()){
-			html= m.replaceAll("¡¾<a href=\"$2\">µã»÷²é¿´Í¼Æ¬</a>¡¿");
-		}
-		return html;
-	}
-	/**
-	 * ÒÆ³ıÊÓÆµ±ê¼Ç
-	 */
-	static final Pattern patternVideo=Pattern.compile("<object(.+?)>(.*?)<param name=\"src\" value=\"(.+?)\"(.+?)>(.+?)</object>");
-	public static String RemoveVideoTag(String html){
-		Matcher m=patternVideo.matcher(html);
-		while(m.find()){
-			html= m.replaceAll("");
-		}
-		return html;
-	}
-	/**
-	 * Ìæ»»ÊÓÆµ±ê¼Ç
-	 */
-	static final Pattern patternVideoSrc=Pattern.compile("<object(.+?)>(.*?)<param name=\"src\" value=\"(.+?)\"(.+?)>(.+?)</object>");
-	public static String ReplaceVideoTag(String html){
-		Matcher m=patternVideoSrc.matcher(html);
-		while(m.find()){
-			html= m.replaceAll("¡¾<a href=\"$3\">µã»÷²é¿´ÊÓÆµ</a>¡¿");
-		}
-		return html;
-	}
+    	long year=        seconds/(24*60*60*30*12);// ç›¸å·®å¹´æ•°
+    	long   month  =   seconds/(24*60*60*30);//ç›¸å·®æœˆæ•°
+    	long   date   =   seconds/(24*60*60);     //ç›¸å·®çš„å¤©æ•° 
+    	long   hour   =   (seconds-date*24*60*60)/(60*60);//ç›¸å·®çš„å°æ—¶æ•° 
+    	long   minute   =   (seconds-date*24*60*60-hour*60*60)/(60);//ç›¸å·®çš„åˆ†é’Ÿæ•° 
+    	long   second   =   (seconds-date*24*60*60-hour*60*60-minute*60);//ç›¸å·®çš„ç§’æ•° 
+            
+    	if(year>0){
+    		return year + "å¹´å‰";
+    	}
+    	if(month>0){
+    		return month + "æœˆå‰";
+    	}
+    	if(date>0){
+    		return date + "å¤©å‰";
+    	}
+    	if(hour>0){
+    		return hour + "å°æ—¶å‰";
+    	}
+    	if(minute>0){
+    		return minute + "åˆ†é’Ÿå‰";
+    	}
+    	if(second>0){
+    		return second + "ç§’å‰";
+    	}
+    	return "æœªçŸ¥æ—¶é—´";
+    }
+    /**
+     * åˆ¤æ–­æ˜¯å¦cnblogså†…éƒ¨é“¾æ¥ï¼Œè¿”å›0åˆ™ä»£è¡¨ä¸æ˜¯
+     *         æ ¼å¼ï¼šhttp://www.cnblogs.com/walkingp/archive/2011/05/27/2059420.html
+     * @param url
+     * @return
+     */
+    public static int GetCnblogsBlogLinkId(String url){
+    	Pattern pattern=Pattern.compile("http://www.cnblogs.com/(.+?)/archive/(\\d+?)/(\\d+?)/(\\d+?)/(\\d+?).html");
+    	Matcher m=pattern.matcher(url);
+    	int id=0;
+    	while(m.find()){
+    		id=Integer.parseInt(m.group(5));
+    	}
+    	return id;
+    }
+    /**
+     * æ ¼å¼åŒ–å†…å®¹ï¼ˆç”¨äºåšå®¢å†…å®¹åŠæ–°é—»å†…å®¹ï¼‰
+     */        
+    public static String FormatContent(Context context, String html){
+    	//æ˜¯å¦å›¾ç‰‡æ¨¡å¼
+    	boolean isImgMode=SettingActivity.IsPicReadMode(context);
+            
+    	if(!isImgMode){
+    		html=AppUtil.ReplaceImgTag(html);
+    		html=AppUtil.ReplaceVideoTag(html);
+    	}
+            
+    	return html;
+    }
+    static final Pattern patternHtml=Pattern.compile("<.+?>");
+    /**
+     * ç§»é™¤htmlæ ‡è®°
+     * @param html
+     * @return
+     */
+    public static String RemoveHtmlTag(String html){
+    	Matcher m=patternHtml.matcher(html);
+    	while(m.find()){
+    		html= m.replaceAll("");
+    	}
+    	return html;
+    }
+    /**
+     * åˆ¤æ–­æ˜¯å¦å«æœ‰å›¾ç‰‡å†…å®¹
+     * @param html
+     * @return
+     */
+    static final Pattern patternImg=Pattern.compile("<img(.+?)src=\"(.+?)\"(.+?)(onload=\"(.+?)\")?([^\"]+?)>");
+    public static boolean IsContainImg(String html){
+    	Matcher m=patternImg.matcher(html);
+    	while(m.find()){
+    		return true;
+    	}
+    	return false;
+    }
+    /**
+     * ç§»é™¤å›¾ç‰‡æ ‡è®°
+     * @param html
+     * @return
+     */
+    public static String RemoveImgTag(String html){
+    	Matcher m=patternImg.matcher(html);
+    	while(m.find()){
+    		html= m.replaceAll("");
+    	}
+    	return html;
+    }
+    /**
+     * æ›¿æ¢å›¾ç‰‡æ ‡è®°
+     * @param html
+     * @return
+     */
+    static final Pattern patternImgSrc=Pattern.compile("<img(.+?)src=\"(.+?)\"(.+?)>");
+    public static String ReplaceImgTag(String html){
+    	Matcher m=patternImgSrc.matcher(html);
+    	while(m.find()){
+    		html= m.replaceAll("ã€<a href=\"$2\">ç‚¹å‡»æŸ¥çœ‹å›¾ç‰‡</a>ã€‘");
+    	}
+    	return html;
+    }
+    /**
+     * ç§»é™¤è§†é¢‘æ ‡è®°
+     */
+    static final Pattern patternVideo=Pattern.compile("<object(.+?)>(.*?)<param name=\"src\" value=\"(.+?)\"(.+?)>(.+?)</object>");
+    public static String RemoveVideoTag(String html){
+    	Matcher m=patternVideo.matcher(html);
+    	while(m.find()){
+    		html= m.replaceAll("");
+    	}
+    	return html;
+    }
+    /**
+     * æ›¿æ¢è§†é¢‘æ ‡è®°
+     */
+    static final Pattern patternVideoSrc=Pattern.compile("<object(.+?)>(.*?)<param name=\"src\" value=\"(.+?)\"(.+?)>(.+?)</object>");
+    public static String ReplaceVideoTag(String html){
+    	Matcher m=patternVideoSrc.matcher(html);
+    	while(m.find()){
+    		html= m.replaceAll("ã€<a href=\"$3\">ç‚¹å‡»æŸ¥çœ‹è§†é¢‘</a>ã€‘");
+    	}
+    	return html;
+    }
 }
