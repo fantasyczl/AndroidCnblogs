@@ -3,44 +3,46 @@ package com.cnblogs.android.parser;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
 import android.util.Log;
-import org.xml.sax.Attributes;
 
 import com.cnblogs.android.core.CommentHelper;
-import com.cnblogs.android.entity.*;
+import com.cnblogs.android.entity.Comment;
 import com.cnblogs.android.utility.AppUtil;
 
 /**
- * Comment·µ»Øxml½âÎöÆ÷
+ * Commentè¿”å›xmlè§£æå™¨
  * 
  * @author walkingp
  * 
  */
 public class CommentListXmlParser extends DefaultHandler {
-	final String ENTRY_TAG = "entry";// Ö÷±ê¼Ç
-	final String ENTRY_ID_TAG = "id";// ±àºÅ±ê¼Ç
-	final String ENTRY_PUBLISHED_TAG = "published";// ·¢±íÊ±¼ä±ê¼Ç
-	final String ENTRY_AUTHOR_TAG = "name";// ÆÀÂÛÕßÃû³Æ
-	final String ENTRY_AUTHOR_URL_TAG = "uri";// ÆÀÂÛÕßÖ÷Ò³
-	final String ENTRY_CONTENT = "content";// ÆÀÂÛÄÚÈİ
+	final String ENTRY_TAG = "entry";// ä¸»æ ‡è®°
+	final String ENTRY_ID_TAG = "id";// ç¼–å·æ ‡è®°
+	final String ENTRY_PUBLISHED_TAG = "published";// å‘è¡¨æ—¶é—´æ ‡è®°
+	final String ENTRY_AUTHOR_TAG = "name";// è¯„è®ºè€…åç§°
+	final String ENTRY_AUTHOR_URL_TAG = "uri";// è¯„è®ºè€…ä¸»é¡µ
+	final String ENTRY_CONTENT = "content";// è¯„è®ºå†…å®¹
 
-	private ArrayList<Comment> listComment;// ¶ÔÏó¼¯ºÏ
-	private Comment entity;// µ¥¸ö¶ÔÏó
-	private Comment.EnumCommentType commentType;// ÆÀÂÛÀàĞÍ
-	private int contentId;// ÄÚÈİ±àºÅ
-	private boolean isStartParse;// ¿ªÊ¼½âÎö
-	private StringBuilder currentDataBuilder;// µ±Ç°È¡µ½µÄÖµ
+	private ArrayList<Comment> listComment;// å¯¹è±¡é›†åˆ
+	private Comment entity;// å•ä¸ªå¯¹è±¡
+	private Comment.EnumCommentType commentType;// è¯„è®ºç±»å‹
+	private int contentId;// å†…å®¹ç¼–å·
+	private boolean isStartParse;// å¼€å§‹è§£æ
+	private StringBuilder currentDataBuilder;// å½“å‰å–åˆ°çš„å€¼
+
 	/**
-	 * Ä¬ÈÏ¹¹Ôìº¯Êı
+	 * é»˜è®¤æ„é€ å‡½æ•°
 	 */
 	public CommentListXmlParser() {
 		super();
 	}
+
 	/**
-	 * ¹¹Ôìº¯Êı
+	 * æ„é€ å‡½æ•°
 	 * 
 	 * @return
 	 */
@@ -50,38 +52,42 @@ public class CommentListXmlParser extends DefaultHandler {
 		this.contentId = contentId;
 		commentType = _commentType;
 	}
+
 	/**
-	 * ½«½á¹û·µ»Ø
+	 * å°†ç»“æœè¿”å›
 	 * 
 	 * @return
 	 */
 	public ArrayList<Comment> GetCommentList() {
 		return listComment;
 	}
+
 	/**
-	 * ÎÄµµ¿ªÊ¼Ê±´¥·¢
+	 * æ–‡æ¡£å¼€å§‹æ—¶è§¦å‘
 	 */
 	public void startDocument() throws SAXException {
-		Log.i("Comment", "ÎÄµµ½âÎö¿ªÊ¼");
+		Log.i("Comment", "æ–‡æ¡£è§£æå¼€å§‹");
 		super.startDocument();
 		listComment = new ArrayList<Comment>();
 		currentDataBuilder = new StringBuilder();
 	}
+
 	/**
-	 * ¶ÁÈ¡²¢½âÎöXMLÊı¾İ
+	 * è¯»å–å¹¶è§£æXMLæ•°æ®
 	 */
 	public void startElement(String uri, String localName, String qName,
 			Attributes attributes) throws SAXException {
 		super.startElement(uri, localName, qName, attributes);
 		if (localName.equalsIgnoreCase(ENTRY_TAG)) {
 			entity = new Comment();
-			entity.SetCommentType(commentType);// ÉèÖÃÆÀÂÛÀàĞÍ
+			entity.SetCommentType(commentType);// è®¾ç½®è¯„è®ºç±»å‹
 			entity.SetContentId(contentId);
 			isStartParse = true;
 		}
 	}
+
 	/**
-	 * ¶ÁÈ¡ÔªËØÄÚÈİ
+	 * è¯»å–å…ƒç´ å†…å®¹
 	 * 
 	 * @param ch
 	 * @param start
@@ -94,33 +100,34 @@ public class CommentListXmlParser extends DefaultHandler {
 		super.characters(ch, start, length);
 		currentDataBuilder.append(ch, start, length);
 	}
+
 	/**
-	 * ÔªËØ½áÊøÊ±´¥·¢
+	 * å…ƒç´ ç»“æŸæ—¶è§¦å‘
 	 */
 	@Override
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
 		super.endElement(uri, localName, qName);
-		if (isStartParse) {// ·¢ÏÖÄ¿±ê
+		if (isStartParse) {// å‘ç°ç›®æ ‡
 			String chars = currentDataBuilder.toString();
-			Log.i("Comment", "ÕıÔÚ½âÎö" + localName);
-			// ´¦Àí
-			if (localName.equalsIgnoreCase(ENTRY_CONTENT)) {// ÄÚÈİ
-				chars = StringEscapeUtils.unescapeHtml(chars);// ½øĞĞ±àÂë´¦Àí£¬±ÜÃâ³öÏÖ&gt;ÕâÖÖhtml
-				// ´¦Àí»Ø¸´£º@
+			Log.i("Comment", "æ­£åœ¨è§£æ" + localName);
+			// å¤„ç†
+			if (localName.equalsIgnoreCase(ENTRY_CONTENT)) {// å†…å®¹
+				chars = AppUtil.HtmlToText(chars);// è¿›è¡Œç¼–ç å¤„ç†ï¼Œé¿å…å‡ºç°&gt;è¿™ç§html
+				// å¤„ç†å›å¤ï¼š@
 				chars = CommentHelper.FormatCommentString(chars);
 				entity.SetContent(chars);
-			} else if (localName.equalsIgnoreCase(ENTRY_AUTHOR_TAG)) {// ÆÀÂÛÕß
+			} else if (localName.equalsIgnoreCase(ENTRY_AUTHOR_TAG)) {// è¯„è®ºè€…
 				entity.SetPostUserName(chars);
-			} else if (localName.equalsIgnoreCase(ENTRY_ID_TAG)) {// ±àºÅ
+			} else if (localName.equalsIgnoreCase(ENTRY_ID_TAG)) {// ç¼–å·
 				int id = Integer.parseInt(chars);
 				entity.SetCommentId(id);
-			} else if (localName.equalsIgnoreCase(ENTRY_PUBLISHED_TAG)) {// ·¢²¼Ê±¼ä
+			} else if (localName.equalsIgnoreCase(ENTRY_PUBLISHED_TAG)) {// å‘å¸ƒæ—¶é—´
 				Date addTime = AppUtil.ParseUTCDate(chars);
 				entity.SetAddTime(addTime);
-			} else if (localName.equalsIgnoreCase(ENTRY_AUTHOR_URL_TAG)) {// ÆÀÂÛÕßÖ÷Ò³
+			} else if (localName.equalsIgnoreCase(ENTRY_AUTHOR_URL_TAG)) {// è¯„è®ºè€…ä¸»é¡µ
 				entity.SetPostUserUrl(chars);
-			} else if (localName.equalsIgnoreCase(ENTRY_TAG)) {// ½ØÖ¹
+			} else if (localName.equalsIgnoreCase(ENTRY_TAG)) {// æˆªæ­¢
 				listComment.add(entity);
 				isStartParse = false;
 			}
@@ -128,11 +135,12 @@ public class CommentListXmlParser extends DefaultHandler {
 
 		currentDataBuilder.setLength(0);
 	}
+
 	/**
-	 * ÎÄµµ½áÊøÊ±´¥·¢
+	 * æ–‡æ¡£ç»“æŸæ—¶è§¦å‘
 	 */
 	public void endDocument() throws SAXException {
-		Log.i("Comment", "ÎÄµµ½âÎö½áÊø");
+		Log.i("Comment", "æ–‡æ¡£è§£æç»“æŸ");
 		super.endDocument();
 	}
 }

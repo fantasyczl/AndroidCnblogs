@@ -11,62 +11,68 @@ import com.cnblogs.android.entity.*;
 import com.cnblogs.android.utility.AppUtil;
 
 import org.apache.commons.lang.*;
+
 /**
- * Blog·µ»Øxml½âÎöÆ÷
+ * Blogè¿”å›xmlè§£æå™¨
  * 
  * @author walkingp
  * 
  */
 public class RssListXmlParser extends DefaultHandler {
-	final String ENTRY_TAG = "Item";// Ö÷±ê¼Ç
-	final String ENTRY_ID_TAG = "RssId";// ±àºÅ±ê¼Ç
-	final String ENTRY_TITLE_TAG = "Title";// ±êÌâ±ê¼Ç
-	final String ENTRY_SUMMARY_TAG = "Description";// ¼ò½é±ê¼Ç
-	final String ENTRY_PUBLISHED_TAG = "AddTime";// ·¢±íÊ±¼ä±ê¼Ç
-	final String ENTRY_UPDATED_TAG = "Updated";// ¸üĞÂÊ±¼ä±ê¼Ç
-	final String ENTRY_AUTHOR_NAME_TAG = "Author";// ·¢±íÕßÃû³Æ
-	final String ENTRY_LINK_TAG = "Link";// Êµ¼ÊÁ´½ÓµØÖ·
-	final String ENTRY_AVATOR_TAG = "Image";// LogoµØÖ·
-	final String ENTRY_RSS_NUM_TAG = "RssNum";// ¶©ÔÄ´ÎÊı
-	final String ENTRY_IS_CNBLOGS_TAG = "IsCnblogs";// ÊÇ·ñÀ´×Ô²©¿ÍÔ°
+	final String ENTRY_TAG = "Item";// ä¸»æ ‡è®°
+	final String ENTRY_ID_TAG = "RssId";// ç¼–å·æ ‡è®°
+	final String ENTRY_TITLE_TAG = "Title";// æ ‡é¢˜æ ‡è®°
+	final String ENTRY_SUMMARY_TAG = "Description";// ç®€ä»‹æ ‡è®°
+	final String ENTRY_PUBLISHED_TAG = "AddTime";// å‘è¡¨æ—¶é—´æ ‡è®°
+	final String ENTRY_UPDATED_TAG = "Updated";// æ›´æ–°æ—¶é—´æ ‡è®°
+	final String ENTRY_AUTHOR_NAME_TAG = "Author";// å‘è¡¨è€…åç§°
+	final String ENTRY_LINK_TAG = "Link";// å®é™…é“¾æ¥åœ°å€
+	final String ENTRY_AVATOR_TAG = "Image";// Logoåœ°å€
+	final String ENTRY_RSS_NUM_TAG = "RssNum";// è®¢é˜…æ¬¡æ•°
+	final String ENTRY_IS_CNBLOGS_TAG = "IsCnblogs";// æ˜¯å¦æ¥è‡ªåšå®¢å›­
 
-	private ArrayList<RssList> listRss;// ¶ÔÏó¼¯ºÏ
-	private RssList entity;// µ¥¸ö¶ÔÏó
-	private boolean isStartParse;// ¿ªÊ¼½âÎö
-	private StringBuilder currentDataBuilder;// µ±Ç°È¡µ½µÄÖµ
+	private ArrayList<RssList> listRss;// å¯¹è±¡é›†åˆ
+	private RssList entity;// å•ä¸ªå¯¹è±¡
+	private boolean isStartParse;// å¼€å§‹è§£æ
+	private StringBuilder currentDataBuilder;// å½“å‰å–åˆ°çš„å€¼
+
 	/**
-	 * Ä¬ÈÏ¹¹Ôìº¯Êı
+	 * é»˜è®¤æ„é€ å‡½æ•°
 	 */
 	public RssListXmlParser() {
 		super();
 	}
+
 	/**
-	 * ¹¹Ôìº¯Êı
+	 * æ„é€ å‡½æ•°
 	 * 
 	 * @return
 	 */
 	public RssListXmlParser(ArrayList<RssList> list) {
 		this.listRss = list;
 	}
+
 	/**
-	 * ½«½á¹û·µ»Ø
+	 * å°†ç»“æœè¿”å›
 	 * 
 	 * @return
 	 */
 	public ArrayList<RssList> GetRssList() {
 		return listRss;
 	}
+
 	/**
-	 * ÎÄµµ¿ªÊ¼Ê±´¥·¢
+	 * æ–‡æ¡£å¼€å§‹æ—¶è§¦å‘
 	 */
 	public void startDocument() throws SAXException {
-		Log.i("Blog", "ÎÄµµ½âÎö¿ªÊ¼");
+		Log.i("Blog", "æ–‡æ¡£è§£æå¼€å§‹");
 		super.startDocument();
 		listRss = new ArrayList<RssList>();
 		currentDataBuilder = new StringBuilder();
 	}
+
 	/**
-	 * ¶ÁÈ¡²¢½âÎöXMLÊı¾İ
+	 * è¯»å–å¹¶è§£æXMLæ•°æ®
 	 */
 	public void startElement(String uri, String localName, String qName,
 			Attributes attributes) throws SAXException {
@@ -76,8 +82,9 @@ public class RssListXmlParser extends DefaultHandler {
 			isStartParse = true;
 		}
 	}
+
 	/**
-	 * ¶ÁÈ¡ÔªËØÄÚÈİ
+	 * è¯»å–å…ƒç´ å†…å®¹
 	 * 
 	 * @param ch
 	 * @param start
@@ -90,54 +97,55 @@ public class RssListXmlParser extends DefaultHandler {
 		super.characters(ch, start, length);
 		currentDataBuilder.append(ch, start, length);
 	}
+
 	/**
-	 * ÔªËØ½áÊøÊ±´¥·¢
+	 * å…ƒç´ ç»“æŸæ—¶è§¦å‘
 	 */
 	@Override
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
 		super.endElement(uri, localName, qName);
-		if (isStartParse) {// ·¢ÏÖÄ¿±ê
+		if (isStartParse) {// å‘ç°ç›®æ ‡
 			String chars = currentDataBuilder.toString();
-			Log.i("Blog", "ÕıÔÚ½âÎö" + localName);
-			// ´¦Àí
-			if (localName.equalsIgnoreCase(ENTRY_TITLE_TAG)) {// ±êÌâ
+			Log.i("Blog", "æ­£åœ¨è§£æ" + localName);
+			// å¤„ç†
+			if (localName.equalsIgnoreCase(ENTRY_TITLE_TAG)) {// æ ‡é¢˜
 				try {
-					chars = StringEscapeUtils.unescapeHtml(chars);// ½øĞĞ±àÂë´¦Àí£¬±ÜÃâ³öÏÖ&gt;ÕâÖÖhtml
+					chars = StringEscapeUtils.unescapeHtml(chars);// è¿›è¡Œç¼–ç å¤„ç†ï¼Œé¿å…å‡ºç°&gt;è¿™ç§html
 				} catch (Exception ex) {
-					Log.e("rssXml", "__________½âÎö³ö´í_____________");
+					Log.e("rssXml", "__________è§£æå‡ºé”™_____________");
 				}
 				entity.SetTitle(chars);
-			} else if (localName.equalsIgnoreCase(ENTRY_SUMMARY_TAG)) {// ÕªÒª
+			} else if (localName.equalsIgnoreCase(ENTRY_SUMMARY_TAG)) {// æ‘˜è¦
 				try {
-					chars = StringEscapeUtils.unescapeHtml(chars);// ½øĞĞ±àÂë´¦Àí£¬±ÜÃâ³öÏÖ&gt;ÕâÖÖhtml
+					chars = StringEscapeUtils.unescapeHtml(chars);// è¿›è¡Œç¼–ç å¤„ç†ï¼Œé¿å…å‡ºç°&gt;è¿™ç§html
 				} catch (Exception ex) {
-					Log.e("rssXml", "__________½âÎö³ö´í_____________");
+					Log.e("rssXml", "__________è§£æå‡ºé”™_____________");
 				}
 				entity.SetDescription(chars);
-			} else if (localName.equalsIgnoreCase(ENTRY_ID_TAG)) {// ±àºÅ
+			} else if (localName.equalsIgnoreCase(ENTRY_ID_TAG)) {// ç¼–å·
 				int id = Integer.parseInt(chars);
 				entity.SetRssId(id);
-			} else if (localName.equalsIgnoreCase(ENTRY_RSS_NUM_TAG)) {// ±àºÅ
+			} else if (localName.equalsIgnoreCase(ENTRY_RSS_NUM_TAG)) {// ç¼–å·
 				int id = Integer.parseInt(chars);
 				entity.SetRssNum(id);
-			} else if (localName.equalsIgnoreCase(ENTRY_PUBLISHED_TAG)) {// ·¢²¼Ê±¼ä
+			} else if (localName.equalsIgnoreCase(ENTRY_PUBLISHED_TAG)) {// å‘å¸ƒæ—¶é—´
 				Date addTime = AppUtil.ParseUTCDate(chars);
 				entity.SetAddTime(addTime);
-			} else if (localName.equalsIgnoreCase(ENTRY_UPDATED_TAG)) {// ĞŞ¸ÄÊ±¼ä
+			} else if (localName.equalsIgnoreCase(ENTRY_UPDATED_TAG)) {// ä¿®æ”¹æ—¶é—´
 				Date updateTime = AppUtil.ParseUTCDate(chars);
 				entity.SetUpdated(updateTime);
-			} else if (localName.equalsIgnoreCase(ENTRY_AUTHOR_NAME_TAG)) {// ×÷ÕßÃû³Æ
+			} else if (localName.equalsIgnoreCase(ENTRY_AUTHOR_NAME_TAG)) {// ä½œè€…åç§°
 				entity.SetAuthor(chars);
-			} else if (localName.equalsIgnoreCase(ENTRY_AVATOR_TAG)) {// LogoµØÖ·
+			} else if (localName.equalsIgnoreCase(ENTRY_AVATOR_TAG)) {// Logoåœ°å€
 				entity.SetImage(chars);
-			} else if (localName.equalsIgnoreCase(ENTRY_LINK_TAG)) {// Êµ¼Ê
+			} else if (localName.equalsIgnoreCase(ENTRY_LINK_TAG)) {// å®é™…
 				entity.SetLink(chars);
-			} else if (localName.equalsIgnoreCase(ENTRY_IS_CNBLOGS_TAG)) {// ÊÇ·ñÀ´×Ô²©¿ÍÔ°
+			} else if (localName.equalsIgnoreCase(ENTRY_IS_CNBLOGS_TAG)) {// æ˜¯å¦æ¥è‡ªåšå®¢å›­
 				int id = Integer.parseInt(chars);
 				boolean isCnblogs = id == 1;
 				entity.SetIsCnblogs(isCnblogs);
-			} else if (localName.equalsIgnoreCase(ENTRY_TAG)) {// ½ØÖ¹
+			} else if (localName.equalsIgnoreCase(ENTRY_TAG)) {// æˆªæ­¢
 				listRss.add(entity);
 				isStartParse = false;
 			}
@@ -145,11 +153,12 @@ public class RssListXmlParser extends DefaultHandler {
 
 		currentDataBuilder.setLength(0);
 	}
+
 	/**
-	 * ÎÄµµ½áÊøÊ±´¥·¢
+	 * æ–‡æ¡£ç»“æŸæ—¶è§¦å‘
 	 */
 	public void endDocument() throws SAXException {
-		Log.i("Rss", "ÎÄµµ½âÎö½áÊø");
+		Log.i("Rss", "æ–‡æ¡£è§£æç»“æŸ");
 		super.endDocument();
 	}
 }

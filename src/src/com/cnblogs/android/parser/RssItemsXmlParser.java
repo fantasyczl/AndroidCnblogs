@@ -11,171 +11,173 @@ import org.xml.sax.Attributes;
 
 import com.cnblogs.android.entity.*;
 import com.cnblogs.android.utility.AppUtil;
+
 /**
- * Blog·µ»Øxml½âÎöÆ÷
+ * Blogè¿”å›xmlè§£æå™¨
+ * 
  * @author walkingp
- *
+ * 
  */
 public class RssItemsXmlParser extends DefaultHandler {
-	final String ENTRY_TAG="item";//Ö÷±ê¼Ç
-	final String ENTRY_TAG2="entry";//Ö÷±ê¼Ç
-	final String ENTRY_TITLE_TAG="title";//±êÌâ
-	final String ENTRY_GUID_TAG="guid";//±àºÅ±ê¼Ç
-	final String ENTRY_GUID_TAG2="id";//±àºÅ±ê¼Ç
-	final String ENTRY_CATENAME_TAG="category";//·ÖÀà±ê¼Ç
-	final String ENTRY_ICON_TAG="image";//Í¼Æ¬±ê¼Ç
-	final String ENTRY_DESCRIPTION_TAG="description";//ÄÚÈİ
-	final String ENTRY_DESCRIPTION_TAG2="content";//ÄÚÈİ
-	final String ENTRY_LINK_TAG="link";//Á´½ÓµØÖ·
-	final String ENTRY_AUTHOR_TAG="author";//×÷Õß
-	final String ENTRY_AUTHOR_TAG2="name";//×÷Õß
-	final String ENTRY_ADDDATE_TAG="pubDate";//Ìí¼ÓÊ±¼ä
-	final String ENTRY_ADDDATE_TAG2="published";//Ìí¼ÓÊ±¼ä
-	
-	private ArrayList<RssItem> listRss;//¶ÔÏó¼¯ºÏ
-	private RssItem entity;//µ¥¸ö¶ÔÏó
-	private boolean isStartParse;//¿ªÊ¼½âÎö
-	private StringBuilder currentDataBuilder;//µ±Ç°È¡µ½µÄÖµ
+	final String ENTRY_TAG = "item";// ä¸»æ ‡è®°
+	final String ENTRY_TAG2 = "entry";// ä¸»æ ‡è®°
+	final String ENTRY_TITLE_TAG = "title";// æ ‡é¢˜
+	final String ENTRY_GUID_TAG = "guid";// ç¼–å·æ ‡è®°
+	final String ENTRY_GUID_TAG2 = "id";// ç¼–å·æ ‡è®°
+	final String ENTRY_CATENAME_TAG = "category";// åˆ†ç±»æ ‡è®°
+	final String ENTRY_ICON_TAG = "image";// å›¾ç‰‡æ ‡è®°
+	final String ENTRY_DESCRIPTION_TAG = "description";// å†…å®¹
+	final String ENTRY_DESCRIPTION_TAG2 = "content";// å†…å®¹
+	final String ENTRY_LINK_TAG = "link";// é“¾æ¥åœ°å€
+	final String ENTRY_AUTHOR_TAG = "author";// ä½œè€…
+	final String ENTRY_AUTHOR_TAG2 = "name";// ä½œè€…
+	final String ENTRY_ADDDATE_TAG = "pubDate";// æ·»åŠ æ—¶é—´
+	final String ENTRY_ADDDATE_TAG2 = "published";// æ·»åŠ æ—¶é—´
+
+	private ArrayList<RssItem> listRss;// å¯¹è±¡é›†åˆ
+	private RssItem entity;// å•ä¸ªå¯¹è±¡
+	private boolean isStartParse;// å¼€å§‹è§£æ
+	private StringBuilder currentDataBuilder;// å½“å‰å–åˆ°çš„å€¼
+
 	/**
-	 * Ä¬ÈÏ¹¹Ôìº¯Êı
+	 * é»˜è®¤æ„é€ å‡½æ•°
 	 */
-	public RssItemsXmlParser(){
+	public RssItemsXmlParser() {
 		super();
 	}
+
 	/**
-	 * ¹¹Ôìº¯Êı
+	 * æ„é€ å‡½æ•°
+	 * 
 	 * @return
 	 */
-	public RssItemsXmlParser(ArrayList<RssItem> list){
-		this.listRss=list;
+	public RssItemsXmlParser(ArrayList<RssItem> list) {
+		this.listRss = list;
 	}
+
 	/**
-	 * ½«½á¹û·µ»Ø
+	 * å°†ç»“æœè¿”å›
+	 * 
 	 * @return
 	 */
-	public ArrayList<RssItem> GetRssItemList(){
+	public ArrayList<RssItem> GetRssItemList() {
 		return listRss;
 	}
+
 	/**
-	 * ÎÄµµ¿ªÊ¼Ê±´¥·¢
+	 * æ–‡æ¡£å¼€å§‹æ—¶è§¦å‘
 	 */
-	public void startDocument() throws SAXException{
-		Log.i("Rss","ÎÄµµ½âÎö¿ªÊ¼");
+	public void startDocument() throws SAXException {
+		Log.i("Rss", "æ–‡æ¡£è§£æå¼€å§‹");
 		super.startDocument();
-		listRss=new ArrayList<RssItem>();
-		currentDataBuilder = new StringBuilder();  	}
-	/**
-	 * ¶ÁÈ¡²¢½âÎöXMLÊı¾İ
-	 */
-	public void startElement(String uri, String localName, String qName, Attributes attributes)
-	throws SAXException {
-		super.startElement(uri, localName, qName,  attributes);
-		if(localName.equalsIgnoreCase(ENTRY_TAG))  
-        {  
-            entity = new RssItem();  
-            isStartParse = true;   
-        }else if(localName.equalsIgnoreCase(ENTRY_TAG2)){
-        	entity = new RssItem();  
-            isStartParse = true;   
-        }
+		listRss = new ArrayList<RssItem>();
+		currentDataBuilder = new StringBuilder();
 	}
+
 	/**
-	 * ¶ÁÈ¡ÔªËØÄÚÈİ
+	 * è¯»å–å¹¶è§£æXMLæ•°æ®
+	 */
+	public void startElement(String uri, String localName, String qName,
+			Attributes attributes) throws SAXException {
+		super.startElement(uri, localName, qName, attributes);
+		if (localName.equalsIgnoreCase(ENTRY_TAG)) {
+			entity = new RssItem();
+			isStartParse = true;
+		} else if (localName.equalsIgnoreCase(ENTRY_TAG2)) {
+			entity = new RssItem();
+			isStartParse = true;
+		}
+	}
+
+	/**
+	 * è¯»å–å…ƒç´ å†…å®¹
+	 * 
 	 * @param ch
 	 * @param start
 	 * @param length
 	 * @throws SAXException
 	 */
 	@Override
-	public void characters(char[] ch, int start, int length) throws SAXException {
-      super.characters(ch, start, length);
-      currentDataBuilder.append(ch, start, length);  
+	public void characters(char[] ch, int start, int length)
+			throws SAXException {
+		super.characters(ch, start, length);
+		currentDataBuilder.append(ch, start, length);
 	}
+
 	/**
-	 * ÔªËØ½áÊøÊ±´¥·¢
+	 * å…ƒç´ ç»“æŸæ—¶è§¦å‘
 	 */
 	@Override
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
 		super.endElement(uri, localName, qName);
-		if(isStartParse){//·¢ÏÖÄ¿±ê
-			String chars=currentDataBuilder.toString().trim().replaceAll("\n|\t|\r", "");
-			Log.i("Rss","ÕıÔÚ½âÎö" + localName);
-    		//´¦Àí
-    		if(localName.equalsIgnoreCase(ENTRY_TITLE_TAG)){//±êÌâ
-    			entity.SetTitle(chars.trim());
-    		}else if(localName.equalsIgnoreCase(ENTRY_ICON_TAG)){//Í¼Æ¬
-    			entity.SetLink(chars);
-    		}else if(localName.equalsIgnoreCase(ENTRY_DESCRIPTION_TAG)){//¼ò½é
-    			chars=StringEscapeUtils.unescapeHtml(chars);//½øĞĞ±àÂë´¦Àí£¬±ÜÃâ³öÏÖ&gt;ÕâÖÖhtml
-    			entity.SetDescription(chars);
-    		}else if(localName.equalsIgnoreCase(ENTRY_DESCRIPTION_TAG2)){//¼ò½é && (entity.GetDescription()==null || entity.GetDescription().equals(""))
-    			entity.SetDescription(chars);
-			}else if(localName.equalsIgnoreCase(ENTRY_GUID_TAG)){//±àºÅ
-				try{
-					int id=Integer.parseInt(chars);
-					entity.SetId(id);
-				}catch(Exception ex){
-					entity.SetId(0);
-				}
-			}else if(localName.equalsIgnoreCase(ENTRY_GUID_TAG2)){//±àºÅ && entity.GetId()==0
-				try{
-					int id=Integer.parseInt(chars);
-    				entity.SetId(id);
-				}catch(Exception ex){
-					entity.SetId(0);
-				}
-			}else if(localName.equalsIgnoreCase(ENTRY_LINK_TAG)){//Á´½Ó
+		if (isStartParse) {// å‘ç°ç›®æ ‡
+			String chars = currentDataBuilder.toString().trim()
+					.replaceAll("\n|\t|\r", "");
+			Log.i("Rss", "æ­£åœ¨è§£æ" + localName);
+			// å¤„ç†
+			if (localName.equalsIgnoreCase(ENTRY_TITLE_TAG)) {// æ ‡é¢˜
+				entity.SetTitle(chars.trim());
+			} else if (localName.equalsIgnoreCase(ENTRY_ICON_TAG)) {// å›¾ç‰‡
 				entity.SetLink(chars);
-			}else if(localName.equalsIgnoreCase(ENTRY_AUTHOR_TAG)){//×÷Õß
+			} else if (localName.equalsIgnoreCase(ENTRY_DESCRIPTION_TAG)) {// ç®€ä»‹
+				chars = StringEscapeUtils.unescapeHtml(chars);// è¿›è¡Œç¼–ç å¤„ç†ï¼Œé¿å…å‡ºç°&gt;è¿™ç§html
+				entity.SetDescription(chars);
+			} else if (localName.equalsIgnoreCase(ENTRY_DESCRIPTION_TAG2)) {// ç®€ä»‹
+																			// &&
+																			// (entity.GetDescription()==null
+																			// ||
+																			// entity.GetDescription().equals(""))
+				entity.SetDescription(chars);
+			} else if (localName.equalsIgnoreCase(ENTRY_GUID_TAG)) {// ç¼–å·
+				try {
+					int id = Integer.parseInt(chars);
+					entity.SetId(id);
+				} catch (Exception ex) {
+					entity.SetId(0);
+				}
+			} else if (localName.equalsIgnoreCase(ENTRY_GUID_TAG2)) {// ç¼–å· &&
+																		// entity.GetId()==0
+				try {
+					int id = Integer.parseInt(chars);
+					entity.SetId(id);
+				} catch (Exception ex) {
+					entity.SetId(0);
+				}
+			} else if (localName.equalsIgnoreCase(ENTRY_LINK_TAG)) {// é“¾æ¥
+				entity.SetLink(chars);
+			} else if (localName.equalsIgnoreCase(ENTRY_AUTHOR_TAG)) {// ä½œè€…
 				entity.SetAuthor(chars);
-			}else if(localName.equalsIgnoreCase(ENTRY_AUTHOR_TAG2)){//×÷Õß && (entity.GetAuthor()==null || entity.GetAuthor().equals(""))
+			} else if (localName.equalsIgnoreCase(ENTRY_AUTHOR_TAG2)) {// ä½œè€… &&
+																		// (entity.GetAuthor()==null
+																		// ||
+																		// entity.GetAuthor().equals(""))
 				entity.SetAuthor(chars);
-			}else if(localName.equalsIgnoreCase(ENTRY_ADDDATE_TAG)){//Ìí¼ÓÊ±¼ä
-				Date addTime=AppUtil.ParseUTCDate(chars);
-				entity.SetAddDate(addTime);	
-			}else if(localName.equalsIgnoreCase(ENTRY_ADDDATE_TAG2)){//Ìí¼ÓÊ±¼ä
-				Date addTime=AppUtil.ParseUTCDate(chars);
-				entity.SetAddDate(addTime);	
-			}else if(localName.equalsIgnoreCase(ENTRY_CATENAME_TAG)){//·ÖÀà
+			} else if (localName.equalsIgnoreCase(ENTRY_ADDDATE_TAG)) {// æ·»åŠ æ—¶é—´
+				Date addTime = AppUtil.ParseUTCDate(chars);
+				entity.SetAddDate(addTime);
+			} else if (localName.equalsIgnoreCase(ENTRY_ADDDATE_TAG2)) {// æ·»åŠ æ—¶é—´
+				Date addTime = AppUtil.ParseUTCDate(chars);
+				entity.SetAddDate(addTime);
+			} else if (localName.equalsIgnoreCase(ENTRY_CATENAME_TAG)) {// åˆ†ç±»
 				entity.SetCategory(chars);
-    		}else if(localName.equalsIgnoreCase(ENTRY_TAG)){//½ØÖ¹
-    			listRss.add(entity);
-    			isStartParse=false;
-    		}else if(localName.equalsIgnoreCase(ENTRY_TAG2)){//½ØÖ¹
-    			listRss.add(entity);
-    			isStartParse=false;
-    		}
+			} else if (localName.equalsIgnoreCase(ENTRY_TAG)) {// æˆªæ­¢
+				listRss.add(entity);
+				isStartParse = false;
+			} else if (localName.equalsIgnoreCase(ENTRY_TAG2)) {// æˆªæ­¢
+				listRss.add(entity);
+				isStartParse = false;
+			}
 		}
-		
+
 		currentDataBuilder.setLength(0);
 	}
+
 	/**
-	 * ÎÄµµ½áÊøÊ±´¥·¢
+	 * æ–‡æ¡£ç»“æŸæ—¶è§¦å‘
 	 */
-	public void endDocument() throws SAXException{
-		Log.i("Rss","ÎÄµµ½âÎö½áÊø");
+	public void endDocument() throws SAXException {
+		Log.i("Rss", "æ–‡æ¡£è§£æç»“æŸ");
 		super.endDocument();
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

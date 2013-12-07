@@ -5,51 +5,57 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import android.util.Log;
+
 /**
- * ÊµÌåÀà×ª»»
+ * å®ä½“ç±»è½¬æ¢
  * 
  * @author walkingp
  * 
  */
 public class NewsXmlParser extends DefaultHandler {
-	final String ENTRY_TAG = "Content";// Ö÷±ê¼Ç
-	final String ENTRY_IMAGE_URL = "ImageUrl";// Í¼Æ¬±ê¼Ç
+	final String ENTRY_TAG = "Content";// ä¸»æ ‡è®°
+	final String ENTRY_IMAGE_URL = "ImageUrl";// å›¾ç‰‡æ ‡è®°
 
-	private String newsContent;// µ¥¸ö¶ÔÏó
-	private boolean isStartParse;// ¿ªÊ¼½âÎö
-	private StringBuilder currentDataBuilder;// µ±Ç°È¡µ½µÄÖµ
+	private String newsContent;// å•ä¸ªå¯¹è±¡
+	private boolean isStartParse;// å¼€å§‹è§£æ
+	private StringBuilder currentDataBuilder;// å½“å‰å–åˆ°çš„å€¼
+
 	/**
-	 * Ä¬ÈÏ¹¹Ôìº¯Êı
+	 * é»˜è®¤æ„é€ å‡½æ•°
 	 */
 	public NewsXmlParser() {
 		super();
 	}
+
 	/**
-	 * ¹¹Ôìº¯Êı
+	 * æ„é€ å‡½æ•°
 	 * 
 	 * @return
 	 */
 	public NewsXmlParser(String content) {
 		this.newsContent = content;
 	}
+
 	/**
-	 * ½«½á¹û·µ»Ø
+	 * å°†ç»“æœè¿”å›
 	 * 
 	 * @return
 	 */
 	public String GetNewsContent() {
 		return newsContent;
 	}
+
 	/**
-	 * ÎÄµµ¿ªÊ¼Ê±´¥·¢
+	 * æ–‡æ¡£å¼€å§‹æ—¶è§¦å‘
 	 */
 	public void startDocument() throws SAXException {
-		Log.i("News", "ÎÄµµ½âÎö¿ªÊ¼");
+		Log.i("News", "æ–‡æ¡£è§£æå¼€å§‹");
 		super.startDocument();
 		currentDataBuilder = new StringBuilder();
 	}
+
 	/**
-	 * ¶ÁÈ¡²¢½âÎöXMLÊı¾İ
+	 * è¯»å–å¹¶è§£æXMLæ•°æ®
 	 */
 	public void startElement(String uri, String localName, String qName,
 			Attributes attributes) throws SAXException {
@@ -59,8 +65,9 @@ public class NewsXmlParser extends DefaultHandler {
 			isStartParse = true;
 		}
 	}
+
 	/**
-	 * ¶ÁÈ¡ÔªËØÄÚÈİ
+	 * è¯»å–å…ƒç´ å†…å®¹
 	 * 
 	 * @param ch
 	 * @param start
@@ -73,18 +80,19 @@ public class NewsXmlParser extends DefaultHandler {
 		super.characters(ch, start, length);
 		currentDataBuilder.append(ch, start, length);
 	}
+
 	/**
-	 * ÔªËØ½áÊøÊ±´¥·¢
+	 * å…ƒç´ ç»“æŸæ—¶è§¦å‘
 	 */
 	@Override
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
 		super.endElement(uri, localName, qName);
-		if (isStartParse) {// ·¢ÏÖÄ¿±ê
+		if (isStartParse) {// å‘ç°ç›®æ ‡
 			String chars = currentDataBuilder.toString();
-			Log.i("News", "ÕıÔÚ½âÎö" + localName);
-			// ´¦Àí
-			if (localName.equalsIgnoreCase(ENTRY_TAG)) {// ±êÌâ
+			Log.i("News", "æ­£åœ¨è§£æ" + localName);
+			// å¤„ç†
+			if (localName.equalsIgnoreCase(ENTRY_TAG)) {// æ ‡é¢˜
 				newsContent = chars;
 				isStartParse = false;
 			}
@@ -92,11 +100,12 @@ public class NewsXmlParser extends DefaultHandler {
 
 		currentDataBuilder.setLength(0);
 	}
+
 	/**
-	 * ÎÄµµ½áÊøÊ±´¥·¢
+	 * æ–‡æ¡£ç»“æŸæ—¶è§¦å‘
 	 */
 	public void endDocument() throws SAXException {
-		Log.i("News", "ÎÄµµ½âÎö½áÊø");
+		Log.i("News", "æ–‡æ¡£è§£æç»“æŸ");
 		super.endDocument();
 	}
 }

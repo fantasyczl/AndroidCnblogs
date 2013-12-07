@@ -10,58 +10,64 @@ import org.xml.sax.Attributes;
 
 import com.cnblogs.android.entity.*;
 import com.cnblogs.android.utility.AppUtil;
+
 /**
- * Users·µ»Øxml½âÎöÆ÷
+ * Usersè¿”å›xmlè§£æå™¨
  * 
  * @author walkingp
  * 
  */
 public class UserListXmlParser extends DefaultHandler {
-	final String ENTRY_TAG = "entry";// Ö÷±ê¼Ç
-	final String ENTRY_AUTHOR_NAME_TAG = "blogapp";// ÓÃ»§Ãû±ê¼Ç£¬Èç£ºiamzhanglei
-	final String ENTRY_BLOG_NAME_TAG = "title";// ²©¿ÍÃû£¬Èç£º¡¾µ±ÄÍÌØ×©¼Ò¡¿
-	final String ENTRY_AVATOR_TAG = "avatar";// Í·ÏñµØÖ·
-	final String ENTRY_URL_TAG = "id";// Êµ¼ÊÍøÖ·±êÇ©
-	final String ENTRY_POST_COUNT_TAG = "postcount";// ²©ÎÄÊı
-	final String ENTRY_UPDATE_TAG = "updated";// ×îºó¸üĞÂÊ±¼ä
+	final String ENTRY_TAG = "entry";// ä¸»æ ‡è®°
+	final String ENTRY_AUTHOR_NAME_TAG = "blogapp";// ç”¨æˆ·åæ ‡è®°ï¼Œå¦‚ï¼šiamzhanglei
+	final String ENTRY_BLOG_NAME_TAG = "title";// åšå®¢åï¼Œå¦‚ï¼šã€å½“è€ç‰¹ç –å®¶ã€‘
+	final String ENTRY_AVATOR_TAG = "avatar";// å¤´åƒåœ°å€
+	final String ENTRY_URL_TAG = "id";// å®é™…ç½‘å€æ ‡ç­¾
+	final String ENTRY_POST_COUNT_TAG = "postcount";// åšæ–‡æ•°
+	final String ENTRY_UPDATE_TAG = "updated";// æœ€åæ›´æ–°æ—¶é—´
 
-	private ArrayList<Users> listUser;// ¶ÔÏó¼¯ºÏ
-	private Users entity;// µ¥¸ö¶ÔÏó
-	private boolean isStartParse;// ¿ªÊ¼½âÎö
-	private StringBuilder currentDataBuilder;// µ±Ç°È¡µ½µÄÖµ
+	private ArrayList<Users> listUser;// å¯¹è±¡é›†åˆ
+	private Users entity;// å•ä¸ªå¯¹è±¡
+	private boolean isStartParse;// å¼€å§‹è§£æ
+	private StringBuilder currentDataBuilder;// å½“å‰å–åˆ°çš„å€¼
+
 	/**
-	 * Ä¬ÈÏ¹¹Ôìº¯Êı
+	 * é»˜è®¤æ„é€ å‡½æ•°
 	 */
 	public UserListXmlParser() {
 		super();
 	}
+
 	/**
-	 * ¹¹Ôìº¯Êı
+	 * æ„é€ å‡½æ•°
 	 * 
 	 * @return
 	 */
 	public UserListXmlParser(ArrayList<Users> list) {
 		this.listUser = list;
 	}
+
 	/**
-	 * ½«½á¹û·µ»Ø
+	 * å°†ç»“æœè¿”å›
 	 * 
 	 * @return
 	 */
 	public ArrayList<Users> GetUserList() {
 		return listUser;
 	}
+
 	/**
-	 * ÎÄµµ¿ªÊ¼Ê±´¥·¢
+	 * æ–‡æ¡£å¼€å§‹æ—¶è§¦å‘
 	 */
 	public void startDocument() throws SAXException {
-		Log.i("Users", "ÎÄµµ½âÎö¿ªÊ¼");
+		Log.i("Users", "æ–‡æ¡£è§£æå¼€å§‹");
 		super.startDocument();
 		listUser = new ArrayList<Users>();
 		currentDataBuilder = new StringBuilder();
 	}
+
 	/**
-	 * ¶ÁÈ¡²¢½âÎöXMLÊı¾İ
+	 * è¯»å–å¹¶è§£æXMLæ•°æ®
 	 */
 	public void startElement(String uri, String localName, String qName,
 			Attributes attributes) throws SAXException {
@@ -71,8 +77,9 @@ public class UserListXmlParser extends DefaultHandler {
 			isStartParse = true;
 		}
 	}
+
 	/**
-	 * ¶ÁÈ¡ÔªËØÄÚÈİ
+	 * è¯»å–å…ƒç´ å†…å®¹
 	 * 
 	 * @param ch
 	 * @param start
@@ -85,32 +92,33 @@ public class UserListXmlParser extends DefaultHandler {
 		super.characters(ch, start, length);
 		currentDataBuilder.append(ch, start, length);
 	}
+
 	/**
-	 * ÔªËØ½áÊøÊ±´¥·¢
+	 * å…ƒç´ ç»“æŸæ—¶è§¦å‘
 	 */
 	@Override
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
 		super.endElement(uri, localName, qName);
-		if (isStartParse) {// ·¢ÏÖÄ¿±ê
+		if (isStartParse) {// å‘ç°ç›®æ ‡
 			String chars = currentDataBuilder.toString();
-			Log.i("Users", "ÕıÔÚ½âÎö" + localName);
-			// ´¦Àí
-			if (localName.equalsIgnoreCase(ENTRY_AUTHOR_NAME_TAG)) {// ÓÃ»§Ãû
+			Log.i("Users", "æ­£åœ¨è§£æ" + localName);
+			// å¤„ç†
+			if (localName.equalsIgnoreCase(ENTRY_AUTHOR_NAME_TAG)) {// ç”¨æˆ·å
 				entity.SetUserName(chars);
-			} else if (localName.equalsIgnoreCase(ENTRY_BLOG_NAME_TAG)) {// ²©¿ÍÃû
+			} else if (localName.equalsIgnoreCase(ENTRY_BLOG_NAME_TAG)) {// åšå®¢å
 				entity.SetBlogName(chars);
-			} else if (localName.equalsIgnoreCase(ENTRY_AVATOR_TAG)) {// ÓÃ»§Í·Ïñ
+			} else if (localName.equalsIgnoreCase(ENTRY_AVATOR_TAG)) {// ç”¨æˆ·å¤´åƒ
 				entity.SetAvator(chars);
-			} else if (localName.equalsIgnoreCase(ENTRY_URL_TAG)) {// ²©¿ÍµØÖ·
+			} else if (localName.equalsIgnoreCase(ENTRY_URL_TAG)) {// åšå®¢åœ°å€
 				entity.SetBlogUrl(chars);
-			} else if (localName.equalsIgnoreCase(ENTRY_POST_COUNT_TAG)) {// ²©ÎÄÊıÁ¿
+			} else if (localName.equalsIgnoreCase(ENTRY_POST_COUNT_TAG)) {// åšæ–‡æ•°é‡
 				int postCount = Integer.parseInt(chars);
 				entity.SetBlogCount(postCount);
-			} else if (localName.equalsIgnoreCase(ENTRY_UPDATE_TAG)) {// ×îºó¸üĞÂÊ±¼ä
+			} else if (localName.equalsIgnoreCase(ENTRY_UPDATE_TAG)) {// æœ€åæ›´æ–°æ—¶é—´
 				Date updateTime = AppUtil.ParseUTCDate(chars);
 				entity.SetLastUpdate(updateTime);
-			} else if (localName.equalsIgnoreCase(ENTRY_TAG)) {// ½ØÖ¹
+			} else if (localName.equalsIgnoreCase(ENTRY_TAG)) {// æˆªæ­¢
 				listUser.add(entity);
 				isStartParse = false;
 			}
@@ -118,11 +126,12 @@ public class UserListXmlParser extends DefaultHandler {
 
 		currentDataBuilder.setLength(0);
 	}
+
 	/**
-	 * ÎÄµµ½áÊøÊ±´¥·¢
+	 * æ–‡æ¡£ç»“æŸæ—¶è§¦å‘
 	 */
 	public void endDocument() throws SAXException {
-		Log.i("Users", "ÎÄµµ½âÎö½áÊø");
+		Log.i("Users", "æ–‡æ¡£è§£æç»“æŸ");
 		super.endDocument();
 	}
 }

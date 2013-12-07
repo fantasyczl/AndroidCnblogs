@@ -7,56 +7,62 @@ import android.util.Log;
 import org.xml.sax.Attributes;
 
 import com.cnblogs.android.entity.*;
+
 /**
- * Blog·µ»Øxml½âÎöÆ÷
+ * Blogè¿”å›xmlè§£æå™¨
  * 
  * @author walkingp
  * 
  */
 public class RssCateXmlParser extends DefaultHandler {
-	final String ENTRY_TAG = "Item";// Ö÷±ê¼Ç
-	final String ENTRY_ID_TAG = "CateId";// ±àºÅ±ê¼Ç
-	final String ENTRY_TITLE_TAG = "CateName";// ±êÌâ±ê¼Ç
-	final String ENTRY_ICON_TAG = "Icon";// Í¼Æ¬±ê¼Ç
-	final String ENTRY_SUMMARY_TAG = "Summary";// ¼ò½é
+	final String ENTRY_TAG = "Item";// ä¸»æ ‡è®°
+	final String ENTRY_ID_TAG = "CateId";// ç¼–å·æ ‡è®°
+	final String ENTRY_TITLE_TAG = "CateName";// æ ‡é¢˜æ ‡è®°
+	final String ENTRY_ICON_TAG = "Icon";// å›¾ç‰‡æ ‡è®°
+	final String ENTRY_SUMMARY_TAG = "Summary";// ç®€ä»‹
 
-	private ArrayList<RssCate> listRss;// ¶ÔÏó¼¯ºÏ
-	private RssCate entity;// µ¥¸ö¶ÔÏó
-	private boolean isStartParse;// ¿ªÊ¼½âÎö
-	private StringBuilder currentDataBuilder;// µ±Ç°È¡µ½µÄÖµ
+	private ArrayList<RssCate> listRss;// å¯¹è±¡é›†åˆ
+	private RssCate entity;// å•ä¸ªå¯¹è±¡
+	private boolean isStartParse;// å¼€å§‹è§£æ
+	private StringBuilder currentDataBuilder;// å½“å‰å–åˆ°çš„å€¼
+
 	/**
-	 * Ä¬ÈÏ¹¹Ôìº¯Êı
+	 * é»˜è®¤æ„é€ å‡½æ•°
 	 */
 	public RssCateXmlParser() {
 		super();
 	}
+
 	/**
-	 * ¹¹Ôìº¯Êı
+	 * æ„é€ å‡½æ•°
 	 * 
 	 * @return
 	 */
 	public RssCateXmlParser(ArrayList<RssCate> list) {
 		this.listRss = list;
 	}
+
 	/**
-	 * ½«½á¹û·µ»Ø
+	 * å°†ç»“æœè¿”å›
 	 * 
 	 * @return
 	 */
 	public ArrayList<RssCate> GetRssCateList() {
 		return listRss;
 	}
+
 	/**
-	 * ÎÄµµ¿ªÊ¼Ê±´¥·¢
+	 * æ–‡æ¡£å¼€å§‹æ—¶è§¦å‘
 	 */
 	public void startDocument() throws SAXException {
-		Log.i("Blog", "ÎÄµµ½âÎö¿ªÊ¼");
+		Log.i("Blog", "æ–‡æ¡£è§£æå¼€å§‹");
 		super.startDocument();
 		listRss = new ArrayList<RssCate>();
 		currentDataBuilder = new StringBuilder();
 	}
+
 	/**
-	 * ¶ÁÈ¡²¢½âÎöXMLÊı¾İ
+	 * è¯»å–å¹¶è§£æXMLæ•°æ®
 	 */
 	public void startElement(String uri, String localName, String qName,
 			Attributes attributes) throws SAXException {
@@ -66,8 +72,9 @@ public class RssCateXmlParser extends DefaultHandler {
 			isStartParse = true;
 		}
 	}
+
 	/**
-	 * ¶ÁÈ¡ÔªËØÄÚÈİ
+	 * è¯»å–å…ƒç´ å†…å®¹
 	 * 
 	 * @param ch
 	 * @param start
@@ -80,27 +87,28 @@ public class RssCateXmlParser extends DefaultHandler {
 		super.characters(ch, start, length);
 		currentDataBuilder.append(ch, start, length);
 	}
+
 	/**
-	 * ÔªËØ½áÊøÊ±´¥·¢
+	 * å…ƒç´ ç»“æŸæ—¶è§¦å‘
 	 */
 	@Override
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
 		super.endElement(uri, localName, qName);
-		if (isStartParse) {// ·¢ÏÖÄ¿±ê
+		if (isStartParse) {// å‘ç°ç›®æ ‡
 			String chars = currentDataBuilder.toString();
-			Log.i("Blog", "ÕıÔÚ½âÎö" + localName);
-			// ´¦Àí
-			if (localName.equalsIgnoreCase(ENTRY_TITLE_TAG)) {// ±êÌâ
+			Log.i("Blog", "æ­£åœ¨è§£æ" + localName);
+			// å¤„ç†
+			if (localName.equalsIgnoreCase(ENTRY_TITLE_TAG)) {// æ ‡é¢˜
 				entity.SetCateName(chars);
-			} else if (localName.equalsIgnoreCase(ENTRY_ICON_TAG)) {// Í¼Æ¬
+			} else if (localName.equalsIgnoreCase(ENTRY_ICON_TAG)) {// å›¾ç‰‡
 				entity.SetIcon(chars);
-			} else if (localName.equalsIgnoreCase(ENTRY_SUMMARY_TAG)) {// ¼ò½é
+			} else if (localName.equalsIgnoreCase(ENTRY_SUMMARY_TAG)) {// ç®€ä»‹
 				entity.SetSummary(chars);
-			} else if (localName.equalsIgnoreCase(ENTRY_ID_TAG)) {// ±àºÅ
+			} else if (localName.equalsIgnoreCase(ENTRY_ID_TAG)) {// ç¼–å·
 				int id = Integer.parseInt(chars);
 				entity.SetCateId(id);
-			} else if (localName.equalsIgnoreCase(ENTRY_TAG)) {// ½ØÖ¹
+			} else if (localName.equalsIgnoreCase(ENTRY_TAG)) {// æˆªæ­¢
 				listRss.add(entity);
 				isStartParse = false;
 			}
@@ -108,11 +116,12 @@ public class RssCateXmlParser extends DefaultHandler {
 
 		currentDataBuilder.setLength(0);
 	}
+
 	/**
-	 * ÎÄµµ½áÊøÊ±´¥·¢
+	 * æ–‡æ¡£ç»“æŸæ—¶è§¦å‘
 	 */
 	public void endDocument() throws SAXException {
-		Log.i("Rss", "ÎÄµµ½âÎö½áÊø");
+		Log.i("Rss", "æ–‡æ¡£è§£æç»“æŸ");
 		super.endDocument();
 	}
 }
