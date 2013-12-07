@@ -16,12 +16,15 @@ import android.widget.TextView;
 public class RssItemsAdapter extends BaseAdapter {
 	private List<RssItem> list;
 	private LayoutInflater mInflater;
+	Context mContext;
 
 	public RssItemsAdapter(Context context, List<RssItem> list) {
+		mContext = context;
 		this.list = list;
 		this.mInflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
+
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder viewHolder = null;
 		RssItem entity = list.get(position);
@@ -47,14 +50,15 @@ public class RssItemsAdapter extends BaseAdapter {
 					.findViewById(R.id.recommend_text_url);
 			viewHolder.text_blog_id = (TextView) convertView
 					.findViewById(R.id.recommend_text_id);
-			viewHolder.recommend_text_cate=(TextView)convertView.findViewById(R.id.recommend_text_cate);
+			viewHolder.recommend_text_cate = (TextView) convertView
+					.findViewById(R.id.recommend_text_cate);
 		}
 
 		viewHolder.text_title.setText(entity.GetTitle());
-		// ÊÇ·ñÒÑ¶Á
+		// æ˜¯å¦å·²è¯»
 		boolean isReaded = entity.GetIsReaded();
 		if (isReaded) {
-			viewHolder.text_title.setTextColor(R.color.gray);
+			viewHolder.text_title.setTextColor(mContext.getResources().getColor(R.color.gray));
 		}
 		viewHolder.text_full_desc.setText(entity.GetDescription());
 		String summary = AppUtil.RemoveHtmlTag(entity.GetDescription());
@@ -67,18 +71,18 @@ public class RssItemsAdapter extends BaseAdapter {
 			String simpleDateString = AppUtil.DateToChineseString(entity
 					.GetAddDate());
 			viewHolder.text_formatdate.setText(simpleDateString);
-		}else{
-			viewHolder.text_date.setText("Î´ÖªÊ±¼ä");
-			viewHolder.text_formatdate.setText("Î´ÖªÊ±¼ä");
+		} else {
+			viewHolder.text_date.setText("æœªçŸ¥æ—¶é—´");
+			viewHolder.text_formatdate.setText("æœªçŸ¥æ—¶é—´");
 		}
 		if (entity.GetLink() != null) {
 			viewHolder.text_url.setText(entity.GetLink());
 		}
 		viewHolder.text_blog_id.setText(String.valueOf(entity.GetId()));
-		
-		String cate="ÎŞ";
-		if(entity.GetCategory()!=null && !entity.GetCategory().equals("")){
-			cate=entity.GetCategory();
+
+		String cate = "æ— ";
+		if (entity.GetCategory() != null && !entity.GetCategory().equals("")) {
+			cate = entity.GetCategory();
 		}
 		viewHolder.recommend_text_cate.setText(cate);
 
@@ -87,15 +91,16 @@ public class RssItemsAdapter extends BaseAdapter {
 	}
 
 	/**
-	 * µÃµ½Êı¾İ
+	 * å¾—åˆ°æ•°æ®
 	 * 
 	 * @return
 	 */
 	public List<RssItem> GetData() {
 		return list;
 	}
+
 	/**
-	 * ²åÈë
+	 * æ’å…¥
 	 * 
 	 * @param list
 	 */
@@ -103,8 +108,9 @@ public class RssItemsAdapter extends BaseAdapter {
 		this.list.addAll(0, list);
 		this.notifyDataSetChanged();
 	}
+
 	/**
-	 * Ôö¼ÓÊı¾İ
+	 * å¢åŠ æ•°æ®
 	 * 
 	 * @param list
 	 */
@@ -112,6 +118,7 @@ public class RssItemsAdapter extends BaseAdapter {
 		this.list.addAll(list);
 		this.notifyDataSetChanged();
 	}
+
 	public int getCount() {
 		if (list == null) {
 			return 0;
@@ -126,6 +133,7 @@ public class RssItemsAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return position;
 	}
+
 	public class ViewHolder {
 		TextView text_title;
 		TextView text_desc;

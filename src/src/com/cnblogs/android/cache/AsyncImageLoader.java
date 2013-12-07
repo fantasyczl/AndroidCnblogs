@@ -19,12 +19,14 @@ import android.util.Log;
 public class AsyncImageLoader {
 	private HashMap<String, SoftReference<Drawable>> imageCache;
 	Context curContext;
+
 	public AsyncImageLoader(Context context) {
 		curContext = context;
 		imageCache = new HashMap<String, SoftReference<Drawable>>();
 	}
+
 	/*
-	 * Ö±½ÓÏÂÔØÍ¼Æ¬
+	 * ç›´æ¥ä¸‹è½½å›¾ç‰‡
 	 */
 	public void loadDrawable(final ImageCacher.EnumImageType imgType,
 			final String imageUrl) {
@@ -36,8 +38,9 @@ public class AsyncImageLoader {
 			}
 		}.start();
 	}
+
 	/**
-	 * ½«ÏÂÔØµ½±¾µØ²¢±£´æ
+	 * å°†ä¸‹è½½åˆ°æœ¬åœ°å¹¶ä¿å­˜
 	 * 
 	 * @param imgType
 	 * @param tag
@@ -56,8 +59,8 @@ public class AsyncImageLoader {
 		final String folder = ImageCacher.GetImageFolder(imgType);
 		String outFilename = folder
 				+ imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
-		Log.i("ÏÂÔØ", tag);
-		Log.i("±¾µØ", outFilename);
+		Log.i("ä¸‹è½½", tag);
+		Log.i("æœ¬åœ°", outFilename);
 		File file = new File(outFilename);
 		if (imageCache.containsKey(imageUrl)) {
 			SoftReference<Drawable> softReference = imageCache.get(imageUrl);

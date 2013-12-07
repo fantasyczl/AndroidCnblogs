@@ -26,9 +26,11 @@ public class RssListAdapter extends BaseAdapter {
 	Context context;
 	RssListAdapter adapter;
 	private EnumSource source;
+
 	public enum EnumSource {
 		MyRss, RssList
 	}
+
 	public RssListAdapter(Context context, List<RssList> list,
 			ListView listView, EnumSource source, RssListAdapter adapter) {
 		this.source = source;
@@ -39,6 +41,7 @@ public class RssListAdapter extends BaseAdapter {
 		this.mInflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
+
 	public View getView(int position, View convertView, ViewGroup parent) {
 		final ViewHolder viewHolder;
 		RssList entity = list.get(position);
@@ -47,26 +50,33 @@ public class RssListAdapter extends BaseAdapter {
 		} else {
 			viewHolder = new ViewHolder();
 			convertView = mInflater.inflate(R.layout.rsslist_list_item, null);
-			viewHolder.list_btn_rss = (Button) convertView.findViewById(R.id.list_btn_rss);
-			viewHolder.rss_item_title = (TextView) convertView.findViewById(R.id.rss_item_title);
-			viewHolder.rss_item_summary = (TextView) convertView.findViewById(R.id.rss_item_summary);
-			viewHolder.rss_item_id = (TextView) convertView.findViewById(R.id.rss_item_id);
-			viewHolder.rss_item_url = (TextView) convertView.findViewById(R.id.rss_item_url);
-			viewHolder.rss_item_is_cnblogs = (TextView) convertView.findViewById(R.id.rss_item_is_cnblogs);
-			viewHolder.rss_item_author = (TextView) convertView.findViewById(R.id.rss_item_author);
+			viewHolder.list_btn_rss = (Button) convertView
+					.findViewById(R.id.list_btn_rss);
+			viewHolder.rss_item_title = (TextView) convertView
+					.findViewById(R.id.rss_item_title);
+			viewHolder.rss_item_summary = (TextView) convertView
+					.findViewById(R.id.rss_item_summary);
+			viewHolder.rss_item_id = (TextView) convertView
+					.findViewById(R.id.rss_item_id);
+			viewHolder.rss_item_url = (TextView) convertView
+					.findViewById(R.id.rss_item_url);
+			viewHolder.rss_item_is_cnblogs = (TextView) convertView
+					.findViewById(R.id.rss_item_is_cnblogs);
+			viewHolder.rss_item_author = (TextView) convertView
+					.findViewById(R.id.rss_item_author);
 		}
-		// ÊÇ·ñÒÑ¾­¶©ÔÄ
+		// æ˜¯å¦å·²ç»è®¢é˜…
 		RssListDalHelper helper = new RssListDalHelper(context);
 		final boolean isRssed = helper.Exist(entity.GetLink());
 		viewHolder.list_btn_rss.setTag(isRssed);
-		// ÉÏÒ»¼¶Activity
-		if (source.equals(EnumSource.MyRss)) {// Èç¹ûÊÇÎÒµÄ¶©ÔÄ
+		// ä¸Šä¸€çº§Activity
+		if (source.equals(EnumSource.MyRss)) {// å¦‚æœæ˜¯æˆ‘çš„è®¢é˜…
 			viewHolder.list_btn_rss.setVisibility(View.GONE);
-		} else {// Èç¹ûÊÇ´Ó¶©ÔÄ·ÖÀà
+		} else {// å¦‚æœæ˜¯ä»è®¢é˜…åˆ†ç±»
 			OnClickListener listener = new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					// ¶©ÔÄ È¡Ïû¶©ÔÄ
+					// è®¢é˜… å–æ¶ˆè®¢é˜…
 					if (v == viewHolder.list_btn_rss) {
 						String url = viewHolder.rss_item_url.getText()
 								.toString();
@@ -91,45 +101,49 @@ public class RssListAdapter extends BaseAdapter {
 
 						RssListDalHelper helper = new RssListDalHelper(context);
 
-						// ¹ã²¥
+						// å¹¿æ’­
 						Intent intent = new Intent();
 						Bundle bundle = new Bundle();
-						bundle.putStringArray("rsslist", 
-								new String[]{entity.GetAuthor(),entity.GetDescription(),entity.GetGuid(),
-									entity.GetTitle(),entity.GetImage(),entity.GetLink(),
-									entity.GetIsCnblogs() ? "1" : "0"
-								});
-						
-						boolean _isRssed = Boolean.parseBoolean(viewHolder.list_btn_rss.getTag().toString());
-						if (_isRssed) {// ÍË¶©
+						bundle.putStringArray(
+								"rsslist",
+								new String[] { entity.GetAuthor(),
+										entity.GetDescription(),
+										entity.GetGuid(), entity.GetTitle(),
+										entity.GetImage(), entity.GetLink(),
+										entity.GetIsCnblogs() ? "1" : "0" });
+
+						boolean _isRssed = Boolean
+								.parseBoolean(viewHolder.list_btn_rss.getTag()
+										.toString());
+						if (_isRssed) {// é€€è®¢
 							helper.Delete(entity.GetLink());
 
 							viewHolder.list_btn_rss
 									.setBackgroundResource(R.drawable.drawable_btn_rss);
 							viewHolder.list_btn_rss.setText(R.string.btn_rss);
-							viewHolder.list_btn_rss.setTextColor(R.color.gray);
+							viewHolder.list_btn_rss.setTextColor(context.getResources().getColor(R.color.gray));
 							viewHolder.list_btn_rss.setTag(false);
-							
+
 							bundle.putBoolean("isrss", false);
 
-							Toast.makeText(context, R.string.unrss_succ, Toast.LENGTH_SHORT)
-									.show();
-						} else {// ¶©ÔÄ
+							Toast.makeText(context, R.string.unrss_succ,
+									Toast.LENGTH_SHORT).show();
+						} else {// è®¢é˜…
 							helper.Insert(entity);
 
 							viewHolder.list_btn_rss
 									.setBackgroundResource(R.drawable.btn_rssed);
 							viewHolder.list_btn_rss.setText(R.string.btn_unrss);
 							viewHolder.list_btn_rss
-									.setTextColor(R.color.darkblue);
+									.setTextColor(context.getResources().getColor(R.color.darkblue));
 							viewHolder.list_btn_rss.setTag(true);
 
 							bundle.putBoolean("isrss", true);
-							
-							Toast.makeText(context, R.string.rss_succ, Toast.LENGTH_SHORT)
-									.show();
+
+							Toast.makeText(context, R.string.rss_succ,
+									Toast.LENGTH_SHORT).show();
 						}
-						// ·¢ËÍ¹ã²¥
+						// å‘é€å¹¿æ’­
 						intent.putExtras(bundle);
 						intent.setAction("android.cnblogs.com.update_rsslist");
 						context.sendBroadcast(intent);
@@ -141,16 +155,15 @@ public class RssListAdapter extends BaseAdapter {
 		if (isRssed) {
 			viewHolder.list_btn_rss.setBackgroundResource(R.drawable.btn_rssed);
 			viewHolder.list_btn_rss.setText(R.string.btn_unrss);
-			viewHolder.list_btn_rss.setTextColor(R.color.gray);
+			viewHolder.list_btn_rss.setTextColor(context.getResources().getColor(R.color.gray));
 		}
 
 		viewHolder.rss_item_title.setText(entity.GetTitle().trim());
 		viewHolder.rss_item_summary.setText(entity.GetDescription().trim());
 		viewHolder.rss_item_id.setText(String.valueOf(entity.GetRssId()));
 		viewHolder.rss_item_url.setText(entity.GetLink());
-		// ÊÇ·ñ²©¿ÍÔ°£¬Èç¹ûÊÇ£¬ÔòÌø×ªµ½¸ÃÓÃ»§²©¿ÍÔ°ÎÄÕÂÁĞ±í
-		viewHolder.rss_item_is_cnblogs.setText(entity.GetIsCnblogs()
-				? "1"
+		// æ˜¯å¦åšå®¢å›­ï¼Œå¦‚æœæ˜¯ï¼Œåˆ™è·³è½¬åˆ°è¯¥ç”¨æˆ·åšå®¢å›­æ–‡ç« åˆ—è¡¨
+		viewHolder.rss_item_is_cnblogs.setText(entity.GetIsCnblogs() ? "1"
 				: "0");
 		viewHolder.rss_item_author.setText(entity.GetAuthor());
 
@@ -159,15 +172,16 @@ public class RssListAdapter extends BaseAdapter {
 	}
 
 	/**
-	 * µÃµ½Êı¾İ
+	 * å¾—åˆ°æ•°æ®
 	 * 
 	 * @return
 	 */
 	public List<RssList> GetData() {
 		return list;
 	}
+
 	/**
-	 * ²åÈë
+	 * æ’å…¥
 	 * 
 	 * @param list
 	 */
@@ -175,8 +189,9 @@ public class RssListAdapter extends BaseAdapter {
 		this.list.addAll(0, list);
 		this.notifyDataSetChanged();
 	}
+
 	/**
-	 * Ôö¼ÓÊı¾İ
+	 * å¢åŠ æ•°æ®
 	 * 
 	 * @param list
 	 */
@@ -184,19 +199,22 @@ public class RssListAdapter extends BaseAdapter {
 		this.list.addAll(list);
 		this.notifyDataSetChanged();
 	}
+
 	/**
-	 * ÒÆ³ıÊı¾İ
+	 * ç§»é™¤æ•°æ®
+	 * 
 	 * @param entity
 	 */
-	public void RemoveData(RssList entity){
-		for(int i=0,len=this.list.size();i<len;i++){
-			if(this.list.get(i).GetLink().equals(entity.GetLink())){
+	public void RemoveData(RssList entity) {
+		for (int i = 0, len = this.list.size(); i < len; i++) {
+			if (this.list.get(i).GetLink().equals(entity.GetLink())) {
 				this.list.remove(i);
 				this.notifyDataSetChanged();
 				break;
 			}
 		}
 	}
+
 	public int getCount() {
 		if (list == null) {
 			return 0;
@@ -211,6 +229,7 @@ public class RssListAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return position;
 	}
+
 	public class ViewHolder {
 		Button list_btn_rss;
 		TextView rss_item_title;

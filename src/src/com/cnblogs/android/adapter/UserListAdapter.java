@@ -28,8 +28,7 @@ public class UserListAdapter extends BaseAdapter {
 	private LayoutInflater mInflater;
 	private Context currentContext;
 
-	public UserListAdapter(Context context, List<Users> list,
-			ListView listView) {
+	public UserListAdapter(Context context, List<Users> list, ListView listView) {
 		currentContext = context;
 		this.listView = listView;
 		asyncImageLoader = new AsyncImageLoader(context);
@@ -37,6 +36,7 @@ public class UserListAdapter extends BaseAdapter {
 		this.mInflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
+
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder viewHolder = null;
 		Users entity = list.get(position);
@@ -60,7 +60,7 @@ public class UserListAdapter extends BaseAdapter {
 					.findViewById(R.id.author_list_update);
 		}
 		String tag = entity.GetAvator();
-		if (tag.contains("?")) {// 截断?后的字符串，避免无效图片
+		if (tag.contains("?")) {// 鎴柇?鍚庣殑瀛楃涓诧紝閬垮厤鏃犳晥鍥剧墖
 			tag = tag.substring(0, tag.indexOf("?"));
 		}
 
@@ -76,7 +76,7 @@ public class UserListAdapter extends BaseAdapter {
 						}
 					}
 				});
-		// 阅读模式
+		// 闃呰妯″紡
 		boolean isPicReadMode = SettingActivity.IsPicReadMode(currentContext);
 		if (isPicReadMode) {
 			viewHolder.author_list_avatar
@@ -92,7 +92,7 @@ public class UserListAdapter extends BaseAdapter {
 		viewHolder.author_list_url.setText(entity.GetBlogUrl());
 		viewHolder.author_list_username.setText(String.valueOf(entity
 				.GetUserName()));
-		// 时间
+		// 鏃堕棿
 		String simpleDateString = AppUtil.DateToChineseString(entity
 				.GetLastUpdate());//
 		viewHolder.author_list_update.setText(simpleDateString);
@@ -102,16 +102,18 @@ public class UserListAdapter extends BaseAdapter {
 		convertView.setTag(viewHolder);
 		return convertView;
 	}
+
 	/**
-	 * 得到数据
+	 * 寰楀埌鏁版嵁
 	 * 
 	 * @return
 	 */
 	public List<Users> GetData() {
 		return list;
 	}
+
 	/**
-	 * 插入
+	 * 鎻掑叆
 	 * 
 	 * @param list
 	 */
@@ -119,8 +121,9 @@ public class UserListAdapter extends BaseAdapter {
 		this.list.addAll(0, list);
 		this.notifyDataSetChanged();
 	}
+
 	/**
-	 * 增加数据
+	 * 澧炲姞鏁版嵁
 	 * 
 	 * @param list
 	 */
@@ -128,6 +131,7 @@ public class UserListAdapter extends BaseAdapter {
 		this.list.addAll(list);
 		this.notifyDataSetChanged();
 	}
+
 	public int getCount() {
 		return list.size();
 	}
@@ -139,6 +143,7 @@ public class UserListAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return position;
 	}
+
 	public class ViewHolder {
 		TextView author_list_title;
 		TextView author_list_url;

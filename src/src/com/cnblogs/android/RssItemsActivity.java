@@ -23,8 +23,7 @@ import android.widget.TextView;
 import com.cnblogs.android.adapter.RssItemsAdapter;
 import com.cnblogs.android.core.RssItemHelper;
 import com.cnblogs.android.entity.RssItem;
-/**
- */
+
 public class RssItemsActivity extends BaseActivity {
 	List<RssItem> listBlog = new ArrayList<RssItem>();
 
@@ -35,13 +34,13 @@ public class RssItemsActivity extends BaseActivity {
 	String itemTitle, itemUrl;
 
 	Button btnBack;
-	ProgressBar bodyProgressBar;// ����ListView���ؿ�
-	ImageButton btnRefresh;// ˢ�°�ť
-	ProgressBar topProgressBar;// ���ذ�ť
+	ProgressBar bodyProgressBar;
+	ImageButton btnRefresh;
+	ProgressBar topProgressBar;
 
-	TextView txtAppTitle;// ����
-	TextView txtNoData;// û�����
-	Resources res;// ��Դ
+	TextView txtAppTitle;
+	TextView txtNoData;
+	Resources res;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,9 +52,7 @@ public class RssItemsActivity extends BaseActivity {
 		BindControls();
 		new PageTask().execute();
 	}
-	/**
-	 * ��ʼ���б�
-	 */
+
 	private void InitialControls() {
 		listView = (ListView) findViewById(R.id.rss_list);
 		bodyProgressBar = (ProgressBar) findViewById(R.id.rssList_progressBar);
@@ -66,32 +63,25 @@ public class RssItemsActivity extends BaseActivity {
 		txtAppTitle = (TextView) findViewById(R.id.txtAppTitle);
 		txtNoData = (TextView) findViewById(R.id.txtNoData);
 	}
-	/**
-	 * ��ʼ�����
-	 */
+
 	void InitialData() {
 		itemTitle = getIntent().getStringExtra("title");
 		itemUrl = getIntent().getStringExtra("url");
 	}
-	/**
-	 * ���¼�
-	 */
+
 	private void BindControls() {
 		txtAppTitle.setText(itemTitle);
-		// ���
 		btnBack.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				RssItemsActivity.this.finish();
 			}
 		});
-		// ˢ��
 		btnRefresh.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				new PageTask().execute();
 			}
 		});
-		// �����ת
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v,
@@ -119,7 +109,6 @@ public class RssItemsActivity extends BaseActivity {
 				startActivity(intent);
 			}
 		});
-		// �����¼�
 		listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
 			@Override
 			public void onCreateContextMenu(ContextMenu menu, View v,
@@ -130,12 +119,7 @@ public class RssItemsActivity extends BaseActivity {
 			}
 		});
 	}
-	/**
-	 * �첽����
-	 * 
-	 * @author walkingp
-	 * 
-	 */
+
 	public class PageTask extends AsyncTask<String, Integer, List<RssItem>> {
 		@Override
 		protected List<RssItem> doInBackground(String... params) {

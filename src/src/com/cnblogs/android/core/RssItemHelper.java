@@ -16,14 +16,14 @@ import com.cnblogs.android.parser.RssItemsXmlParser;
 import com.cnblogs.android.utility.NetHelper;
 
 /**
- * Rss²Ù×÷Àà
+ * Rssæ“ä½œç±»
  * 
  * @author walkingp
  * 
  */
 public class RssItemHelper extends DefaultHandler {
 	/**
-	 * ¸ù¾İÍøÖ·µÃµ½¶©ÔÄµÄÎÄÕÂÁĞ±í
+	 * æ ¹æ®ç½‘å€å¾—åˆ°è®¢é˜…çš„æ–‡ç« åˆ—è¡¨
 	 * 
 	 * @return
 	 */
@@ -36,8 +36,9 @@ public class RssItemHelper extends DefaultHandler {
 
 		return list;
 	}
+
 	/**
-	 * ½«×Ö·û´®×ª»»ÎªRss¼¯ºÏ
+	 * å°†å­—ç¬¦ä¸²è½¬æ¢ä¸ºRssé›†åˆ
 	 * 
 	 * @return
 	 */

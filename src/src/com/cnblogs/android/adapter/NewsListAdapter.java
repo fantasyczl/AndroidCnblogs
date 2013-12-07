@@ -17,8 +17,10 @@ import android.widget.TextView;
 public class NewsListAdapter extends BaseAdapter {
 	private List<News> list;
 	private LayoutInflater mInflater;
+	Context mContext;
 
 	public NewsListAdapter(Context context, List<News> list) {
+		mContext = context;
 		this.list = list;
 		this.mInflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -33,23 +35,33 @@ public class NewsListAdapter extends BaseAdapter {
 			viewHolder = new ViewHolder();
 			convertView = mInflater.inflate(R.layout.news_list_item, null);
 
-			viewHolder.news_text_id = (TextView) convertView.findViewById(R.id.news_text_id);
-			viewHolder.news_text_title = (TextView) convertView.findViewById(R.id.news_text_title);
-			viewHolder.news_text_summary = (TextView) convertView.findViewById(R.id.news_text_summary);
-			viewHolder.news_text_diggs = (TextView) convertView.findViewById(R.id.news_text_diggs);
-			viewHolder.news_text_view = (TextView) convertView.findViewById(R.id.news_text_view);
-			viewHolder.news_text_comments = (TextView) convertView.findViewById(R.id.news_text_comments);
-			viewHolder.news_text_date = (TextView) convertView.findViewById(R.id.news_text_date);
-			viewHolder.news_text_format_date = (TextView) convertView.findViewById(R.id.news_text_format_date);
-			viewHolder.news_text_url = (TextView) convertView.findViewById(R.id.news_text_url);
-			viewHolder.icon_downloaded=(ImageView)convertView.findViewById(R.id.icon_downloaded);
+			viewHolder.news_text_id = (TextView) convertView
+					.findViewById(R.id.news_text_id);
+			viewHolder.news_text_title = (TextView) convertView
+					.findViewById(R.id.news_text_title);
+			viewHolder.news_text_summary = (TextView) convertView
+					.findViewById(R.id.news_text_summary);
+			viewHolder.news_text_diggs = (TextView) convertView
+					.findViewById(R.id.news_text_diggs);
+			viewHolder.news_text_view = (TextView) convertView
+					.findViewById(R.id.news_text_view);
+			viewHolder.news_text_comments = (TextView) convertView
+					.findViewById(R.id.news_text_comments);
+			viewHolder.news_text_date = (TextView) convertView
+					.findViewById(R.id.news_text_date);
+			viewHolder.news_text_format_date = (TextView) convertView
+					.findViewById(R.id.news_text_format_date);
+			viewHolder.news_text_url = (TextView) convertView
+					.findViewById(R.id.news_text_url);
+			viewHolder.icon_downloaded = (ImageView) convertView
+					.findViewById(R.id.icon_downloaded);
 		}
 
 		viewHolder.news_text_title.setText(entity.GetNewsTitle());
-		// 是否已读
+		// 鏄惁宸茶
 		boolean isReaded = entity.GetIsReaded();
 		if (isReaded) {
-			viewHolder.news_text_title.setTextColor(R.color.gray);
+			viewHolder.news_text_title.setTextColor(mContext.getResources().getColor(R.color.gray));
 		}
 		viewHolder.news_text_summary.setText(entity.GetSummary());
 		viewHolder.news_text_id.setText(String.valueOf(entity.GetNewsId()));
@@ -64,8 +76,8 @@ public class NewsListAdapter extends BaseAdapter {
 				.GetAddTime());
 		viewHolder.news_text_format_date.setText(simpleDateString);
 		viewHolder.news_text_url.setText(entity.GetNewsUrl());
-		
-		if(!entity.GetIsFullText()){
+
+		if (!entity.GetIsFullText()) {
 			viewHolder.icon_downloaded.setVisibility(View.GONE);
 		}
 		convertView.setTag(viewHolder);
@@ -73,15 +85,16 @@ public class NewsListAdapter extends BaseAdapter {
 	}
 
 	/**
-	 * 得到数据
+	 * 寰楀埌鏁版嵁
 	 * 
 	 * @return
 	 */
 	public List<News> GetData() {
 		return list;
 	}
+
 	/**
-	 * 插入
+	 * 鎻掑叆
 	 * 
 	 * @param list
 	 */
@@ -89,8 +102,9 @@ public class NewsListAdapter extends BaseAdapter {
 		this.list.addAll(0, list);
 		this.notifyDataSetChanged();
 	}
+
 	/**
-	 * 增加数据
+	 * 澧炲姞鏁版嵁
 	 * 
 	 * @param list
 	 */
@@ -98,6 +112,7 @@ public class NewsListAdapter extends BaseAdapter {
 		this.list.addAll(list);
 		this.notifyDataSetChanged();
 	}
+
 	public int getCount() {
 		return list.size();
 	}
@@ -109,6 +124,7 @@ public class NewsListAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return position;
 	}
+
 	public class ViewHolder {
 		TextView news_text_id;
 		TextView news_text_title;

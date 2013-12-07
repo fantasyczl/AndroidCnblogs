@@ -8,7 +8,7 @@ import android.os.Environment;
 
 public class FileAccess {
 	/**
-	 * ´´½¨ÎÄ¼þ¼Ð
+	 * åˆ›å»ºæ–‡ä»¶å¤¹
 	 * 
 	 * @param dirName
 	 */
@@ -23,12 +23,12 @@ public class FileAccess {
 	}
 
 	/**
-	 * É¾³ý´ËÂ·¾¶Ãû±íÊ¾µÄÎÄ¼þ»òÄ¿Â¼¡£ Èç¹û´ËÂ·¾¶Ãû±íÊ¾Ò»¸öÄ¿Â¼£¬Ôò»áÏÈÉ¾³ýÄ¿Â¼ÏÂµÄÄÚÈÝÔÙ½«Ä¿Â¼É¾³ý£¬ËùÒÔ¸Ã²Ù×÷²»ÊÇÔ­×ÓÐÔµÄ¡£
-	 * Èç¹ûÄ¿Â¼ÖÐ»¹ÓÐÄ¿Â¼£¬Ôò»áÒý·¢µÝ¹é¶¯×÷¡£
+	 * åˆ é™¤æ­¤è·¯å¾„åè¡¨ç¤ºçš„æ–‡ä»¶æˆ–ç›®å½•ã€‚ å¦‚æžœæ­¤è·¯å¾„åè¡¨ç¤ºä¸€ä¸ªç›®å½•ï¼Œåˆ™ä¼šå…ˆåˆ é™¤ç›®å½•ä¸‹çš„å†…å®¹å†å°†ç›®å½•åˆ é™¤ï¼Œæ‰€ä»¥è¯¥æ“ä½œä¸æ˜¯åŽŸå­æ€§çš„ã€‚
+	 * å¦‚æžœç›®å½•ä¸­è¿˜æœ‰ç›®å½•ï¼Œåˆ™ä¼šå¼•å‘é€’å½’åŠ¨ä½œã€‚
 	 * 
 	 * @param filePath
-	 *            ÒªÉ¾³ýÎÄ¼þ»òÄ¿Â¼µÄÂ·¾¶¡£
-	 * @return µ±ÇÒ½öµ±³É¹¦É¾³ýÎÄ¼þ»òÄ¿Â¼Ê±£¬·µ»Ø true£»·ñÔò·µ»Ø false¡£
+	 *            è¦åˆ é™¤æ–‡ä»¶æˆ–ç›®å½•çš„è·¯å¾„ã€‚
+	 * @return å½“ä¸”ä»…å½“æˆåŠŸåˆ é™¤æ–‡ä»¶æˆ–ç›®å½•æ—¶ï¼Œè¿”å›ž trueï¼›å¦åˆ™è¿”å›ž falseã€‚
 	 */
 	public static boolean DeleteFile(String filePath) {
 		File file = new File(filePath);
@@ -45,8 +45,9 @@ public class FileAccess {
 		}
 		return true;
 	}
+
 	/**
-	 * É¾³ýÈ«²¿ÎÄ¼þ
+	 * åˆ é™¤å…¨éƒ¨æ–‡ä»¶
 	 * 
 	 * @param file
 	 * @return
@@ -55,80 +56,91 @@ public class FileAccess {
 		File[] files = file.listFiles();
 		for (File deleteFile : files) {
 			if (deleteFile.isDirectory()) {
-				// Èç¹ûÊÇÎÄ¼þ¼Ð£¬ÔòµÝ¹éÉ¾³ýÏÂÃæµÄÎÄ¼þºóÔÙÉ¾³ý¸ÃÎÄ¼þ¼Ð
+				// å¦‚æžœæ˜¯æ–‡ä»¶å¤¹ï¼Œåˆ™é€’å½’åˆ é™¤ä¸‹é¢çš„æ–‡ä»¶åŽå†åˆ é™¤è¯¥æ–‡ä»¶å¤¹
 				if (!DeleteAllFile(deleteFile)) {
-					// Èç¹ûÊ§°ÜÔò·µ»Ø
+					// å¦‚æžœå¤±è´¥åˆ™è¿”å›ž
 					return false;
 				}
 			} else {
 				if (!deleteFile.delete()) {
-					// Èç¹ûÊ§°ÜÔò·µ»Ø
+					// å¦‚æžœå¤±è´¥åˆ™è¿”å›ž
 					return false;
 				}
 			}
 		}
 		return file.delete();
 	}
+
 	/**
-	 * µÃµ½Êý¾Ý¿âÎÄ¼þÂ·¾¶
+	 * å¾—åˆ°æ•°æ®åº“æ–‡ä»¶è·¯å¾„
+	 * 
 	 * @return
 	 */
-	public static String GetDbFileAbsolutePath(){
-		String dbPath="/data/data/" + Config.APP_PACKAGE_NAME + "/databases/" + Config.DB_FILE_NAME;
+	public static String GetDbFileAbsolutePath() {
+		String dbPath = "/data/data/" + Config.APP_PACKAGE_NAME + "/databases/"
+				+ Config.DB_FILE_NAME;
 		return dbPath;
 	}
+
 	/**
-	 * ¶ÁÈ¡ÎÄ¼þ´óÐ¡
+	 * è¯»å–æ–‡ä»¶å¤§å°
+	 * 
 	 * @param filePath
 	 * @return
 	 */
-	public static long GetFileLength(String filePath){
-		File file=new File(filePath);
+	public static long GetFileLength(String filePath) {
+		File file = new File(filePath);
 		return file.length();
 	}
+
 	/**
-	 * ¶ÁÈ¡ÎÄ¼þ¼Ð´óÐ¡
+	 * è¯»å–æ–‡ä»¶å¤¹å¤§å°
+	 * 
 	 * @param dirPath
 	 * @return
 	 */
-	public static long GetPathLength(String dirPath){
-		File dir=new File(dirPath);
+	public static long GetPathLength(String dirPath) {
+		File dir = new File(dirPath);
 		return getDirSize(dir);
 	}
+
 	/**
-	 * ¶ÁÈ¡ÎÄ¼þ¼Ð´óÐ¡
+	 * è¯»å–æ–‡ä»¶å¤¹å¤§å°
+	 * 
 	 * @param dir
 	 * @return
 	 */
-	private static long getDirSize(File dir) {  
-	    if (dir == null) {  
-	        return 0;  
-	    }  
-	    if (!dir.isDirectory()) {  
-	        return 0;  
-	    }  
-	    long dirSize = 0;  
-	    File[] files = dir.listFiles();  
-	    for (File file : files) {  
-	        if (file.isFile()) {  
-	            dirSize += file.length();  
-	        } else if (file.isDirectory()) {  
-	            dirSize += file.length();  
-	            dirSize += getDirSize(file); // Èç¹ûÓöµ½Ä¿Â¼ÔòÍ¨¹ýµÝ¹éµ÷ÓÃ¼ÌÐøÍ³¼Æ  
-	        }  
-	    }  
-	    return dirSize;  
-	} 
+	private static long getDirSize(File dir) {
+		if (dir == null) {
+			return 0;
+		}
+		if (!dir.isDirectory()) {
+			return 0;
+		}
+		long dirSize = 0;
+		File[] files = dir.listFiles();
+		for (File file : files) {
+			if (file.isFile()) {
+				dirSize += file.length();
+			} else if (file.isDirectory()) {
+				dirSize += file.length();
+				dirSize += getDirSize(file); // å¦‚æžœé‡åˆ°ç›®å½•åˆ™é€šè¿‡é€’å½’è°ƒç”¨ç»§ç»­ç»Ÿè®¡
+			}
+		}
+		return dirSize;
+	}
+
 	/**
-	 * ½«×Ö³¤³¤¶È×ª»»ÎªKB/MB
+	 * å°†å­—é•¿é•¿åº¦è½¬æ¢ä¸ºKB/MB
+	 * 
 	 * @param size
 	 * @return
 	 */
-	public static String GetFileSize(long size){
-		int kbSize=(int)size/1024;
-		if(kbSize>1024){
-			float mbSize=kbSize/1024;
-			DecimalFormat formator=new DecimalFormat( "##,###,###.## ");
+	public static String GetFileSize(long size) {
+		int kbSize = (int) size / 1024;
+		if (kbSize > 1024) {
+			float mbSize = kbSize / 1024;
+			DecimalFormat formator = new DecimalFormat("##,###,###.## ");
 			return formator.format(mbSize) + "M";
 		}
 		return kbSize + "K";

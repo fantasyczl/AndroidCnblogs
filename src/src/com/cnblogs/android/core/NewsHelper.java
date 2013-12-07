@@ -20,46 +20,50 @@ import com.cnblogs.android.parser.NewsXmlParser;
 import com.cnblogs.android.utility.NetHelper;
 
 /**
- * News²Ù×÷Àà
+ * Newsæ“ä½œç±»
  * 
  * @author walkingp
  * 
  */
 public class NewsHelper extends DefaultHandler {
 	/**
-	 * ¸ù¾İÒ³Âë·µ»ØNews¶ÔÏó¼¯ºÏ
+	 * æ ¹æ®é¡µç è¿”å›Newså¯¹è±¡é›†åˆ
 	 * 
-	 * @return pageIndex:Ò³Âë£¬´Ó1¿ªÊ¼
+	 * @return pageIndex:é¡µç ï¼Œä»1å¼€å§‹
 	 */
 	public static ArrayList<News> GetNewsList(int pageIndex) {
 		int pageSize = Config.NEWS_PAGE_SIZE;
 		String url = Config.URL_GET_NEWS_LIST.replace("{pageIndex}",
 				String.valueOf(pageIndex)).replace("{pageSize}",
-				String.valueOf(pageSize));// Êı¾İµØÖ·
+				String.valueOf(pageSize));// æ•°æ®åœ°å€
 		String dataString = NetHelper.GetContentFromUrl(url);
 
 		ArrayList<News> list = ParseString(dataString);
 
 		return list;
 	}
+
 	/**
-	 * ÍÆ¼öĞÂÎÅ
-	 * @param pageIndex£ºÒ³Âë£¬´Ó1¿ªÊ¼
+	 * æ¨èæ–°é—»
+	 * 
+	 * @param pageIndex
+	 *            ï¼šé¡µç ï¼Œä»1å¼€å§‹
 	 * @return
 	 */
-	public static List<News> GetRecommendNewsList(int pageIndex){
-		int pageSize=Config.NEWS_PAGE_SIZE;
+	public static List<News> GetRecommendNewsList(int pageIndex) {
+		int pageSize = Config.NEWS_PAGE_SIZE;
 		String url = Config.URL_RECOMMEND_NEWS_LIST.replace("{pageIndex}",
 				String.valueOf(pageIndex)).replace("{pageSize}",
-				String.valueOf(pageSize));// Êı¾İµØÖ·
+				String.valueOf(pageSize));// æ•°æ®åœ°å€
 		String dataString = NetHelper.GetContentFromUrl(url);
 
 		List<News> list = ParseString(dataString);
 
 		return list;
 	}
+
 	/**
-	 * ½«×Ö·û´®×ª»»ÎªNews¼¯ºÏ
+	 * å°†å­—ç¬¦ä¸²è½¬æ¢ä¸ºNewsé›†åˆ
 	 * 
 	 * @return
 	 */
@@ -84,8 +88,9 @@ public class NewsHelper extends DefaultHandler {
 
 		return listNews;
 	}
+
 	/**
-	 * ¸ù¾İ±àºÅ»ñÈ¡²©¿ÍÄÚÈİ
+	 * æ ¹æ®ç¼–å·è·å–åšå®¢å†…å®¹
 	 * 
 	 * @param blogId
 	 * @return
@@ -93,7 +98,7 @@ public class NewsHelper extends DefaultHandler {
 	public static String GetNewsContentByIdWithNet(int newsId) {
 		String newsContent = "";
 		String url = Config.URL_GET_NEWS_DETAIL.replace("{0}",
-				String.valueOf(newsId));// ÍøÖ·
+				String.valueOf(newsId));// ç½‘å€
 		String xml = NetHelper.GetContentFromUrl(url);
 		if (xml == "") {
 			return "";
@@ -104,30 +109,33 @@ public class NewsHelper extends DefaultHandler {
 	}
 
 	/**
-	 * ¸ù¾İ±àºÅ»ñÈ¡²©¿ÍÄÚÈİ(ÏÈÈ¡±¾µØ£¬ÔÙÈ¡ÍøÂç)
+	 * æ ¹æ®ç¼–å·è·å–åšå®¢å†…å®¹(å…ˆå–æœ¬åœ°ï¼Œå†å–ç½‘ç»œ)
 	 * 
 	 * @param blogId
 	 * @return
 	 */
 	public static String GetNewsContentById(int newsId, Context context) {
 		String newsContent = "";
-		// ÓÅÏÈ¿¼ÂÇ±¾µØÊı¾İ
+		// ä¼˜å…ˆè€ƒè™‘æœ¬åœ°æ•°æ®
 		NewsDalHelper helper = new NewsDalHelper(context);
 		News entity = helper.GetNewsEntity(newsId);
 		if (null == entity || entity.GetNewsContent().equals("")) {
 			newsContent = GetNewsContentByIdWithNet(newsId);
-			//String _newsContent=ImageCacher.FormatLocalHtmlWithImg(ImageCacher.EnumImageType.News, newsContent);
-			//if (Config.IS_SYNCH2DB_AFTER_READ) {
-			//	helper.SynchronyContent2DB(newsId, _newsContent);// Í¬²½ÖÁÊı¾İ¿â
-			//}
+			// String
+			// _newsContent=ImageCacher.FormatLocalHtmlWithImg(ImageCacher.EnumImageType.News,
+			// newsContent);
+			// if (Config.IS_SYNCH2DB_AFTER_READ) {
+			// helper.SynchronyContent2DB(newsId, _newsContent);// åŒæ­¥è‡³æ•°æ®åº“
+			// }
 		} else {
 			newsContent = entity.GetNewsContent();
 		}
 
 		return newsContent;
 	}
+
 	/**
-	 * ½«×Ö·û´®×ª»»ÎªĞÂÎÅÄÚÈİ
+	 * å°†å­—ç¬¦ä¸²è½¬æ¢ä¸ºæ–°é—»å†…å®¹
 	 * 
 	 * @return
 	 */

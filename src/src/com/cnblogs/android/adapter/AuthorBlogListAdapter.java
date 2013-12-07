@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 public class AuthorBlogListAdapter extends BaseAdapter {
 	private List<Blog> list;
 	private LayoutInflater mInflater;
@@ -19,7 +20,7 @@ public class AuthorBlogListAdapter extends BaseAdapter {
 
 	public AuthorBlogListAdapter(Context context, List<Blog> list) {
 		this.list = list;
-		this.context=context;
+		this.context = context;
 		this.mInflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
@@ -57,10 +58,10 @@ public class AuthorBlogListAdapter extends BaseAdapter {
 		}
 
 		viewHolder.recommend_text_title.setText(entity.GetBlogTitle());
-		// 是否已读
+		// 鏄惁宸茶
 		boolean isReaded = entity.GetIsReaded();
 		if (isReaded) {
-			viewHolder.recommend_text_title.setTextColor(R.color.gray);
+			viewHolder.recommend_text_title.setTextColor(context.getResources().getColor(R.color.gray));
 		}
 		viewHolder.recommend_text_desc.setText(entity.GetSummary());
 		viewHolder.recommend_text_diggs.setText(String.valueOf(entity
@@ -77,22 +78,23 @@ public class AuthorBlogListAdapter extends BaseAdapter {
 		viewHolder.recommend_text_formatdate.setText(simpleDateString);
 		viewHolder.recommend_text_url.setText(entity.GetBlogUrl());
 		viewHolder.recommend_text_id
-				.setText(String.valueOf(entity.GetBlogId()));		
-
+				.setText(String.valueOf(entity.GetBlogId()));
 
 		convertView.setTag(viewHolder);
 		return convertView;
 	}
+
 	/**
-	 * 得到数据
+	 * 寰楀埌鏁版嵁
 	 * 
 	 * @return
 	 */
 	public List<Blog> GetData() {
 		return list;
 	}
+
 	/**
-	 * 插入
+	 * 鎻掑叆
 	 * 
 	 * @param list
 	 */
@@ -100,8 +102,9 @@ public class AuthorBlogListAdapter extends BaseAdapter {
 		this.list.addAll(0, list);
 		this.notifyDataSetChanged();
 	}
+
 	/**
-	 * 增加数据
+	 * 澧炲姞鏁版嵁
 	 * 
 	 * @param list
 	 */
@@ -109,6 +112,7 @@ public class AuthorBlogListAdapter extends BaseAdapter {
 		this.list.addAll(list);
 		this.notifyDataSetChanged();
 	}
+
 	public int getCount() {
 		return list.size();
 	}
@@ -120,6 +124,7 @@ public class AuthorBlogListAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return position;
 	}
+
 	public class ViewHolder {
 		TextView recommend_text_id;
 		TextView recommend_text_title;

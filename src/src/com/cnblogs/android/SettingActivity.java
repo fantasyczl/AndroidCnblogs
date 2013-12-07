@@ -41,76 +41,77 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
 /**
- * ÉèÖÃ
+ * è®¾ç½®
+ * 
  * @author walkingp
  * @date:2011-12
- *
+ * 
  */
-public class SettingActivity extends PreferenceActivity
-		implements
-			OnPreferenceClickListener,
-			OnClickListener,
-			OnMultiChoiceClickListener,
-			Preference.OnPreferenceChangeListener {
+public class SettingActivity extends PreferenceActivity implements
+		OnPreferenceClickListener, OnClickListener, OnMultiChoiceClickListener,
+		Preference.OnPreferenceChangeListener {
 
 	// preference key
-	private static final String CONFIG_ABOUT_OPTION_KEY = "config_about";// ¹ØÓÚ
-	private static final String CONFIG_UPDATE_OPTION_KEY = "config_update";// ¸üĞÂ°æ±¾
-	private static final String CONFIG_READ_MODE_OPTION_KEY = "config_read_mode";// ÔÄ¶ÁÄ£Ê½
-	private static final String CONFIG_IS_HORIZONTAL = "config_is_horizontal";// ÊÇ·ñÔÊĞíºáÊúÆÁ
-	private static final String CONFIG_CLEAR_CACHE = "config_clear_cache";// Çå¿Õ»º´æ
+	private static final String CONFIG_ABOUT_OPTION_KEY = "config_about";// å…³äº
+	private static final String CONFIG_UPDATE_OPTION_KEY = "config_update";// æ›´æ–°ç‰ˆæœ¬
+	private static final String CONFIG_READ_MODE_OPTION_KEY = "config_read_mode";// é˜…è¯»æ¨¡å¼
+	private static final String CONFIG_IS_HORIZONTAL = "config_is_horizontal";// æ˜¯å¦å…è®¸æ¨ªç«–å±
+	private static final String CONFIG_CLEAR_CACHE = "config_clear_cache";// æ¸…ç©ºç¼“å­˜
 	// Dialog id
-	private static final int DIALOG_READ_MODE_GUID = 0;// ÔÄ¶ÁÄ£Ê½¶Ô»°¿ò
-	private static final int DIALOG_CLEAR_CACHE = 1;// Çå¿Õ»º´æ¶Ô»°¿ò
+	private static final int DIALOG_READ_MODE_GUID = 0;// é˜…è¯»æ¨¡å¼å¯¹è¯æ¡†
+	private static final int DIALOG_CLEAR_CACHE = 1;// æ¸…ç©ºç¼“å­˜å¯¹è¯æ¡†
 
-	private static final String itemPicMode = "0";// Í¼ÎÄÄ£Ê½
+	private static final String itemPicMode = "0";// å›¾æ–‡æ¨¡å¼
 
-	ProgressDialog progressDialog;// ¸üĞÂ°æ±¾Ê±½ø¶È¿ò
+	ProgressDialog progressDialog;// æ›´æ–°ç‰ˆæœ¬æ—¶è¿›åº¦æ¡†
 
-	private ListPreference listReadMode;// ÔÄ¶ÁÄ£Ê½
-	private CheckBoxPreference listIsHorizontal;// ÊÇ·ñºáÆÁ
-	static Resources res;// ×ÊÔ´
+	private ListPreference listReadMode;// é˜…è¯»æ¨¡å¼
+	private CheckBoxPreference listIsHorizontal;// æ˜¯å¦æ¨ªå±
+	static Resources res;// èµ„æº
 
-	private AlertDialog dialogSelectReadMode;// ¶Ô»°¿ò
-	static SharedPreferences sharePreferences;// ÉèÖÃ
+	private AlertDialog dialogSelectReadMode;// å¯¹è¯æ¡†
+	static SharedPreferences sharePreferences;// è®¾ç½®
 
 	PreferenceScreen preferencescreen;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preference);
 
 		res = this.getResources();
-		// °ó¶¨µã»÷
+		// ç»‘å®šç‚¹å‡»
 		preferencescreen = getPreferenceScreen();
 		preferencescreen.findPreference(CONFIG_ABOUT_OPTION_KEY)
 				.setOnPreferenceClickListener(this);
-		// ¼ì²é¸üĞÂµã»÷¼àÌı
+		// æ£€æŸ¥æ›´æ–°ç‚¹å‡»ç›‘å¬
 		preferencescreen.findPreference(CONFIG_UPDATE_OPTION_KEY)
 				.setOnPreferenceClickListener(this);
-		// ÔÊĞíºáÊúÆÁ
+		// å…è®¸æ¨ªç«–å±
 		preferencescreen.findPreference(CONFIG_IS_HORIZONTAL)
 				.setOnPreferenceClickListener(this);
 		listIsHorizontal = (CheckBoxPreference) findPreference(CONFIG_IS_HORIZONTAL);
 
-		// ¶ÁÈ¡ÔÄ¶ÁÄ£Ê½
+		// è¯»å–é˜…è¯»æ¨¡å¼
 		preferencescreen.findPreference(CONFIG_READ_MODE_OPTION_KEY)
 				.setOnPreferenceChangeListener(this);
-		// Çå¿Õ»º´æ
+		// æ¸…ç©ºç¼“å­˜
 		preferencescreen.findPreference(CONFIG_CLEAR_CACHE)
 				.setOnPreferenceClickListener(this);
 		listReadMode = (ListPreference) findPreference(CONFIG_READ_MODE_OPTION_KEY);
 
 		String readMode = GetConfigReadMode(getApplicationContext());
-		listReadMode.setSummary("µ±Ç°Ñ¡Ôñ£º" + GetReadMode(readMode));
+		listReadMode.setSummary("å½“å‰é€‰æ‹©ï¼š" + GetReadMode(readMode));
 
 		sharePreferences = GetDefaultSharedPreferences(this);
 
 		BindControls();
 	}
+
 	/**
-	 * µÃµ½Ä¬ÈÏµÄsharedPreferences
+	 * å¾—åˆ°é»˜è®¤çš„sharedPreferences
 	 * 
 	 * @return
 	 */
@@ -119,15 +120,17 @@ public class SettingActivity extends PreferenceActivity
 				context.getResources().getString(R.string.preferences_key),
 				MODE_PRIVATE);
 	}
+
 	/**
-	 * ÉèÖÃ³õÊ¼×´Ì¬
+	 * è®¾ç½®åˆå§‹çŠ¶æ€
 	 */
 	void BindControls() {
 		boolean isHorizontal = getIsAutoHorizontal(getApplicationContext());
 		listIsHorizontal.setSelectable(isHorizontal);
 	}
+
 	/**
-	 * ºáÊúÆÁ
+	 * æ¨ªç«–å±
 	 */
 	@Override
 	protected void onResume() {
@@ -137,21 +140,24 @@ public class SettingActivity extends PreferenceActivity
 		else
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
 	}
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 	}
+
 	/**
-	 * ÔÄ¶ÁÄ£Ê½
+	 * é˜…è¯»æ¨¡å¼
 	 * 
 	 * @param mode
 	 * @return
 	 */
 	private static String GetReadMode(String mode) {
-		return mode.equalsIgnoreCase(itemPicMode) ? "Í¼ÎÄÄ£Ê½" : "ÎÄ±¾Ä£Ê½";
+		return mode.equalsIgnoreCase(itemPicMode) ? "å›¾æ–‡æ¨¡å¼" : "æ–‡æœ¬æ¨¡å¼";
 	}
+
 	/**
-	 * ÊÇ·ñÍ¼Æ¬Ä£Ê½
+	 * æ˜¯å¦å›¾ç‰‡æ¨¡å¼
 	 * 
 	 * @param context
 	 * @return
@@ -159,8 +165,9 @@ public class SettingActivity extends PreferenceActivity
 	public static boolean IsPicReadMode(Context context) {
 		return GetConfigReadMode(context).equalsIgnoreCase(itemPicMode);
 	}
+
 	/**
-	 * µÃµ½ÔÄ¶ÁÄ£Ê½
+	 * å¾—åˆ°é˜…è¯»æ¨¡å¼
 	 * 
 	 * @param context
 	 * @return
@@ -169,28 +176,30 @@ public class SettingActivity extends PreferenceActivity
 		return GetDefaultSharedPreferences(context).getString(
 				CONFIG_READ_MODE_OPTION_KEY, "0");
 	}
+
 	/**
-	 * ×Ô¶¯ºáÊúÆÁ
+	 * è‡ªåŠ¨æ¨ªç«–å±
 	 * 
 	 * @param context
 	 * @return
 	 */
 	public static boolean getIsAutoHorizontal(Context context) {
-		SharedPreferences sp=GetDefaultSharedPreferences(context);
+		SharedPreferences sp = GetDefaultSharedPreferences(context);
 		boolean isHorizontal = sp.getBoolean(CONFIG_IS_HORIZONTAL, true);
 		return isHorizontal;
 	}
+
 	/**
-	 * ÉèÖÃÀïÃæµÄµ¥»÷ÊÂ¼ş
+	 * è®¾ç½®é‡Œé¢çš„å•å‡»äº‹ä»¶
 	 * 
 	 * @return
 	 */
 	public boolean onPreferenceClick(Preference preference) {
 		String key = preference.getKey();
-		if (key.equals(CONFIG_READ_MODE_OPTION_KEY)) {// ÔÄ¶ÁÄ£Ê½
+		if (key.equals(CONFIG_READ_MODE_OPTION_KEY)) {// é˜…è¯»æ¨¡å¼
 			showDialog(DIALOG_READ_MODE_GUID);
 			return true;
-		} else if (key.equalsIgnoreCase(CONFIG_ABOUT_OPTION_KEY)) {// ¹ØÓÚ
+		} else if (key.equalsIgnoreCase(CONFIG_ABOUT_OPTION_KEY)) {// å…³äº
 			Intent intent = new Intent();
 			intent.setClass(getApplicationContext(), AboutActivity.class);
 			Bundle bundle = new Bundle();
@@ -199,7 +208,7 @@ public class SettingActivity extends PreferenceActivity
 
 			startActivityForResult(intent, 0);
 			return true;
-		} else if (key.equalsIgnoreCase(CONFIG_UPDATE_OPTION_KEY)) {// ¸üĞÂ
+		} else if (key.equalsIgnoreCase(CONFIG_UPDATE_OPTION_KEY)) {// æ›´æ–°
 			ConnectivityManager cManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 			NetworkInfo info = cManager.getActiveNetworkInfo();
 			if (info != null && info.isAvailable()) {
@@ -210,7 +219,7 @@ public class SettingActivity extends PreferenceActivity
 						R.string.sys_network_error, Toast.LENGTH_SHORT).show();
 			}
 			return true;
-		} else if (key.equalsIgnoreCase(CONFIG_IS_HORIZONTAL)) {// ÔÊĞíºáÊúÆÁ
+		} else if (key.equalsIgnoreCase(CONFIG_IS_HORIZONTAL)) {// å…è®¸æ¨ªç«–å±
 			boolean isHorizontal = preferencescreen.findPreference(
 					CONFIG_IS_HORIZONTAL).isSelectable(); // sharePreferences.getBoolean(CONFIG_IS_HORIZONTAL,
 															// true);
@@ -218,20 +227,20 @@ public class SettingActivity extends PreferenceActivity
 					.putBoolean(CONFIG_IS_HORIZONTAL, isHorizontal).commit();
 
 			return true;
-		} else if (key.equalsIgnoreCase(CONFIG_CLEAR_CACHE)) {// Çå¿Õ»º´æ
+		} else if (key.equalsIgnoreCase(CONFIG_CLEAR_CACHE)) {// æ¸…ç©ºç¼“å­˜
 			showDialog(DIALOG_CLEAR_CACHE);
 			return true;
 		}
 		return false;
 	}
-	// ÔÄ¶ÁÄ£Ê½
+
+	// é˜…è¯»æ¨¡å¼
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
 		if (preference == listReadMode) {
-			String readMode = newValue.toString().equalsIgnoreCase("0")
-					? "Í¼ÎÄÄ£Ê½"
-					: "ÎÄ×ÖÄ£Ê½";
-			listReadMode.setSummary("µ±Ç°Ñ¡Ôñ£º" + readMode);
+			String readMode = newValue.toString().equalsIgnoreCase("0") ? "å›¾æ–‡æ¨¡å¼"
+					: "æ–‡å­—æ¨¡å¼";
+			listReadMode.setSummary("å½“å‰é€‰æ‹©ï¼š" + readMode);
 			SharedPreferences.Editor editor = sharePreferences.edit();
 
 			editor.putString(CONFIG_READ_MODE_OPTION_KEY, newValue.toString());
@@ -240,8 +249,9 @@ public class SettingActivity extends PreferenceActivity
 
 		return true;
 	}
+
 	/**
-	 * Ñ¡ÔñÔÄ¶ÁÄ£Ê½
+	 * é€‰æ‹©é˜…è¯»æ¨¡å¼
 	 */
 	@Override
 	public void onClick(DialogInterface dialog, int which, boolean isChecked) {
@@ -260,91 +270,106 @@ public class SettingActivity extends PreferenceActivity
 	public void onClick(DialogInterface dialog, int which) {
 
 	}
+
 	/**
-	 * ´´½¨¶Ô»°¿ò
+	 * åˆ›å»ºå¯¹è¯æ¡†
 	 */
 	protected Dialog onCreateDialog(int dialogGuid) {
 		Dialog mDialog = null;
 		switch (dialogGuid) {
-			case DIALOG_READ_MODE_GUID :// ÔÄ¶ÁÄ£Ê½
-				mDialog = new AlertDialog.Builder(this)
-						.setTitle(R.string.config_read_mode_title)
-						.setPositiveButton(R.string.com_btn_ok,
-								new DialogInterface.OnClickListener() {// È·¶¨
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										// dialog.dismiss();
-									}
-								})
-						.setNegativeButton(R.string.com_btn_cancel,
-								new DialogInterface.OnClickListener() {// È¡Ïû
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										dialog.dismiss();
-									}
-								}).create();
+		case DIALOG_READ_MODE_GUID:// é˜…è¯»æ¨¡å¼
+			mDialog = new AlertDialog.Builder(this)
+					.setTitle(R.string.config_read_mode_title)
+					.setPositiveButton(R.string.com_btn_ok,
+							new DialogInterface.OnClickListener() {// ç¡®å®š
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									// dialog.dismiss();
+								}
+							})
+					.setNegativeButton(R.string.com_btn_cancel,
+							new DialogInterface.OnClickListener() {// å–æ¶ˆ
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									dialog.dismiss();
+								}
+							}).create();
 
-				dialogSelectReadMode = (AlertDialog) mDialog;
-				break;
-			case DIALOG_CLEAR_CACHE :// Çå¿Õ»º´æ
-				//progressDialog = new ProgressDialog(SettingActivity.this);
-				//progressDialog=ProgressDialog.show(SettingActivity.this, "»ñÈ¡ĞÅÏ¢", "¼ÆËãÖĞ£¬ÇëÉÔºò¡­¡­",false,true);
+			dialogSelectReadMode = (AlertDialog) mDialog;
+			break;
+		case DIALOG_CLEAR_CACHE:// æ¸…ç©ºç¼“å­˜
+			// progressDialog = new ProgressDialog(SettingActivity.this);
+			// progressDialog=ProgressDialog.show(SettingActivity.this, "è·å–ä¿¡æ¯",
+			// "è®¡ç®—ä¸­ï¼Œè¯·ç¨å€™â€¦â€¦",false,true);
 
-				/*progressDialog = new ProgressDialog(SettingActivity.this);
-				progressDialog.setTitle("»ñÈ¡ĞÅÏ¢");
-				progressDialog.setMessage("¼ÆËãÖĞ£¬ÇëÉÔºò¡­¡­");
-				progressDialog.show();*/
-				LayoutInflater inflater = LayoutInflater
-						.from(getApplicationContext());
-				View layout = inflater.inflate(R.layout.dialog_clear_cache,
-						null);
-				TextView tvCacheCapcity=(TextView)layout.findViewById(R.id.tvCacheCapcity);
-				String cacheText=tvCacheCapcity.getText().toString();
-				//Êı¾İ¿âÎÄ¼ş´óĞ¡
-				String dbPath=FileAccess.GetDbFileAbsolutePath();
-				long dbSize=FileAccess.GetFileLength(dbPath);
-				//»º´æÎÄ¼ş¼Ğ´óĞ¡
-				final String cachePath=res.getString(R.string.app_images_location_path);
-				long imgSize=FileAccess.GetPathLength(cachePath);
-				cacheText=cacheText.replace("{0}", FileAccess.GetFileSize(dbSize)).replace("{1}", FileAccess.GetFileSize(imgSize));
-				tvCacheCapcity.setText(cacheText);
-				//progressDialog.dismiss();
-				mDialog = new AlertDialog.Builder(this)
-						.setView(layout)
-						.setTitle(R.string.dialog_clear_cache_bar_title)
-						.setPositiveButton(
-								R.string.dialog_clear_cache_bar_title,
-								new DialogInterface.OnClickListener() {// È·¶¨
-									@Override
-									public void onClick(DialogInterface dialog,int which) {
-										//progressDialog=ProgressDialog.show(getApplicationContext(), "Çå¿Õ»º´æ", "ÇåÀíÖĞ£¬ÇëÉÔºò¡­¡­",true,false);
-										try{
-											//Çå¿ÕÎŞÓÃÊı¾İ
-											DBHelper.DatabaseHelper.ClearData(getApplicationContext());
-											//É¾³ı»º´æÎÄ¼ş
-											FileAccess.DeleteFile(cachePath);
-											Toast.makeText(getApplicationContext(), R.string.config_clear_cache_succ,Toast.LENGTH_SHORT).show();
-										}catch(Exception ex){
-											Log.e("clear_cache", ex.getMessage());
-											Toast.makeText(getApplicationContext(), R.string.sys_error,Toast.LENGTH_SHORT).show();
-										}
+			/*
+			 * progressDialog = new ProgressDialog(SettingActivity.this);
+			 * progressDialog.setTitle("è·å–ä¿¡æ¯");
+			 * progressDialog.setMessage("è®¡ç®—ä¸­ï¼Œè¯·ç¨å€™â€¦â€¦"); progressDialog.show();
+			 */
+			LayoutInflater inflater = LayoutInflater
+					.from(getApplicationContext());
+			View layout = inflater.inflate(R.layout.dialog_clear_cache, null);
+			TextView tvCacheCapcity = (TextView) layout
+					.findViewById(R.id.tvCacheCapcity);
+			String cacheText = tvCacheCapcity.getText().toString();
+			// æ•°æ®åº“æ–‡ä»¶å¤§å°
+			String dbPath = FileAccess.GetDbFileAbsolutePath();
+			long dbSize = FileAccess.GetFileLength(dbPath);
+			// ç¼“å­˜æ–‡ä»¶å¤¹å¤§å°
+			final String cachePath = res
+					.getString(R.string.app_images_location_path);
+			long imgSize = FileAccess.GetPathLength(cachePath);
+			cacheText = cacheText
+					.replace("{0}", FileAccess.GetFileSize(dbSize)).replace(
+							"{1}", FileAccess.GetFileSize(imgSize));
+			tvCacheCapcity.setText(cacheText);
+			// progressDialog.dismiss();
+			mDialog = new AlertDialog.Builder(this)
+					.setView(layout)
+					.setTitle(R.string.dialog_clear_cache_bar_title)
+					.setPositiveButton(R.string.dialog_clear_cache_bar_title,
+							new DialogInterface.OnClickListener() {// ç¡®å®š
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									// progressDialog=ProgressDialog.show(getApplicationContext(),
+									// "æ¸…ç©ºç¼“å­˜", "æ¸…ç†ä¸­ï¼Œè¯·ç¨å€™â€¦â€¦",true,false);
+									try {
+										// æ¸…ç©ºæ— ç”¨æ•°æ®
+										DBHelper.DatabaseHelper
+												.ClearData(getApplicationContext());
+										// åˆ é™¤ç¼“å­˜æ–‡ä»¶
+										FileAccess.DeleteFile(cachePath);
+										Toast.makeText(
+												getApplicationContext(),
+												R.string.config_clear_cache_succ,
+												Toast.LENGTH_SHORT).show();
+									} catch (Exception ex) {
+										Log.e("clear_cache", ex.getMessage());
+										Toast.makeText(getApplicationContext(),
+												R.string.sys_error,
+												Toast.LENGTH_SHORT).show();
 									}
-								})
-						.setNegativeButton(R.string.com_btn_cancel,
-								new DialogInterface.OnClickListener() {// È¡Ïû
-									@Override
-									public void onClick(DialogInterface dialog,int which) {
-										dialog.dismiss();
-									}
-								}).create();
-				break;
+								}
+							})
+					.setNegativeButton(R.string.com_btn_cancel,
+							new DialogInterface.OnClickListener() {// å–æ¶ˆ
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									dialog.dismiss();
+								}
+							}).create();
+			break;
 		}
 		return mDialog;
 	}
+
 	/**
-	 * »ñÈ¡·şÎñÆ÷¶Ë³ÌĞò°æ±¾ºÅ£¬È»ºóºÍ±¾µØ°æ±¾ºÅ±È½Ï£¬ÅĞ¶ÏÊÇ·ñĞèÒª¸üĞÂ
+	 * è·å–æœåŠ¡å™¨ç«¯ç¨‹åºç‰ˆæœ¬å·ï¼Œç„¶åå’Œæœ¬åœ°ç‰ˆæœ¬å·æ¯”è¾ƒï¼Œåˆ¤æ–­æ˜¯å¦éœ€è¦æ›´æ–°
 	 */
 	public class GetVersionThread extends AsyncTask<Void, Void, App> {
 		@Override
@@ -354,7 +379,7 @@ public class SettingActivity extends PreferenceActivity
 			try {
 				String dataString = NetHelper.GetContentFromUrl(url);
 
-				// ½âÎöjson
+				// è§£æjson
 				if (!dataString.equals("")) {
 					try {
 						List<App> list = new ArrayList<App>();
@@ -399,6 +424,7 @@ public class SettingActivity extends PreferenceActivity
 			}
 			return null;
 		}
+
 		@Override
 		protected void onPostExecute(App entity) {
 			super.onPostExecute(entity);
@@ -439,6 +465,7 @@ public class SettingActivity extends PreferenceActivity
 								}).show();
 			}
 		}
+
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();

@@ -54,7 +54,8 @@ public class MyFavListAdapter extends BaseAdapter {
 					.findViewById(R.id.recommend_text_domain);
 			viewHolder.text_blog_id = (TextView) convertView
 					.findViewById(R.id.recommend_text_id);
-			viewHolder.text_user_name=(TextView)convertView.findViewById(R.id.recommend_user_name);
+			viewHolder.text_user_name = (TextView) convertView
+					.findViewById(R.id.recommend_user_name);
 		}
 
 		viewHolder.text_title.setText(entity.GetBlogTitle());
@@ -76,16 +77,18 @@ public class MyFavListAdapter extends BaseAdapter {
 		convertView.setTag(viewHolder);
 		return convertView;
 	}
+
 	/**
-	 * 得到数据
+	 * 寰楀埌鏁版嵁
 	 * 
 	 * @return
 	 */
 	public List<Blog> GetData() {
 		return list;
 	}
+
 	/**
-	 * 插入
+	 * 鎻掑叆
 	 * 
 	 * @param list
 	 */
@@ -93,8 +96,9 @@ public class MyFavListAdapter extends BaseAdapter {
 		this.list.addAll(0, list);
 		this.notifyDataSetChanged();
 	}
+
 	/**
-	 * 增加数据
+	 * 澧炲姞鏁版嵁
 	 * 
 	 * @param list
 	 */
@@ -102,19 +106,22 @@ public class MyFavListAdapter extends BaseAdapter {
 		this.list.addAll(list);
 		this.notifyDataSetChanged();
 	}
+
 	/**
-	 * 移除数据
+	 * 绉婚櫎鏁版嵁
+	 * 
 	 * @param entity
 	 */
-	public void RemoveData(Blog entity){
-		for(int i=0,len=this.list.size();i<len;i++){
-			if(this.list.get(i).GetBlogId()==entity.GetBlogId()){
+	public void RemoveData(Blog entity) {
+		for (int i = 0, len = this.list.size(); i < len; i++) {
+			if (this.list.get(i).GetBlogId() == entity.GetBlogId()) {
 				this.list.remove(i);
 				this.notifyDataSetChanged();
 				break;
 			}
 		}
 	}
+
 	public int getCount() {
 		return list.size();
 	}
@@ -126,6 +133,7 @@ public class MyFavListAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return position;
 	}
+
 	public class ViewHolder {
 		TextView text_title;
 		TextView text_desc;

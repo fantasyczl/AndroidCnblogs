@@ -66,12 +66,7 @@ public class BlogDalHelper {
 
 		return list;
 	}
-	/**
-	 * @param author
-	 * @param pageIndex
-	 * @param pageSize
-	 * @return
-	 */
+
 	public List<Blog> GetBlogListByAuthor(String author,int pageIndex,int pageSize){
 		String limit = String.valueOf((pageIndex - 1) * pageSize) + "," + String.valueOf(pageSize);
 		String where="AuthorName=?";
@@ -80,8 +75,7 @@ public class BlogDalHelper {
 		
 		return list;
 	}
-	/**
-	 */
+
 	public Blog GetBlogEntity(int blogId) {
 		String limit = "1";
 		String where = "BlogId=?";
@@ -149,22 +143,13 @@ public class BlogDalHelper {
 		}
 		return false;
 	}
-	/**
-	 * ��־Ϊ�Ѷ�
-	 * 
-	 * @param blogId
-	 */
+
 	public void MarkAsReaded(int blogId) {
 		String sql = "update BlogList set IsReaded=1 where BlogId=?";
 		String[] args = {String.valueOf(blogId)};
 		db.execSQL(sql, args);
 	}
-	/**
-	 * ����������ͬ������ݿ�
-	 * 
-	 * @param blogId
-	 * @param blogContent
-	 */
+
 	public void SynchronyContent2DB(int blogId, String blogContent) {
 		if (blogContent.equals("")) {
 			return;
@@ -173,11 +158,7 @@ public class BlogDalHelper {
 		String[] args = {blogContent, String.valueOf(blogId)};
 		db.execSQL(sql, args);
 	}
-	/**
-	 * ����
-	 * 
-	 * @param list
-	 */
+
 	public void SynchronyData2DB(List<Blog> blogList) {
 		List<ContentValues> list = new ArrayList<ContentValues>();
 		for (int i = 0, len = blogList.size(); i < len; i++) {
@@ -227,17 +208,13 @@ public class BlogDalHelper {
 		synchronized (_writeLock) {
 			db.beginTransaction();
 			try {
-				// �������
-				// String where="IsFull=?";
-				// String[] args={"0"};
-				// db.delete(DB_BLOG_TABLE, where, args);
 				for (int i = 0, len = list.size(); i < len; i++) {
 					int blogId=list.get(i).getAsInteger("BlogId");
 					boolean isExist = Exist(blogId);
 					boolean isFull = IsFull(blogId);
 					if (!isExist) {
 						db.insert(Config.DB_BLOG_TABLE, null, list.get(i));
-					} else if (!isFull) {// ���û��д����
+					} else if (!isFull) {
 						SynchronyContent2DB(list.get(i).getAsInteger("BlogId"),
 								list.get(i).getAsString("Content"));
 					}

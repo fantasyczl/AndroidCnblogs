@@ -14,69 +14,52 @@ import com.cnblogs.android.parser.RssCateXmlParser;
 import com.cnblogs.android.utility.NetHelper;
 
 /**
- * News²Ù×÷Àà
+ * Newsæ“ä½œç±»
+ * 
  * @author walkingp
- *
+ * 
  */
 public class RssCateHelper extends DefaultHandler {
 	/**
-	 * ¸ù¾İÒ³Âë·µ»ØNews¶ÔÏó¼¯ºÏ
-	 * @return
-	 * pageIndex:Ò³Âë£¬´Ó1¿ªÊ¼
+	 * æ ¹æ®é¡µç è¿”å›Newså¯¹è±¡é›†åˆ
+	 * 
+	 * @return pageIndex:é¡µç ï¼Œä»1å¼€å§‹
 	 */
-	public static ArrayList<RssCate> GetRssCates(){
-		String url=Config.URL_RSS_CATE_URL;//Ê×Ñ¡µØÖ·
-		String dataString=NetHelper.GetXmlContentFromUrl(url,"UTF-8");
-		if(dataString.equals("")){
+	public static ArrayList<RssCate> GetRssCates() {
+		String url = Config.URL_RSS_CATE_URL;// é¦–é€‰åœ°å€
+		String dataString = NetHelper.GetXmlContentFromUrl(url, "UTF-8");
+		if (dataString.equals("")) {
 			return null;
 		}
-		ArrayList<RssCate> list=ParseString(dataString);
-		
+		ArrayList<RssCate> list = ParseString(dataString);
+
 		return list;
 	}
+
 	/**
-	 * ½«×Ö·û´®×ª»»ÎªRssCate¼¯ºÏ
+	 * å°†å­—ç¬¦ä¸²è½¬æ¢ä¸ºRssCateé›†åˆ
+	 * 
 	 * @return
 	 */
 	private static ArrayList<RssCate> ParseString(String dataString) {
-	      SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-	      ArrayList<RssCate> listCate=new ArrayList<RssCate>();
-	      try {
-	          XMLReader xmlReader = saxParserFactory.newSAXParser().getXMLReader();
-	          RssCateXmlParser handler = new RssCateXmlParser(listCate);
-	          xmlReader.setContentHandler(handler);
-	          
-	          xmlReader.parse(new InputSource(new StringReader(dataString)));
-	          listCate=handler.GetRssCateList();
-	      } catch (SAXException e) {
-	          e.printStackTrace();
-	      } catch (ParserConfigurationException e) {
-	          e.printStackTrace();
-	      } catch (IOException e) {
-	          e.printStackTrace();
-	      }
+		SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+		ArrayList<RssCate> listCate = new ArrayList<RssCate>();
+		try {
+			XMLReader xmlReader = saxParserFactory.newSAXParser()
+					.getXMLReader();
+			RssCateXmlParser handler = new RssCateXmlParser(listCate);
+			xmlReader.setContentHandler(handler);
 
-	      return listCate;
-    }
+			xmlReader.parse(new InputSource(new StringReader(dataString)));
+			listCate = handler.GetRssCateList();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return listCate;
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

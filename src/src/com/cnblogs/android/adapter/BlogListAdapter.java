@@ -70,19 +70,22 @@ public class BlogListAdapter extends BaseAdapter {
 					.findViewById(R.id.recommend_text_domain);
 			viewHolder.text_blog_id = (TextView) convertView
 					.findViewById(R.id.recommend_text_id);
-			viewHolder.text_user_name=(TextView)convertView.findViewById(R.id.recommend_user_name);
-			viewHolder.icon_downloaded=(ImageView)convertView.findViewById(R.id.icon_downloaded);
+			viewHolder.text_user_name = (TextView) convertView
+					.findViewById(R.id.recommend_user_name);
+			viewHolder.icon_downloaded = (ImageView) convertView
+					.findViewById(R.id.icon_downloaded);
 		}
-		if(entity.GetAvator()!=null){
+		if (entity.GetAvator() != null) {
 			String tag = entity.GetAvator();
-			if (tag.contains("?")) {// 截断?后的字符串，避免无效图片
+			if (tag.contains("?")) {// 鎴柇?鍚庣殑瀛楃涓诧紝閬垮厤鏃犳晥鍥剧墖
 				tag = tag.substring(0, tag.indexOf("?"));
 			}
-	
+
 			viewHolder.imageIcon.setTag(tag);
 			Drawable cachedImage = asyncImageLoader.loadDrawable(
 					ImageCacher.EnumImageType.Avatar, tag, new ImageCallback() {
-						public void imageLoaded(Drawable imageDrawable, String tag) {
+						public void imageLoaded(Drawable imageDrawable,
+								String tag) {
 							Log.i("Drawable", tag);
 							ImageView imageViewByTag = (ImageView) listView
 									.findViewWithTag(tag);
@@ -93,13 +96,14 @@ public class BlogListAdapter extends BaseAdapter {
 									imageViewByTag
 											.setImageResource(R.drawable.sample_face);
 								} catch (Exception ex) {
-	
+
 								}
 							}
 						}
 					});
-			// 阅读模式
-			boolean isPicReadMode = SettingActivity.IsPicReadMode(currentContext);
+			// 闃呰妯″紡
+			boolean isPicReadMode = SettingActivity
+					.IsPicReadMode(currentContext);
 			if (isPicReadMode) {
 				viewHolder.imageIcon.setImageResource(R.drawable.sample_face);
 				if (cachedImage != null) {
@@ -111,11 +115,11 @@ public class BlogListAdapter extends BaseAdapter {
 		}
 
 		viewHolder.text_title.setText(entity.GetBlogTitle());
-		// 是否已读
+		// 鏄惁宸茶
 		boolean isReaded = entity.GetIsReaded();
 		Log.i("title", entity.GetBlogTitle());
 		if (isReaded) {
-			//viewHolder.text_title.setTextColor(R.color.gray);
+			// viewHolder.text_title.setTextColor(R.color.gray);
 		}
 		viewHolder.text_desc.setText(entity.GetSummary());
 		viewHolder.text_diggs.setText(String.valueOf(entity.GetDiggsNum()));
@@ -132,24 +136,26 @@ public class BlogListAdapter extends BaseAdapter {
 		viewHolder.text_domain.setText(entity.GetAuthorUrl());
 		viewHolder.text_blog_id.setText(String.valueOf(entity.GetBlogId()));
 		viewHolder.text_user_name.setText(entity.GetUserName());
-		
-		if(!entity.GetIsFullText()){
+
+		if (!entity.GetIsFullText()) {
 			viewHolder.icon_downloaded.setVisibility(View.GONE);
 		}
 
 		convertView.setTag(viewHolder);
 		return convertView;
 	}
+
 	/**
-	 * 得到数据
+	 * 寰楀埌鏁版嵁
 	 * 
 	 * @return
 	 */
 	public List<Blog> GetData() {
 		return list;
 	}
+
 	/**
-	 * 插入
+	 * 鎻掑叆
 	 * 
 	 * @param list
 	 */
@@ -157,8 +163,9 @@ public class BlogListAdapter extends BaseAdapter {
 		this.list.addAll(0, list);
 		this.notifyDataSetChanged();
 	}
+
 	/**
-	 * 增加数据
+	 * 澧炲姞鏁版嵁
 	 * 
 	 * @param list
 	 */
@@ -166,19 +173,22 @@ public class BlogListAdapter extends BaseAdapter {
 		this.list.addAll(list);
 		this.notifyDataSetChanged();
 	}
+
 	/**
-	 * 移除数据
+	 * 绉婚櫎鏁版嵁
+	 * 
 	 * @param entity
 	 */
-	public void RemoveData(Blog entity){
-		for(int i=0,len=this.list.size();i<len;i++){
-			if(this.list.get(i).GetBlogId()==entity.GetBlogId()){
+	public void RemoveData(Blog entity) {
+		for (int i = 0, len = this.list.size(); i < len; i++) {
+			if (this.list.get(i).GetBlogId() == entity.GetBlogId()) {
 				this.list.remove(i);
 				this.notifyDataSetChanged();
 				break;
 			}
 		}
 	}
+
 	public int getCount() {
 		return list.size();
 	}
@@ -190,6 +200,7 @@ public class BlogListAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return position;
 	}
+
 	public class ViewHolder {
 		TextView text_title;
 		TextView text_desc;

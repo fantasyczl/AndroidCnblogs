@@ -32,6 +32,7 @@ public class RssCateListAdapter extends BaseAdapter {
 		this.mInflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
+
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder viewHolder = null;
 		RssCate entity = list.get(position);
@@ -50,7 +51,7 @@ public class RssCateListAdapter extends BaseAdapter {
 					.findViewById(R.id.rss_cate_id);
 		}
 		String tag = entity.GetIcon();
-		if (tag.contains("?")) {// 截断?后的字符串，避免无效图片
+		if (tag.contains("?")) {// 鎴柇?鍚庣殑瀛楃涓诧紝閬垮厤鏃犳晥鍥剧墖
 			tag = tag.substring(0, tag.indexOf("?"));
 		}
 
@@ -86,15 +87,16 @@ public class RssCateListAdapter extends BaseAdapter {
 	}
 
 	/**
-	 * 得到数据
+	 * 寰楀埌鏁版嵁
 	 * 
 	 * @return
 	 */
 	public List<RssCate> GetData() {
 		return list;
 	}
+
 	/**
-	 * 插入
+	 * 鎻掑叆
 	 * 
 	 * @param list
 	 */
@@ -102,8 +104,9 @@ public class RssCateListAdapter extends BaseAdapter {
 		this.list.addAll(0, list);
 		this.notifyDataSetChanged();
 	}
+
 	/**
-	 * 增加数据
+	 * 澧炲姞鏁版嵁
 	 * 
 	 * @param list
 	 */
@@ -111,6 +114,7 @@ public class RssCateListAdapter extends BaseAdapter {
 		this.list.addAll(list);
 		this.notifyDataSetChanged();
 	}
+
 	public int getCount() {
 		if (list == null) {
 			return 0;
@@ -125,6 +129,7 @@ public class RssCateListAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return position;
 	}
+
 	public class ViewHolder {
 		ImageView rss_cate_icon;
 		TextView rss_cate_title;

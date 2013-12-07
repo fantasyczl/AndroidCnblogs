@@ -2,12 +2,6 @@ package com.cnblogs.android.entity;
 
 import java.util.Date;
 
-/**
- * 新闻类
- * 
- * @author walkingp
- * 
- */
 public class News {
 	private int _newsId;
 	private String _newsTitle;
@@ -82,9 +76,7 @@ public class News {
 	public int GetCommentNum() {
 		return _commentNum;
 	}
-	/**
-	 * 重写
-	 */
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof News) {

@@ -45,6 +45,7 @@ import com.cnblogs.android.utility.NetHelper;
  * 
  */
 public class CommentActivity extends BaseActivity {
+	static final String TAG = "CommentActivity";
 	List<Comment> listComment = new ArrayList<Comment>();
 	Comment.EnumCommentType commentType;// 评论类型：博客|新闻
 	int contentId;// 主编号
@@ -55,7 +56,7 @@ public class CommentActivity extends BaseActivity {
 
 	int pageIndex = 1;// 页码
 
-	ListView listView;
+	PullToRefreshListView listView;
 
 	private Button comment_button_back;// 返回
 
@@ -89,8 +90,7 @@ public class CommentActivity extends BaseActivity {
 	 */
 	private void BindControls() {
 		// 上拉刷新
-		((PullToRefreshListView) listView)
-				.setOnRefreshListener(new OnRefreshListener() {
+		listView.setOnRefreshListener(new OnRefreshListener() {
 					@Override
 					public void onRefresh() {
 						new PageTask(-1, true).execute();
@@ -103,7 +103,7 @@ public class CommentActivity extends BaseActivity {
 			 */
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				Log.i("w", lastItem + "|" + adapter.getCount() + "|"
+				Log.i(TAG, lastItem + "|" + adapter.getCount() + "|"
 						+ scrollState + "|"
 						+ OnScrollListener.SCROLL_STATE_IDLE);
 				if (lastItem == adapter.getCount()
@@ -163,14 +163,13 @@ public class CommentActivity extends BaseActivity {
 		contentTitle = getIntent().getStringExtra("title");
 		contentUrl = getIntent().getStringExtra("url");
 
-		listView = (ListView) findViewById(R.id.comment_list);
+		listView = (PullToRefreshListView) findViewById(R.id.comment_list);
 		commentsMore_progressBar = (ProgressBar) findViewById(R.id.commentList_progressBar);
 		commentsMore_progressBar.setVisibility(View.VISIBLE);
 
 		// 底部view
 		LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		viewFooter = (LinearLayout) mInflater.inflate(R.layout.listview_footer,
-				null, false);
+		viewFooter = (LinearLayout) mInflater.inflate(R.layout.listview_footer, null, false);
 
 		// 返回
 		comment_button_back = (Button) findViewById(R.id.comment_button_back);
@@ -323,7 +322,7 @@ public class CommentActivity extends BaseActivity {
 			}
 
 			if (isRefresh) {// 刷新时处理
-				((PullToRefreshListView) listView).onRefreshComplete();
+				listView.onRefreshComplete();
 			}
 		}
 

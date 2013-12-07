@@ -22,15 +22,16 @@ public class RssListDalHelper {
 		dbHelper = new DBHelper.DatabaseHelper(context);
 		db = dbHelper.getWritableDatabase();
 	}
+
 	/**
-	 * ÅĞ¶ÏÊÇ·ñÒÑ¾­´æÔÚ
+	 * åˆ¤æ–­æ˜¯å¦å·²ç»å­˜åœ¨
 	 * 
 	 * @param blogId
 	 * @return
 	 */
 	public boolean Exist(String link) {
 		String where = "Link=?";
-		String[] args = {link};
+		String[] args = { link };
 		Cursor cursor = db.query(Config.DB_RSSLIST_TABLE, null, where, args,
 				null, null, null);
 		boolean isExist = cursor != null && cursor.moveToNext();
@@ -38,14 +39,16 @@ public class RssListDalHelper {
 
 		return isExist;
 	}
+
 	/**
-	 * ¸ù¾İÓÃ»§Ãû£¨²©¿ÍÔ°ÅĞ¶Ï£©
+	 * æ ¹æ®ç”¨æˆ·åï¼ˆåšå®¢å›­åˆ¤æ–­ï¼‰
+	 * 
 	 * @param author
 	 * @return
 	 */
-	public boolean ExistByAuthorName(String author){
-		String where="Author=?";
-		String[] args={author};
+	public boolean ExistByAuthorName(String author) {
+		String where = "Author=?";
+		String[] args = { author };
 		Cursor cursor = db.query(Config.DB_RSSLIST_TABLE, null, where, args,
 				null, null, null);
 		boolean isExist = cursor != null && cursor.moveToNext();
@@ -53,19 +56,21 @@ public class RssListDalHelper {
 
 		return isExist;
 	}
+
 	/**
-	 * µÃµ½Í·Ìõ
+	 * å¾—åˆ°å¤´æ¡
 	 * 
 	 * @return
 	 */
 	public List<RssList> GetRssList() {
 		String where = "IsActive=?";
-		String[] args = {"1"};
+		String[] args = { "1" };
 
 		return GetRssListByWhere(null, where, args);
 	}
+
 	/*
-	 * ·ÖÒ³
+	 * åˆ†é¡µ
 	 */
 	public List<RssList> GetRssListByPage(int pageIndex, int pageSize) {
 		String limit = String.valueOf((pageIndex - 1) * pageSize) + ","
@@ -74,13 +79,14 @@ public class RssListDalHelper {
 
 		return list;
 	}
+
 	/*
-	 * µÃµ½¶ÔÏó
+	 * å¾—åˆ°å¯¹è±¡
 	 */
 	public RssList GetRssListEntity(String link) {
 		String limit = "1";
 		String where = "Link=?";
-		String[] args = {link};
+		String[] args = { link };
 		List<RssList> list = GetRssListByWhere(limit, where, args);
 		if (list.size() > 0) {
 			return list.get(0);
@@ -88,8 +94,9 @@ public class RssListDalHelper {
 
 		return null;
 	}
+
 	/**
-	 * ¸ù¾İÌõ¼şµÃµ½
+	 * æ ¹æ®æ¡ä»¶å¾—åˆ°
 	 * 
 	 * @param top
 	 * @param where
@@ -121,7 +128,8 @@ public class RssListDalHelper {
 			entity.SetDescription(description);
 			entity.SetOrderNum(cursor.getInt(cursor.getColumnIndex("OrderNum")));
 			entity.SetRssNum(cursor.getInt(cursor.getColumnIndex("RssNum")));
-			entity.SetIsCnblogs(cursor.getString(cursor.getColumnIndex("IsCnblogs")).equals("1"));
+			entity.SetIsCnblogs(cursor.getString(
+					cursor.getColumnIndex("IsCnblogs")).equals("1"));
 			entity.SetImage(cursor.getString(cursor.getColumnIndex("Image")));
 			entity.SetCateId(cursor.getInt(cursor.getColumnIndex("CateId")));
 			boolean isActive = cursor.getString(
@@ -138,18 +146,20 @@ public class RssListDalHelper {
 
 		return listRss;
 	}
+
 	/**
-	 * É¾³ı
+	 * åˆ é™¤
 	 * 
 	 * @param link
 	 */
 	public void Delete(String link) {
 		String where = "Link=?";
-		String[] args = {link};
+		String[] args = { link };
 		db.delete(Config.DB_RSSLIST_TABLE, where, args);
 	}
+
 	/**
-	 * ²åÈëÊı¾İ¿â
+	 * æ’å…¥æ•°æ®åº“
 	 * 
 	 * @param entity
 	 */
@@ -185,8 +195,9 @@ public class RssListDalHelper {
 			}
 		}
 	}
+
 	/**
-	 * ²åÈë
+	 * æ’å…¥
 	 * 
 	 * @param list
 	 */
@@ -219,7 +230,7 @@ public class RssListDalHelper {
 		synchronized (_writeLock) {
 			db.beginTransaction();
 			try {
-				// Çå³ıÒÑÓĞ
+				// æ¸…é™¤å·²æœ‰
 				// String where="IsFull=?";
 				// String[] args={"0"};
 				// db.delete(DB_NEWS_TABLE, where, args);

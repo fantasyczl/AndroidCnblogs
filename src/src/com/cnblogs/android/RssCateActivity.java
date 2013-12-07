@@ -1,4 +1,5 @@
 package com.cnblogs.android;
+
 import java.util.List;
 import com.cnblogs.android.adapter.RssCateListAdapter;
 import com.cnblogs.android.core.RssCateHelper;
@@ -29,8 +30,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+
 /**
- * RSS¶©ÔÄÖĞĞÄ·ÖÀà
+ * RSSè®¢é˜…ä¸­å¿ƒåˆ†ç±»
  * 
  * @author walkingp
  * 
@@ -40,17 +42,18 @@ public class RssCateActivity extends Activity {
 	ListView listview;
 	Button rsscate_button_back;
 
-	ProgressBar bodyProgressBar;// Ö÷ÌâListView¼ÓÔØ¿ò
-	ProgressBar topProgressBar;// ¼ÓÔØ°´Å¥
-	
-	ImageButton btn_add;//Ìí¼Ó
+	ProgressBar bodyProgressBar;// ä¸»é¢˜ListViewåŠ è½½æ¡†
+	ProgressBar topProgressBar;// åŠ è½½æŒ‰é’®
 
-	TextView txtNoData;// Ã»ÓĞÊı¾İ
-	
-	private static final int DIALOG_ADD_RSS_URL = 0;// ×ÖÌå´óĞ¡
-	private AlertDialog dialogAddRss;// ¶Ô»°¿ò
-	private ProgressDialog progressDialog;  
+	ImageButton btn_add;// æ·»åŠ 
+
+	TextView txtNoData;// æ²¡æœ‰æ•°æ®
+
+	private static final int DIALOG_ADD_RSS_URL = 0;// å­—ä½“å¤§å°
+	private AlertDialog dialogAddRss;// å¯¹è¯æ¡†
+	private ProgressDialog progressDialog;
 	EditText etUrl;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,19 +64,21 @@ public class RssCateActivity extends Activity {
 		InitControl();
 		new PageTask().execute();
 	}
+
 	/**
-	 * ³õÊ¼»¯Êı¾İ
+	 * åˆå§‹åŒ–æ•°æ®
 	 */
 	void InitialData() {
 	}
+
 	/**
-	 * ³õÊ¼¼ÓÔØ¿Ø¼ş
+	 * åˆå§‹åŠ è½½æ§ä»¶
 	 */
 	private void InitControl() {
-		// ·µ»Ø
+		// è¿”å›
 		rsscate_button_back = (Button) findViewById(R.id.rsscate_button_back);
 		topProgressBar = (ProgressBar) findViewById(R.id.rss_progressBar);
-		btn_add=(ImageButton)findViewById(R.id.btn_add);
+		btn_add = (ImageButton) findViewById(R.id.btn_add);
 		txtNoData = (TextView) findViewById(R.id.txtNoData);
 		bodyProgressBar = (ProgressBar) findViewById(R.id.rssList_progressBar);
 		rsscate_button_back.setOnClickListener(new OnClickListener() {
@@ -83,12 +88,12 @@ public class RssCateActivity extends Activity {
 			}
 		});
 		listview = (ListView) findViewById(R.id.rss_cate_list);
-		// µã»÷Ìø×ª
+		// ç‚¹å‡»è·³è½¬
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v,
 					int position, long id) {
-				// ÍøÂç²»¿ÉÓÃ
+				// ç½‘ç»œä¸å¯ç”¨
 				if (!NetHelper.networkIsAvailable(getApplicationContext())) {
 					Toast.makeText(getApplicationContext(),
 							R.string.sys_network_error, Toast.LENGTH_SHORT)
@@ -110,111 +115,134 @@ public class RssCateActivity extends Activity {
 				startActivity(intent);
 			}
 		});
-		//Ìí¼Ó×Ô¶¨Òå
-		btn_add.setOnClickListener(new OnClickListener(){
+		// æ·»åŠ è‡ªå®šä¹‰
+		btn_add.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				showDialog(DIALOG_ADD_RSS_URL);
-			}			
+			}
 		});
 	}
-	protected Dialog onCreateDialog(int dialogGuid){
-		Context context=RssCateActivity.this;
-		AlertDialog.Builder builder=new AlertDialog.Builder(context);
-		AlertDialog alertDialog=null;
-		switch(dialogGuid){
-			case DIALOG_ADD_RSS_URL://Ìí¼ÓRss
-				LayoutInflater inflater = LayoutInflater.from(context);
-				View layout = inflater.inflate(R.layout.dialog_add_rss,
-						null);
-				
-				alertDialog=builder.setTitle(R.string.rss_add_url_manual)
-							.setView(layout)
-							.setPositiveButton(R.string.com_btn_save, new AddRssClickListener())
-							.setNeutralButton(R.string.com_btn_cancel, new AddRssClickListener()).create();
-				
-				etUrl=(EditText)layout.findViewById(R.id.etUrl);
-				
-				dialogAddRss=alertDialog;
-				break;
+
+	protected Dialog onCreateDialog(int dialogGuid) {
+		Context context = RssCateActivity.this;
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		AlertDialog alertDialog = null;
+		switch (dialogGuid) {
+		case DIALOG_ADD_RSS_URL:// æ·»åŠ Rss
+			LayoutInflater inflater = LayoutInflater.from(context);
+			View layout = inflater.inflate(R.layout.dialog_add_rss, null);
+
+			alertDialog = builder
+					.setTitle(R.string.rss_add_url_manual)
+					.setView(layout)
+					.setPositiveButton(R.string.com_btn_save,
+							new AddRssClickListener())
+					.setNeutralButton(R.string.com_btn_cancel,
+							new AddRssClickListener()).create();
+
+			etUrl = (EditText) layout.findViewById(R.id.etUrl);
+
+			dialogAddRss = alertDialog;
+			break;
 		}
 		return alertDialog;
 	}
+
 	/**
-	 * Ìí¼Ó¶©ÔÄ
+	 * æ·»åŠ è®¢é˜…
+	 * 
 	 * @author walkingp
-	 *
+	 * 
 	 */
-	class AddRssClickListener implements android.content.DialogInterface.OnClickListener {
+	class AddRssClickListener implements
+			android.content.DialogInterface.OnClickListener {
 		@Override
 		public void onClick(DialogInterface dialog, int which) {
-			if(dialog==dialogAddRss){
-				switch(which){
-					case Dialog.BUTTON_POSITIVE://±£´æÉèÖÃ
-						String url=etUrl.getText().toString();
-						
-						new RssTask(url).execute();
-						break;
-					case Dialog.BUTTON_NEGATIVE://È¡Ïû
-						break;
+			if (dialog == dialogAddRss) {
+				switch (which) {
+				case Dialog.BUTTON_POSITIVE:// ä¿å­˜è®¾ç½®
+					String url = etUrl.getText().toString();
+
+					new RssTask(url).execute();
+					break;
+				case Dialog.BUTTON_NEGATIVE:// å–æ¶ˆ
+					break;
 				}
 			}
-		}		
-	}
-	/**
-	 * ¶©ÔÄÄÚÈİ
-	 * @author Administrator
-	 *
-	 */
-	class RssTask extends AsyncTask<String, Integer, RssList>{
-		String url;
-		public RssTask(String url){
-			this.url=url;
 		}
+	}
+
+	/**
+	 * è®¢é˜…å†…å®¹
+	 * 
+	 * @author Administrator
+	 * 
+	 */
+	class RssTask extends AsyncTask<String, Integer, RssList> {
+		String url;
+
+		public RssTask(String url) {
+			this.url = url;
+		}
+
 		@Override
 		protected RssList doInBackground(String... params) {
-			RssList entity=RssListHelper.GetRssEntity(url);
-			
+			RssList entity = RssListHelper.GetRssEntity(url);
+
 			return entity;
 		}
+
 		@Override
 		protected void onPostExecute(RssList result) {
-			if(result==null){
-				Toast.makeText(getApplicationContext(), R.string.rss_invalid_url_tips, Toast.LENGTH_SHORT).show();
+			if (result == null) {
+				Toast.makeText(getApplicationContext(),
+						R.string.rss_invalid_url_tips, Toast.LENGTH_SHORT)
+						.show();
 				return;
 			}
-			RssListDalHelper helper = new RssListDalHelper(getApplicationContext());
-			boolean isRssed=helper.Exist(url);
-			if(isRssed){
-				Toast.makeText(getApplicationContext(), R.string.rss_redupicate_tips, Toast.LENGTH_SHORT).show();
+			RssListDalHelper helper = new RssListDalHelper(
+					getApplicationContext());
+			boolean isRssed = helper.Exist(url);
+			if (isRssed) {
+				Toast.makeText(getApplicationContext(),
+						R.string.rss_redupicate_tips, Toast.LENGTH_SHORT)
+						.show();
 				return;
 			}
-			if(url.toLowerCase().indexOf("cnblogs.com")>=0){
+			if (url.toLowerCase().indexOf("cnblogs.com") >= 0) {
 				result.SetIsCnblogs(true);
 			}
 			progressDialog.dismiss();
-			try{
+			try {
 				helper.Insert(result);
-				Toast.makeText(getApplicationContext(), R.string.rss_succ, Toast.LENGTH_SHORT).show();
-			}catch(Exception ex){
-				Toast.makeText(getApplicationContext(), R.string.rss_fail, Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), R.string.rss_succ,
+						Toast.LENGTH_SHORT).show();
+			} catch (Exception ex) {
+				Toast.makeText(getApplicationContext(), R.string.rss_fail,
+						Toast.LENGTH_SHORT).show();
 			}
 		}
+
 		@Override
 		protected void onPreExecute() {
-			if(url.equals("")){
-				Toast.makeText(getApplicationContext(), R.string.sys_input_empty, Toast.LENGTH_SHORT).show();
+			if (url.equals("")) {
+				Toast.makeText(getApplicationContext(),
+						R.string.sys_input_empty, Toast.LENGTH_SHORT).show();
 				return;
 			}
-			//ÏÔÊ¾ProgressDialog  
-            progressDialog = ProgressDialog.show(RssCateActivity.this, "Ìí¼Ó¶©ÔÄ", "ÕıÔÚ´¦Àí¶©ÔÄÖĞ£¬ÇëÉÔºò", true, false);  
+			// æ˜¾ç¤ºProgressDialog
+			progressDialog = ProgressDialog.show(RssCateActivity.this, "æ·»åŠ è®¢é˜…",
+					"æ­£åœ¨å¤„ç†è®¢é˜…ä¸­ï¼Œè¯·ç¨å€™", true, false);
 		}
 	}
+
 	/**
-	 * ¼ÓÔØÄÚÈİ
+	 * åŠ è½½å†…å®¹
+	 * 
 	 * @author walkingp
-	 *
+	 * 
 	 */
 	public class PageTask extends AsyncTask<String, Integer, List<RssCate>> {
 
@@ -223,6 +251,7 @@ public class RssCateActivity extends Activity {
 			List<RssCate> listCate = RssCateHelper.GetRssCates();
 			return listCate;
 		}
+
 		@Override
 		protected void onPostExecute(List<RssCate> result) {
 			bodyProgressBar.setVisibility(View.GONE);
@@ -235,6 +264,7 @@ public class RssCateActivity extends Activity {
 				listview.setAdapter(adapter);
 			}
 		}
+
 		@Override
 		protected void onPreExecute() {
 			bodyProgressBar.setVisibility(View.VISIBLE);

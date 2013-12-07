@@ -35,25 +35,16 @@ import android.os.Environment;
 import android.util.Log;
 
 public class NetHelper {
-	/**
-	 * ��ȡDefaultHttpClientʵ��
-	 * 
-	 * @param charset
-	 *            ������뼯, �ɿ�
-	 * @return DefaultHttpClient ����
-	 */
+
 	private static DefaultHttpClient getDefaultHttpClient(final String charset) {
 		HttpParams httpParams = new BasicHttpParams();
 
-		// �������ӳ�ʱ�� Socket ��ʱ���Լ� Socket �����С
 		HttpConnectionParams.setConnectionTimeout(httpParams, 20 * 1000);
 		HttpConnectionParams.setSoTimeout(httpParams, 20 * 1000);
 		HttpConnectionParams.setSocketBufferSize(httpParams, 8192);
 
-		// �����ض���ȱʡΪ true
 		HttpClientParams.setRedirecting(httpParams, true);
 
-		// ���� user agent
 		String userAgent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2) Gecko/20100115 Firefox/3.6";
 		HttpProtocolParams.setUserAgent(httpParams, userAgent);
 
@@ -69,7 +60,6 @@ public class NetHelper {
 		try {
 			httpClient = getDefaultHttpClient(charset);
 			hg = new HttpGet(url);
-			// �������󣬵õ���Ӧ
 			HttpResponse response = httpClient.execute(hg);
 			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
 				return "";
@@ -164,18 +154,12 @@ public class NetHelper {
 			client.getConnectionManager().shutdown();
 			return result;
 		} catch (Exception e) {
-			Log.e("NetHelper", "______________��ȡ���ʧ��" + e.toString()
+			Log.e("NetHelper", "______________失败" + e.toString()
 					+ "_____________");
 			return "";
 		}
 	}
-	/**
-	 * �����Post��ݻ�÷���
-	 * 
-	 * @param url
-	 * @param params
-	 * @return
-	 */
+
 	public static String GetContentFromUrlByPostParams(String url,
 			List<NameValuePair> params) {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -191,19 +175,17 @@ public class NetHelper {
 				return result;
 			}
 			if (responseCode == 403) {
-				return "1";// �Ѿ���ע�˴���
+				return "1";
 			}
 		} catch (Exception e) {
-			Log.e("NetHelper", "______________��ȡ���ʧ��" + e.toString()
+			Log.e("NetHelper", "______________失败" + e.toString()
 					+ "_____________");
 			e.printStackTrace();
 		}
 		httpClient.getConnectionManager().shutdown();
 		return "";
 	}
-	/**
-	 * ��ȡ������
-	 */
+
 	public static byte[] readInputStream(InputStream inStream) throws Exception {
 		ByteArrayOutputStream outSteam = new ByteArrayOutputStream();
 		byte[] buffer = new byte[4096];
@@ -215,15 +197,9 @@ public class NetHelper {
 		inStream.close();
 		return outSteam.toByteArray();
 	}
-	/**
-	 * ����ͼƬ������
-	 * 
-	 * @param url
-	 * @return
-	 */
+
 	public static Drawable loadImageFromUrlWithStore(String folder, String url) {
 		try {
-			//ע��url���ܰ�?���������Ҫ��?ǰ�ض�
 			if(url.indexOf("?")>0){
 				url=url.substring(0,url.indexOf("?"));
 			}
@@ -247,12 +223,7 @@ public class NetHelper {
 		}
 		return null;
 	}
-	/**
-	 * ����ͼƬ
-	 * 
-	 * @param url
-	 * @return
-	 */
+
 	public static Drawable loadImageFromUrl(String url) {
 		InputStream is = null;
 		try {

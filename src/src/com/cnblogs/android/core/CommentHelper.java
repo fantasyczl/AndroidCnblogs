@@ -20,16 +20,16 @@ import com.cnblogs.android.utility.AppUtil;
 import com.cnblogs.android.utility.NetHelper;
 
 /**
- * Comment²Ù×÷Àà
+ * Commentæ“ä½œç±»
  * 
  * @author walkingp
  * @date 2011-11-29
  */
 public class CommentHelper extends DefaultHandler {
 	/**
-	 * ¸ù¾İÒ³Âë·µ»ØComment¶ÔÏó¼¯ºÏ
+	 * æ ¹æ®é¡µç è¿”å›Commentå¯¹è±¡é›†åˆ
 	 * 
-	 * @return pageIndex:Ò³Âë£¬´Ó1¿ªÊ¼
+	 * @return pageIndex:é¡µç ï¼Œä»1å¼€å§‹
 	 */
 	public static ArrayList<Comment> GetCommentList(int contentId,
 			int pageIndex, Comment.EnumCommentType commentType) {
@@ -40,7 +40,7 @@ public class CommentHelper extends DefaultHandler {
 		}
 		url = url.replace("{contentId}", String.valueOf(contentId))
 				.replace("{pageIndex}", String.valueOf(pageIndex))
-				.replace("{pageSize}", String.valueOf(pageSize));// Êı¾İµØÖ·
+				.replace("{pageSize}", String.valueOf(pageSize));// æ•°æ®åœ°å€
 		String dataString = NetHelper.GetContentFromUrl(url);
 
 		ArrayList<Comment> list = ParseString(contentId, dataString,
@@ -48,24 +48,24 @@ public class CommentHelper extends DefaultHandler {
 
 		return list;
 	}
+
 	/*
-	 * ·µ»ØÄÚÈİµÄËùÓĞÆÀÂÛ
+	 * è¿”å›å†…å®¹çš„æ‰€æœ‰è¯„è®º
 	 */
 	public static List<Comment> GetCommentList(int contentId,
 			Comment.EnumCommentType commentType, int commentCount) {
 		List<Comment> listComment = new ArrayList<Comment>();
-		int pageSize = 0;// ·ÖÒ³ÌõÊı
-		int pageCount = 0;// ×ÜÒ³Âë
+		int pageSize = 0;// åˆ†é¡µæ¡æ•°
+		int pageCount = 0;// æ€»é¡µç 
 		switch (commentType) {
-			case Blog :
-				pageSize = Config.BLOG_PAGE_SIZE;
-				break;
-			case News :
-				pageSize = Config.NEWS_PAGE_SIZE;
-				break;
+		case Blog:
+			pageSize = Config.BLOG_PAGE_SIZE;
+			break;
+		case News:
+			pageSize = Config.NEWS_PAGE_SIZE;
+			break;
 		}
-		pageCount = commentCount % pageSize == 0
-				? commentCount / pageSize
+		pageCount = commentCount % pageSize == 0 ? commentCount / pageSize
 				: commentCount / pageSize + 1;
 		for (int i = 1; i < pageCount + 1; i++) {
 			List<Comment> list = GetCommentList(contentId, i, commentType);
@@ -74,8 +74,9 @@ public class CommentHelper extends DefaultHandler {
 
 		return listComment;
 	}
+
 	/**
-	 * ½«×Ö·û´®×ª»»ÎªComment¼¯ºÏ
+	 * å°†å­—ç¬¦ä¸²è½¬æ¢ä¸ºCommenté›†åˆ
 	 * 
 	 * @return
 	 */
@@ -102,41 +103,43 @@ public class CommentHelper extends DefaultHandler {
 
 		return listComment;
 	}
+
 	/**
-	 * ¸ñÊ½»¯ÆÀÂÛÄÚÈİ 1¡¢½«'@name'ºó¼ÓÃ°ºÅ
+	 * æ ¼å¼åŒ–è¯„è®ºå†…å®¹ 1ã€å°†'@name'ååŠ å†’å·
 	 * 
-	 * @hchxxzx<br/> <a href="#2256199" title="²é¿´Ëù»Ø¸´µÄÆÀÂÛ">@</a>hchxxzx<br/>
-	 *               ÄÚÈİ 2¡¢¸ñÊ½»¯ÒıÓÃ²¿·Ö <fieldset
-	 *               class="comment_quote"><legend>ÒıÓÃ</legend>öÌ£º<br/>
-	 *               ´ó¸ç£¬¿´µçÊÓ²»ÊÇÎªÁË²ğµçÊÓ</fieldset><br/>
+	 * @hchxxzx<br/> <a href="#2256199" title="æŸ¥çœ‹æ‰€å›å¤çš„è¯„è®º">@</a>hchxxzx<br/>
+	 *               å†…å®¹ 2ã€æ ¼å¼åŒ–å¼•ç”¨éƒ¨åˆ† <fieldset
+	 *               class="comment_quote"><legend>å¼•ç”¨</legend>éï¼š<br/>
+	 *               å¤§å“¥ï¼Œçœ‹ç”µè§†ä¸æ˜¯ä¸ºäº†æ‹†ç”µè§†</fieldset><br/>
 	 * @param html
 	 * @return
 	 */
 	static final Pattern patternAtNoLink = Pattern.compile("@([^<]+)");
 	static final Pattern patternAt = Pattern.compile("<a(.+?)>@</a>([^<]+)");
 	static final Pattern patternQuote = Pattern
-			.compile("<fieldset(.+?)><legend>(.+?)</legend>(.+?)£º?<br\\s?/>(.+?)</fieldset>");// ÒıÓÃ
+			.compile("<fieldset(.+?)><legend>(.+?)</legend>(.+?)ï¼š?<br\\s?/>(.+?)</fieldset>");// å¼•ç”¨
+
 	public static String FormatCommentString(String html) {
-		// Ìæ»»»Ø¸´
+		// æ›¿æ¢å›å¤
 		Matcher m = patternAtNoLink.matcher(html);
 		String rs = new String(html);
 		while (m.find()) {
-			rs = m.replaceAll("@$1£º");
+			rs = m.replaceAll("@$1ï¼š");
 		}
 		m = patternAt.matcher(rs);
 		while (m.find()) {
-			rs = m.replaceAll("@$2£º");
+			rs = m.replaceAll("@$2ï¼š");
 		}
-		// Ìæ»»ÒıÓÃ
+		// æ›¿æ¢å¼•ç”¨
 		m = patternQuote.matcher(rs);
 		while (m.find()) {
-			rs = m.replaceAll("$1¡º");
+			rs = m.replaceAll("$1ã€");
 			rs = m.replaceAll("@$2");
-			rs = m.replaceAll("$3¡»");
+			rs = m.replaceAll("$3ã€");
 		}
-		// Ìæ»»Í¼Æ¬
+		// æ›¿æ¢å›¾ç‰‡
 		rs = AppUtil.RemoveImgTag(rs);
-		// Ìæ»»ÊÓÆµ
+		// æ›¿æ¢è§†é¢‘
 		rs = AppUtil.RemoveVideoTag(rs);
 
 		return rs;

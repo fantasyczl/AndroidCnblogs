@@ -1,4 +1,5 @@
 package com.cnblogs.android.dal;
+
 import java.util.List;
 
 import com.cnblogs.android.core.Config;
@@ -14,17 +15,28 @@ public class DBHelper {
 	private SQLiteDatabase db;
 	private DatabaseHelper dbHelper;
 	public final static byte[] _writeLock = new byte[0];
+
+	// 打开数据库
 	public void OpenDB(Context context) {
 		dbHelper = new DatabaseHelper(context);
 		db = dbHelper.getWritableDatabase();
 	}
+
+	// 关闭数据库
 	public void Close() {
 		dbHelper.close();
-		if(db!=null){
+		if (db != null) {
 			db.close();
 		}
 	}
 
+	/**
+	 * 插入
+	 * 
+	 * @param list
+	 * @param table
+	 *            表名
+	 */
 	public void Insert(List<ContentValues> list, String tableName) {
 		synchronized (_writeLock) {
 			db.beginTransaction();
@@ -38,14 +50,23 @@ public class DBHelper {
 			}
 		}
 	}
+
 	public DBHelper(Context context) {
 		this.dbHelper = new DatabaseHelper(context);
 	}
 
+	/**
+	 * 用于初始化数据库
+	 * 
+	 * @author Administrator
+	 * 
+	 */
 	public static class DatabaseHelper extends SQLiteOpenHelper {
+		// 定义数据库文件
 		private static final String DB_NAME = Config.DB_FILE_NAME;
-		// ������ݿ�汾
+		// 定义数据库版本
 		private static final int DB_VERSION = 1;
+
 		public DatabaseHelper(Context context) {
 			super(context, DB_NAME, null, DB_VERSION);
 		}
@@ -58,20 +79,21 @@ public class DBHelper {
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			CreateBlogDb(db);
-			Log.i("DBHelper", "����BlogList��ɹ�");
+			Log.i("DBHelper", "创建BlogList表成功");
 			CreateNewsDb(db);
-			Log.i("DBHelper", "����NewsList��ɹ�");
+			Log.i("DBHelper", "创建NewsList表成功");
 			CreateCommentDb(db);
-			Log.i("DBHelper", "����CommentList��ɹ�");
+			Log.i("DBHelper", "创建CommentList表成功");
 			CreateRssListDb(db);
-			Log.i("DBHelper", "����RssList��ɹ�");
+			Log.i("DBHelper", "创建RssList表成功");
 			CreateRssItemDb(db);
-			Log.i("DBHelper", "����RssItem��ɹ�");
+			Log.i("DBHelper", "创建RssItem表成功");
 			CreateFavListDb(db);
-			Log.i("DBHelper", "����FavList��ɹ�");			
+			Log.i("DBHelper", "创建FavList表成功");
 		}
+
 		/**
-		 * ����BlogList��
+		 * 创建BlogList表
 		 * 
 		 * @param db
 		 */
@@ -91,16 +113,17 @@ public class DBHelper {
 			sb.append("[Comments] INTEGER(16) DEFAULT (0), ");
 			sb.append("[Digg] INTEGER(16) DEFAULT (0), ");
 			sb.append("[IsReaded] BOOLEAN DEFAULT (0), ");
-			sb.append("[IsFull] BOOLEAN DEFAULT (0), ");// �Ƿ�ȫ��
-			sb.append("[BlogUrl] NVARCHAR(200), ");// ��ҳ��ַ
-			sb.append("[UserName] NVARCHAR(50), ");// �û���
+			sb.append("[IsFull] BOOLEAN DEFAULT (0), ");// 是否全文
+			sb.append("[BlogUrl] NVARCHAR(200), ");// 网页地址
+			sb.append("[UserName] NVARCHAR(50), ");// 用户名
 			sb.append("[CateId] INTEGER(16), ");
 			sb.append("[CateName] NVARCHAR(16))");
 
 			db.execSQL(sb.toString());
 		}
+
 		/**
-		 * ����NewsList��
+		 * 创建NewsList表
 		 * 
 		 * @param db
 		 */
@@ -119,13 +142,14 @@ public class DBHelper {
 			sb.append("[IsReaded] BOOLEAN DEFAULT (0), ");
 			sb.append("[IsFull] BOOLEAN DEFAULT (0), ");
 			sb.append("[CateId] INTEGER(16), ");
-			sb.append("[NewsUrl] NVARCHAR(200), ");// ��ҳ��ַ
+			sb.append("[NewsUrl] NVARCHAR(200), ");// 网页地址
 			sb.append("[CateName] NVARCHAR(16))");
 
 			db.execSQL(sb.toString());
 		}
+
 		/**
-		 * ��������CommentList��
+		 * 创建评论CommentList表
 		 * 
 		 * @param db
 		 */
@@ -141,8 +165,9 @@ public class DBHelper {
 			sb.append("[AddTime] DATETIME);");
 			db.execSQL(sb.toString());
 		}
+
 		/**
-		 * �������Ĳ���RssList��
+		 * 创建订阅博客RssList表
 		 * 
 		 * @param db
 		 */
@@ -167,8 +192,9 @@ public class DBHelper {
 			sb.append(");");
 			db.execSQL(sb.toString());
 		}
+
 		/**
-		 * ������������RssItem��
+		 * 创建订阅文章RssItem表
 		 * 
 		 * @param db
 		 */
@@ -186,8 +212,10 @@ public class DBHelper {
 			sb.append("[IsDigg] BOOLEAN DEFAULT (0));");
 			db.execSQL(sb.toString());
 		}
+
 		/**
-		 * �����ղر�FavList
+		 * 创建收藏表FavList
+		 * 
 		 * @param db
 		 */
 		private void CreateFavListDb(SQLiteDatabase db) {
@@ -199,8 +227,9 @@ public class DBHelper {
 			sb.append("[ContentId] INTEGER NOT NULL DEFAULT (0));");
 			db.execSQL(sb.toString());
 		}
+
 		/**
-		 * ���°汾ʱ���±�
+		 * 更新版本时更新表
 		 */
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -208,8 +237,9 @@ public class DBHelper {
 			onCreate(db);
 			Log.e("User", "onUpgrade");
 		}
+
 		/**
-		 * ɾ���
+		 * 删除表
 		 * 
 		 * @param db
 		 */
@@ -223,18 +253,20 @@ public class DBHelper {
 			sb.append("DROP TABLE IF EXISTS " + Config.DB_FAV_TABLE + ";");
 			db.execSQL(sb.toString());
 		}
+
 		/**
-		 * �����ݱ?�����������ݣ�
+		 * 清空数据表（仅清空无用数据）
+		 * 
 		 * @param db
 		 */
-		public static void ClearData(Context context){
+		public static void ClearData(Context context) {
 			DatabaseHelper dbHelper = new DBHelper.DatabaseHelper(context);
-			SQLiteDatabase db=dbHelper.getWritableDatabase();
-			StringBuilder sb=new StringBuilder();
-			sb.append("DELETE FROM BlogList WHERE IsFull=0 AND BlogId NOT IN(SELECT ContentId FROM FavList WHERE ContentType=0);");//��ղ��ͱ�
-			sb.append("DELETE FROM NewsList WHERE IsFull=0;");//������ű�
-			sb.append("DELETE FROM CommentList;");//������۱�
-			sb.append("DELETE FROM RssItem;");//��ն������±�
+			SQLiteDatabase db = dbHelper.getWritableDatabase();
+			StringBuilder sb = new StringBuilder();
+			sb.append("DELETE FROM BlogList WHERE IsFull=0 AND BlogId NOT IN(SELECT ContentId FROM FavList WHERE ContentType=0);");// 清空博客表
+			sb.append("DELETE FROM NewsList WHERE IsFull=0;");// 清空新闻表
+			sb.append("DELETE FROM CommentList;");// 清空评论表
+			sb.append("DELETE FROM RssItem;");// 清空订阅文章表
 			db.execSQL(sb.toString());
 		}
 	}

@@ -17,32 +17,34 @@ import com.cnblogs.android.parser.RssListXmlParser;
 import com.cnblogs.android.utility.NetHelper;
 
 /**
- * Rss²Ù×÷Àà
+ * Rssæ“ä½œç±»
  * 
  * @author walkingp
  * 
  */
 public class RssListHelper extends DefaultHandler {
 	/**
-	 * ¸ù¾İÍøÖ··µ»Ø
+	 * æ ¹æ®ç½‘å€è¿”å›
+	 * 
 	 * @param url
 	 * @return
 	 */
-	public static RssList GetRssEntity(String url){
+	public static RssList GetRssEntity(String url) {
 		String dataString = NetHelper.getData(url, "UTF-8");
 		if (dataString.equals("")) {
 			return null;
 		}
 		return ParseString2Entity(dataString);
 	}
+
 	/**
-	 * ¸ù¾İ·ÖÀàµÃµ½ÍÆ¼öµÄÁĞ±í
+	 * æ ¹æ®åˆ†ç±»å¾—åˆ°æ¨èçš„åˆ—è¡¨
 	 * 
 	 * @return
 	 */
 	public static List<RssList> GetRssList(int cateId) {
 		String url = Config.URL_RSS_LIST_URL.replace("{0}",
-				String.valueOf(cateId));// Êı¾İµØÖ·
+				String.valueOf(cateId));// æ•°æ®åœ°å€
 		String dataString = NetHelper.GetXmlContentFromUrl(url, "UTF-8");
 		if (dataString.equals("")) {
 			return null;
@@ -51,8 +53,9 @@ public class RssListHelper extends DefaultHandler {
 
 		return list;
 	}
+
 	/**
-	 * ½«×Ö·û´®×ª»»ÎªRss¼¯ºÏ
+	 * å°†å­—ç¬¦ä¸²è½¬æ¢ä¸ºRssé›†åˆ
 	 * 
 	 * @return
 	 */
@@ -79,7 +82,7 @@ public class RssListHelper extends DefaultHandler {
 	}
 
 	/**
-	 * ½«×Ö·û´®×ª»»ÎªRss¶ÔÏó
+	 * å°†å­—ç¬¦ä¸²è½¬æ¢ä¸ºRsså¯¹è±¡
 	 * 
 	 * @return
 	 */

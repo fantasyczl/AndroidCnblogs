@@ -23,30 +23,32 @@ import android.widget.TextView;
 import com.cnblogs.android.adapter.RssListAdapter;
 import com.cnblogs.android.core.RssListHelper;
 import com.cnblogs.android.entity.RssList;
+
 /**
- * RSS·ÖÀàÏÂµÄ×÷Õß
+ * RSSåˆ†ç±»ä¸‹çš„ä½œè€…
  * 
  * @author walkingp
  * 
  */
 public class RssListActivity extends BaseActivity {
 	ListView listView;
-	private RssListAdapter adapter;// Êı¾İÔ´
+	private RssListAdapter adapter;// æ•°æ®æº
 	List<RssList> listRss;
 
 	int cateId;
 	String cateTitle;
 
-	TextView txtNoData;// Ã»ÓĞÊı¾İ
+	TextView txtNoData;// æ²¡æœ‰æ•°æ®
 
-	Button btnBack;// ·µ»Ø
-	ProgressBar bodyProgressBar;// Ö÷ÌâListView¼ÓÔØ¿ò
-	ImageButton btnRefresh;// Ë¢ĞÂ°´Å¥
-	ProgressBar topProgressBar;// ¼ÓÔØ°´Å¥
+	Button btnBack;// è¿”å›
+	ProgressBar bodyProgressBar;// ä¸»é¢˜ListViewåŠ è½½æ¡†
+	ImageButton btnRefresh;// åˆ·æ–°æŒ‰é’®
+	ProgressBar topProgressBar;// åŠ è½½æŒ‰é’®
 
-	TextView txtAppTitle;// ±êÌâ
+	TextView txtAppTitle;// æ ‡é¢˜
 
-	Resources res;// ×ÊÔ´
+	Resources res;// èµ„æº
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,8 +60,9 @@ public class RssListActivity extends BaseActivity {
 		BindControls();
 		new PageTask().execute();
 	}
+
 	/**
-	 * ³õÊ¼»¯ÁĞ±í
+	 * åˆå§‹åŒ–åˆ—è¡¨
 	 */
 	private void InitialControls() {
 		listView = (ListView) findViewById(R.id.rss_list);
@@ -71,32 +74,34 @@ public class RssListActivity extends BaseActivity {
 		txtAppTitle = (TextView) findViewById(R.id.txtAppTitle);
 		txtNoData = (TextView) findViewById(R.id.txtNoData);
 	}
+
 	/**
-	 * ³õÊ¼»¯Êı¾İ
+	 * åˆå§‹åŒ–æ•°æ®
 	 */
 	void InitialData() {
 		cateId = getIntent().getIntExtra("cateId", 0);
 		cateTitle = getIntent().getStringExtra("title");
 	}
+
 	/**
-	 * °ó¶¨ÊÂ¼ş
+	 * ç»‘å®šäº‹ä»¶
 	 */
 	private void BindControls() {
 		txtAppTitle.setText(cateTitle);
-		// Ìø»Ø
+		// è·³å›
 		btnBack.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				RssListActivity.this.finish();
 			}
 		});
-		// Ë¢ĞÂ
+		// åˆ·æ–°
 		btnRefresh.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				new PageTask().execute();
 			}
 		});
-		// µã»÷Ìø×ª
+		// ç‚¹å‡»è·³è½¬
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v,
@@ -116,7 +121,7 @@ public class RssListActivity extends BaseActivity {
 
 				Intent intent = new Intent();
 				Bundle bundle = new Bundle();
-				if (isCnblogs) {// ²©¿ÍÔ°
+				if (isCnblogs) {// åšå®¢å›­
 					intent.setClass(RssListActivity.this,
 							AuthorBlogActivity.class);
 					bundle.putString("blogName", title);
@@ -133,7 +138,7 @@ public class RssListActivity extends BaseActivity {
 				startActivity(intent);
 			}
 		});
-		// ³¤°´ÊÂ¼ş
+		// é•¿æŒ‰äº‹ä»¶
 		listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
 			@Override
 			public void onCreateContextMenu(ContextMenu menu, View v,
@@ -144,6 +149,7 @@ public class RssListActivity extends BaseActivity {
 			}
 		});
 	}
+
 	public class PageTask extends AsyncTask<String, Integer, List<RssList>> {
 
 		@Override
@@ -151,6 +157,7 @@ public class RssListActivity extends BaseActivity {
 			List<RssList> list = RssListHelper.GetRssList(cateId);
 			return list;
 		}
+
 		@Override
 		protected void onPostExecute(List<RssList> result) {
 			bodyProgressBar.setVisibility(View.GONE);
@@ -164,6 +171,7 @@ public class RssListActivity extends BaseActivity {
 				listView.setAdapter(adapter);
 			}
 		}
+
 		@Override
 		protected void onPreExecute() {
 			bodyProgressBar.setVisibility(View.VISIBLE);

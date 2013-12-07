@@ -21,7 +21,7 @@ import com.cnblogs.android.utility.NetHelper;
 
 public class UserHelper {
 	/**
-	 * ·µ»ØUser¶ÔÏó
+	 * è¿”å›Userå¯¹è±¡
 	 * 
 	 * @param userName
 	 * @return
@@ -36,36 +36,41 @@ public class UserHelper {
 
 		return entity;
 	}
+
 	/**
-	 * ¸ù¾İ¹Ø¼ü×Ö·µ»ØUser¶ÔÏó¼¯ºÏ
+	 * æ ¹æ®å…³é”®å­—è¿”å›Userå¯¹è±¡é›†åˆ
 	 * 
-	 * @return q:¹Ø¼ü×Ö
+	 * @return q:å…³é”®å­—
 	 */
 	public static ArrayList<Users> GetUserList(String q) {
 		String url = Config.URL_USER_SEARCH_AUTHOR_LIST
-				.replace("{username}", q);// Êı¾İµØÖ·
+				.replace("{username}", q);// æ•°æ®åœ°å€
 		String dataString = NetHelper.GetContentFromUrl(url);
 
 		ArrayList<Users> list = ParseString(dataString);
 
 		return list;
 	}
+
 	/**
-	 * ·µ»Ø²©¿ÍÅÅĞĞ°ñÓÃ»§
+	 * è¿”å›åšå®¢æ’è¡Œæ¦œç”¨æˆ·
+	 * 
 	 * @param pageIndex
 	 * @return
 	 */
-	public static List<Users> GetTopUserList(int pageIndex){
-		String url=Config.URL_RECOMMEND_USER_LIST.replace("{pageIndex}",String.valueOf(pageIndex))
-					.replace("{pageSize}",String.valueOf(Config.NUM_RECOMMEND_USER));
+	public static List<Users> GetTopUserList(int pageIndex) {
+		String url = Config.URL_RECOMMEND_USER_LIST.replace("{pageIndex}",
+				String.valueOf(pageIndex)).replace("{pageSize}",
+				String.valueOf(Config.NUM_RECOMMEND_USER));
 		String dataString = NetHelper.GetContentFromUrl(url);
 
 		ArrayList<Users> list = ParseString(dataString);
 
 		return list;
 	}
+
 	/**
-	 * ½«×Ö·û´®×ª»»ÎªUser¼¯ºÏ
+	 * å°†å­—ç¬¦ä¸²è½¬æ¢ä¸ºUseré›†åˆ
 	 * 
 	 * @return
 	 */
@@ -90,8 +95,9 @@ public class UserHelper {
 
 		return listUser;
 	}
+
 	/**
-	 * ½«×Ö·û´®×ª»»ÎªUser
+	 * å°†å­—ç¬¦ä¸²è½¬æ¢ä¸ºUser
 	 * 
 	 * @return
 	 */
@@ -116,13 +122,15 @@ public class UserHelper {
 
 		return entity;
 	}
+
 	/**
-	 * ´Ó²©¿ÍµØÖ·ÖĞÌáÈ¡¶ş¼¶Â·¾¶Ãû Èç£ºhttp://www.cnblogs.com/walkingp ·µ»Øwalkingp
+	 * ä»åšå®¢åœ°å€ä¸­æå–äºŒçº§è·¯å¾„å å¦‚ï¼šhttp://www.cnblogs.com/walkingp è¿”å›walkingp
 	 * 
 	 * @param url
 	 * @return
 	 */
 	private static Pattern patternUrl = Pattern.compile("http://(.+?)/(.+?)/");
+
 	public static String GetBlogUrlName(String url) {
 		Matcher m = patternUrl.matcher(url);
 		while (m.find()) {
@@ -132,11 +140,14 @@ public class UserHelper {
 		}
 		return "";
 	}
+
 	/**
-	 * ´ÓHomeÒ³µØÖ·ÖĞÌáÈ¡ÓÃ»§Ãû Èç£ºhttp://home.cnblogs.com/u/A_ming/ ·µ»ØA_ming
+	 * ä»Homeé¡µåœ°å€ä¸­æå–ç”¨æˆ·å å¦‚ï¼šhttp://home.cnblogs.com/u/A_ming/ è¿”å›A_ming
 	 */
-	private static Pattern patternHomeUrl = Pattern.compile("http://www.cnblogs.com/(.+?)/");
-	//patternHomeUrl = Pattern.compile("http://home.cnblogs.com/u/(.+?)/");
+	private static Pattern patternHomeUrl = Pattern
+			.compile("http://www.cnblogs.com/(.+?)/");
+
+	// patternHomeUrl = Pattern.compile("http://home.cnblogs.com/u/(.+?)/");
 	public static String GetHomeUrlName(String url) {
 		Matcher m = patternHomeUrl.matcher(url);
 		while (m.find()) {
@@ -146,8 +157,9 @@ public class UserHelper {
 		}
 		return "";
 	}
+
 	/**
-	 * È¡µÃ´óÍ·Ïñ 48*48 -> 154*154
+	 * å–å¾—å¤§å¤´åƒ 48*48 -> 154*154
 	 * 
 	 * @param avatarUrl
 	 * @return

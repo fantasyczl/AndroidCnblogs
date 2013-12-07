@@ -1,10 +1,5 @@
 package com.cnblogs.android.entity;
 
-/**
- * ¶©ÔÄ·ÖÀà
- * @author walkingp
- *
- */
 public class RssCate {
 	private int _cateId;
 	private String _cateName;

@@ -26,8 +26,9 @@ import android.widget.Toast;
 public class UpdateService extends Service {
 	public static final int INIT_UPDATE_NOTIFY = 10010;
 	Resources res;
+
 	/**
-	 * ÏÂÔØapkÎÄ¼ş£¬ÏÂÔØÍê³ÉºóÌáÊ¾°²×°
+	 * ä¸‹è½½apkæ–‡ä»¶ï¼Œä¸‹è½½å®Œæˆåæç¤ºå®‰è£…
 	 * 
 	 */
 	class DownloadUpdateFilesTask extends AsyncTask<String, Integer, File> {
@@ -45,7 +46,7 @@ public class UpdateService extends Service {
 					String apkPath = res
 							.getString(R.string.app_apk_location_path);
 
-					FileAccess.MakeDir(apkPath);// ´´½¨ÎÄ¼ş¼Ğ
+					FileAccess.MakeDir(apkPath);// åˆ›å»ºæ–‡ä»¶å¤¹
 					FileOutputStream out = new FileOutputStream(
 							res.getString(R.string.app_update_location_url));
 					byte[] buffer = new byte[1024];
@@ -65,7 +66,7 @@ public class UpdateService extends Service {
 					out.close();
 				}
 				is.close();
-				return new File(res.getString(R.string.app_update_location_url));// Éú³É±¾µØÎÄ¼şÃû
+				return new File(res.getString(R.string.app_update_location_url));// ç”Ÿæˆæœ¬åœ°æ–‡ä»¶å
 			} catch (Exception e) {
 				e.printStackTrace();
 				Toast.makeText(getApplicationContext(), R.string.sys_error,
@@ -87,13 +88,13 @@ public class UpdateService extends Service {
 					"application/vnd.android.package-archive");
 			installIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-			long al[] = {80L, 80L};
+			long al[] = { 80L, 80L };
 			updateNotify.vibrate = al;
 			updateNotify.icon = android.R.drawable.stat_sys_download_done;
 			updateNotify.flags = Notification.FLAG_AUTO_CANCEL;
-			updateNotify.defaults = Notification.DEFAULT_SOUND;// ÁåÉùÌáĞÑ
+			updateNotify.defaults = Notification.DEFAULT_SOUND;// é“ƒå£°æé†’
 			updateNotify.contentIntent = PendingIntent.getActivity(
-					UpdateService.this, 0, installIntent, 0);// °²×°½çÃæ
+					UpdateService.this, 0, installIntent, 0);// å®‰è£…ç•Œé¢
 			updateNotify.contentView.setViewVisibility(R.id.progressBlock,
 					View.GONE);
 			updateNotify.contentView.setViewVisibility(
@@ -122,7 +123,7 @@ public class UpdateService extends Service {
 	}
 
 	/**
-	 * ¼ì²â¸üĞÂÌõ¼şÊÇ·ñÂú×ã£¬ÈôÂú×ãÔò¿ªÊ¼ÏÂÔØ³ÌĞò
+	 * æ£€æµ‹æ›´æ–°æ¡ä»¶æ˜¯å¦æ»¡è¶³ï¼Œè‹¥æ»¡è¶³åˆ™å¼€å§‹ä¸‹è½½ç¨‹åº
 	 */
 	@Override
 	public void onStart(Intent intent, int startId) {
@@ -151,7 +152,7 @@ public class UpdateService extends Service {
 	}
 
 	/**
-	 * ÉèÖÃÍ¨ÖªÀ¸ÏÔÊ¾
+	 * è®¾ç½®é€šçŸ¥æ æ˜¾ç¤º
 	 */
 	@Override
 	public void onCreate() {
@@ -179,7 +180,7 @@ public class UpdateService extends Service {
 		super.onDestroy();
 	}
 
-	// Í¨ÖªÀ¸
+	// é€šçŸ¥æ 
 	private NotificationManager updateNotifMg;
 	private Notification updateNotify;
 }

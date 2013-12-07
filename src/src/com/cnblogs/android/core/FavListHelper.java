@@ -9,92 +9,111 @@ import com.cnblogs.android.dal.BlogDalHelper;
 import com.cnblogs.android.dal.FavDalHelper;
 import com.cnblogs.android.entity.FavList;
 import com.cnblogs.android.enums.EnumResultType;
+
 /**
- * ÊÕ²Ø²Ù×÷Àà
+ * æ”¶è—æ“ä½œç±»
+ * 
  * @author walkingp
- *
+ * 
  */
 public class FavListHelper {
 	static FavDalHelper helper;
+
 	/**
-	 * µÃµ½ÊµÌåÀà
+	 * å¾—åˆ°å®ä½“ç±»
+	 * 
 	 * @param contentId
 	 * @param contentType
 	 * @param context
 	 * @return
 	 */
-	public static FavList GetFavEntity(int contentId,FavList.EnumContentType contentType,Context context){
-		helper=new FavDalHelper(context);
-		return helper.GetFavEntity(contentId,contentType);
+	public static FavList GetFavEntity(int contentId,
+			FavList.EnumContentType contentType, Context context) {
+		helper = new FavDalHelper(context);
+		return helper.GetFavEntity(contentId, contentType);
 	}
+
 	/**
-	 * ·µ»Ø±»ÒıÓÃµÄÀà
+	 * è¿”å›è¢«å¼•ç”¨çš„ç±»
+	 * 
 	 * @param contentId
 	 * @param contentType
 	 * @param context
 	 * @return
 	 */
-	public static Object GetFavRefEntity(int contentId,FavList.EnumContentType contentType,Context context){
-		Object obj=null;
-		switch(contentType){
-			case Blog:
-			default:
-				obj=new BlogDalHelper(context).GetBlogEntity(contentId);
-				break;				
+	public static Object GetFavRefEntity(int contentId,
+			FavList.EnumContentType contentType, Context context) {
+		Object obj = null;
+		switch (contentType) {
+		case Blog:
+		default:
+			obj = new BlogDalHelper(context).GetBlogEntity(contentId);
+			break;
 		}
 		return obj;
 	}
+
 	/**
-	 * ¸ù¾İÒ³ÂëµÃµ½List
+	 * æ ¹æ®é¡µç å¾—åˆ°List
+	 * 
 	 * @param pageIndex
 	 * @param pageSize
 	 * @param contentType
 	 * @param context
 	 * @return
 	 */
-	public static List<FavList> GetFavListByPage(int pageIndex,FavList.EnumContentType contentType, Context context){
-		helper=new FavDalHelper(context);
-		int pageSize=Config.COMMENT_PAGE_SIZE;
-		List<FavList> list=helper.GetFavListByPage(pageIndex, pageSize, contentType);
-		
+	public static List<FavList> GetFavListByPage(int pageIndex,
+			FavList.EnumContentType contentType, Context context) {
+		helper = new FavDalHelper(context);
+		int pageSize = Config.COMMENT_PAGE_SIZE;
+		List<FavList> list = helper.GetFavListByPage(pageIndex, pageSize,
+				contentType);
+
 		return list;
 	}
+
 	/**
-	 * Ìí¼Óµ½ÊÕ²Ø
+	 * æ·»åŠ åˆ°æ”¶è—
+	 * 
 	 * @param contentId
 	 * @param contentType
 	 * @param context
 	 */
-	public static EnumResultType.EnumActionResultType AddFav(int contentId,FavList.EnumContentType contentType,Context context){
-		helper=new FavDalHelper(context);
-		FavList favList=new FavList();
+	public static EnumResultType.EnumActionResultType AddFav(int contentId,
+			FavList.EnumContentType contentType, Context context) {
+		helper = new FavDalHelper(context);
+		FavList favList = new FavList();
 		favList.SetContentId(contentId);
 		favList.SetContentType(contentType);
 		Date datetime = new java.util.Date();
 		favList.SetAddTime(datetime);
-		
-		List<FavList> listFav=new ArrayList<FavList>();
+
+		List<FavList> listFav = new ArrayList<FavList>();
 		listFav.add(favList);
-		
+
 		return helper.SynchronyData2DB(listFav);
 	}
+
 	/**
-	 * ÒÆ³ıÊÕ²Ø
+	 * ç§»é™¤æ”¶è—
+	 * 
 	 * @param favId
 	 * @param context
 	 */
-	public static boolean RemoveFav(int favId,Context context){
-		helper=new FavDalHelper(context);
+	public static boolean RemoveFav(int favId, Context context) {
+		helper = new FavDalHelper(context);
 		return helper.Delete(favId);
 	}
 
 	/**
-	 * ÒÆ³ıÊÕ²Ø
+	 * ç§»é™¤æ”¶è—
+	 * 
 	 * @param favId
 	 * @param context
 	 */
-	public static boolean RemoveFav(int contentId,FavList.EnumContentType contentType,Context context){
-		helper=new FavDalHelper(context);
-		return helper.Delete(contentId,contentType);
+	public static boolean RemoveFav(int contentId,
+			FavList.EnumContentType contentType, Context context) {
+		helper = new FavDalHelper(context);
+		return helper.Delete(contentId, contentType);
 	}
 }

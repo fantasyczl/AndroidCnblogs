@@ -7,29 +7,32 @@ public class FavList {
 	private EnumContentType _contentType;
 	private int _contentId;
 	private Date _addTime;
+
 	/**
-	 * ÊÕ²ØÀàĞÍ
-	 *
+	 * æ”¶è—ç±»å‹
+	 * 
 	 */
-	public enum EnumContentType{
-		Blog,//²©¿Í
-		News,//ĞÂÎÅ
-		Author,//×÷Õß
-		RssItem//¶©ÔÄÎÄÕÂ
+	public enum EnumContentType {
+		Blog, // åšå®¢
+		News, // æ–°é—»
+		Author, // ä½œè€…
+		RssItem// è®¢é˜…æ–‡ç« 
 	}
 
 	/**
-	 * ÖØĞ´
+	 * é‡å†™
 	 */
 	@Override
-	public boolean equals(Object obj){
-		if (obj instanceof FavList){
-			FavList o = (FavList)obj;
-		    return String.valueOf(o.GetFavId()).equals(String.valueOf(this.GetFavId()));
-		}else{
-		    return super.equals(obj);
+	public boolean equals(Object obj) {
+		if (obj instanceof FavList) {
+			FavList o = (FavList) obj;
+			return String.valueOf(o.GetFavId()).equals(
+					String.valueOf(this.GetFavId()));
+		} else {
+			return super.equals(obj);
 		}
 	}
+
 	public void SetFavId(int favId) {
 		_favId = favId;
 	}

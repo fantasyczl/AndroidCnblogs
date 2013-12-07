@@ -16,127 +16,143 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 /**
- * ÄÚÖÃä¯ÀÀÆ÷£¨¹²ÓÃ£©
+ * å†…ç½®æµè§ˆå™¨ï¼ˆå…±ç”¨ï¼‰
+ * 
  * @author walkingp
  * @date:2011-12
- *
+ * 
  */
 public class WebActivity extends BaseActivity {
 	WebView wv;
 	ProgressBar web_progressBar;
 	ImageButton btnRefresh;
-	private Button button_back;//·µ»Ø
-	
+	private Button button_back;// è¿”å›
+
 	String url;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.web_layout);
-		//·ÀÖ¹ĞİÃß
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		//ÍøÂç²»¿ÉÓÃ
-		if(!NetHelper.networkIsAvailable(getApplicationContext())){
-			Toast.makeText(getApplicationContext(), R.string.sys_network_error, Toast.LENGTH_SHORT).show();
+		// é˜²æ­¢ä¼‘çœ 
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+				WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		// ç½‘ç»œä¸å¯ç”¨
+		if (!NetHelper.networkIsAvailable(getApplicationContext())) {
+			Toast.makeText(getApplicationContext(), R.string.sys_network_error,
+					Toast.LENGTH_SHORT).show();
 			return;
 		}
-		BindControls();		
+		BindControls();
 	}
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		 if (keyCode == KeyEvent.KEYCODE_BACK){
-			 if(wv.canGoBack()){
-					wv.goBack();
-				}else{
-					WebActivity.this.finish();
-				}
-		 }
-         return false;
-    }
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if (wv.canGoBack()) {
+				wv.goBack();
+			} else {
+				WebActivity.this.finish();
+			}
+		}
+		return false;
+	}
+
 	/**
-	 * °ó¶¨ÊÂ¼ş
+	 * ç»‘å®šäº‹ä»¶
 	 */
-	private void BindControls(){
-		url=getIntent().getStringExtra("url");
-		String title=getIntent().getStringExtra("title");		
-		
-		TextView txtWebTitle=(TextView)findViewById(R.id.txtWebTitle);
+	private void BindControls() {
+		url = getIntent().getStringExtra("url");
+		String title = getIntent().getStringExtra("title");
+
+		TextView txtWebTitle = (TextView) findViewById(R.id.txtWebTitle);
 		txtWebTitle.setText(title);
-		
-		web_progressBar=(ProgressBar)findViewById(R.id.web_progressBar);
-    	wv=(WebView)findViewById(R.id.bookWebview);
-        wv.getSettings().setJavaScriptEnabled(true);//¿ÉÓÃJS
-        wv.setScrollBarStyle(0);//¹ö¶¯Ìõ·ç¸ñ£¬Îª0¾ÍÊÇ²»¸ø¹ö¶¯ÌõÁô¿Õ¼ä£¬¹ö¶¯Ìõ¸²¸ÇÔÚÍøÒ³ÉÏ
-        wv.setWebViewClient(new WebViewClient(){   
-        	public boolean shouldOverrideUrlLoading(WebView view, String url) {   
-                view.loadUrl(url);   
-                return true;   
-            }  
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                Log.d("WebView","onPageStarted");
-                super.onPageStarted(view, url, favicon);
-                web_progressBar.setVisibility(View.VISIBLE);
-            }    
-            public void onPageFinished(WebView view, String url) {
-                Log.d("WebView","onPageFinished ");
-                super.onPageFinished(view, url);
-                web_progressBar.setVisibility(View.GONE);
-            }
-        }); 
-        
-        //Ë¢ĞÂ
-        btnRefresh=(ImageButton)findViewById(R.id.web_refresh_btn);
-        btnRefresh.setOnClickListener(new OnClickListener(){
-			public void onClick(View v) {
-				loadurl(wv,url);
+
+		web_progressBar = (ProgressBar) findViewById(R.id.web_progressBar);
+		wv = (WebView) findViewById(R.id.bookWebview);
+		wv.getSettings().setJavaScriptEnabled(true);// å¯ç”¨JS
+		wv.setScrollBarStyle(0);// æ»šåŠ¨æ¡é£æ ¼ï¼Œä¸º0å°±æ˜¯ä¸ç»™æ»šåŠ¨æ¡ç•™ç©ºé—´ï¼Œæ»šåŠ¨æ¡è¦†ç›–åœ¨ç½‘é¡µä¸Š
+		wv.setWebViewClient(new WebViewClient() {
+			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+				view.loadUrl(url);
+				return true;
+			}
+
+			public void onPageStarted(WebView view, String url, Bitmap favicon) {
+				Log.d("WebView", "onPageStarted");
+				super.onPageStarted(view, url, favicon);
+				web_progressBar.setVisibility(View.VISIBLE);
+			}
+
+			public void onPageFinished(WebView view, String url) {
+				Log.d("WebView", "onPageFinished ");
+				super.onPageFinished(view, url);
+				web_progressBar.setVisibility(View.GONE);
 			}
 		});
-       //·µ»Ø
-        button_back=(Button)findViewById(R.id.web_button_back);
-        button_back.setOnClickListener(new OnClickListener(){
+
+		// åˆ·æ–°
+		btnRefresh = (ImageButton) findViewById(R.id.web_refresh_btn);
+		btnRefresh.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				if(wv.canGoBack()){
+				loadurl(wv, url);
+			}
+		});
+		// è¿”å›
+		button_back = (Button) findViewById(R.id.web_button_back);
+		button_back.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				if (wv.canGoBack()) {
 					wv.goBack();
-				}else{
+				} else {
 					WebActivity.this.finish();
 				}
 			}
 		});
-        loadurl(wv,url);//¼ÓÔØÍøÒ³
-    }
-	final class MyWebViewClient extends WebViewClient{  
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {   
-            view.loadUrl(url);   
-            return true;   
-        }  
-        public void onPageStarted(WebView view, String url, Bitmap favicon) {
-        	//ÍøÂç²»¿ÉÓÃ
-			if(!NetHelper.networkIsAvailable(getApplicationContext())){
-				Toast.makeText(getApplicationContext(), R.string.sys_network_error, Toast.LENGTH_SHORT).show();
+		loadurl(wv, url);// åŠ è½½ç½‘é¡µ
+	}
+
+	final class MyWebViewClient extends WebViewClient {
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			view.loadUrl(url);
+			return true;
+		}
+
+		public void onPageStarted(WebView view, String url, Bitmap favicon) {
+			// ç½‘ç»œä¸å¯ç”¨
+			if (!NetHelper.networkIsAvailable(getApplicationContext())) {
+				Toast.makeText(getApplicationContext(),
+						R.string.sys_network_error, Toast.LENGTH_SHORT).show();
 				return;
 			}
-            super.onPageStarted(view, url, favicon);
-        }    
-        public void onPageFinished(WebView view, String url) {
-            Log.d("WebView","onPageFinished ");
-            view.loadUrl("javascript:window.local_obj.showSource('<head>'+" +
-                    "document.getElementsByTagName('html')[0].innerHTML+'</head>');");
-            super.onPageFinished(view, url);
-        }
-    }
-	private void loadurl(final WebView view, String url){
-		try{
-			//ÍøÂç²»¿ÉÓÃ
-			if(!NetHelper.networkIsAvailable(getApplicationContext())){
-				Toast.makeText(getApplicationContext(), R.string.sys_network_error, Toast.LENGTH_SHORT).show();
+			super.onPageStarted(view, url, favicon);
+		}
+
+		public void onPageFinished(WebView view, String url) {
+			Log.d("WebView", "onPageFinished ");
+			view.loadUrl("javascript:window.local_obj.showSource('<head>'+"
+					+ "document.getElementsByTagName('html')[0].innerHTML+'</head>');");
+			super.onPageFinished(view, url);
+		}
+	}
+
+	private void loadurl(final WebView view, String url) {
+		try {
+			// ç½‘ç»œä¸å¯ç”¨
+			if (!NetHelper.networkIsAvailable(getApplicationContext())) {
+				Toast.makeText(getApplicationContext(),
+						R.string.sys_network_error, Toast.LENGTH_SHORT).show();
 				return;
 			}
-			if(wv.canGoBack()){
-				url=wv.getUrl();
+			if (wv.canGoBack()) {
+				url = wv.getUrl();
 			}
-    		view.loadUrl(url);//ÔØÈëÍøÒ³
-		}catch(Exception ex){
-			Toast.makeText(getApplicationContext(), R.string.sys_network_error,Toast.LENGTH_SHORT).show();
+			view.loadUrl(url);// è½½å…¥ç½‘é¡µ
+		} catch (Exception ex) {
+			Toast.makeText(getApplicationContext(), R.string.sys_network_error,
+					Toast.LENGTH_SHORT).show();
 			return;
 		}
 	}

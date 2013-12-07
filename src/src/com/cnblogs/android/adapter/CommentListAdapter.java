@@ -26,6 +26,7 @@ public class CommentListAdapter extends BaseAdapter {
 		this.mInflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
+
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder viewHolder = null;
 		Comment entity = list.get(position);
@@ -53,7 +54,7 @@ public class CommentListAdapter extends BaseAdapter {
 		viewHolder.comment_id.setText(String.valueOf(entity.GetCommentId()));
 		viewHolder.comment_user_name.setText(entity.GetPostUserName());
 		viewHolder.comment_user_url.setText(entity.GetPostUserUrl());
-		// 替换掉所有的html标签
+		// 鏇挎崲鎺夋墍鏈夌殑html鏍囩
 		String content = entity.GetContent();
 		content = content.replace("<br />", "\r\n");
 		content = HtmlRegexpUtil.filterHtml(content);
@@ -64,25 +65,26 @@ public class CommentListAdapter extends BaseAdapter {
 		String simpleDateString = AppUtil.DateToChineseString(entity
 				.GetAddTime());
 		viewHolder.comment_format_date.setText(simpleDateString);
-		// 楼层
+		// 妤煎眰
 		int floorNum = (pageIndex - 1) * Config.COMMENT_PAGE_SIZE + position
 				+ 1;
-		viewHolder.comment_floor.setText(String.valueOf(floorNum) + "楼：");
+		viewHolder.comment_floor.setText(String.valueOf(floorNum) + "妤硷細");
 
 		convertView.setTag(viewHolder);
 		return convertView;
 	}
 
 	/**
-	 * 得到数据
+	 * 寰楀埌鏁版嵁
 	 * 
 	 * @return
 	 */
 	public List<Comment> GetData() {
 		return list;
 	}
+
 	/**
-	 * 插入
+	 * 鎻掑叆
 	 * 
 	 * @param list
 	 */
@@ -90,8 +92,9 @@ public class CommentListAdapter extends BaseAdapter {
 		this.list.addAll(0, list);
 		this.notifyDataSetChanged();
 	}
+
 	/**
-	 * 增加数据
+	 * 澧炲姞鏁版嵁
 	 * 
 	 * @param list
 	 */
@@ -99,6 +102,7 @@ public class CommentListAdapter extends BaseAdapter {
 		this.list.addAll(list);
 		this.notifyDataSetChanged();
 	}
+
 	public int getCount() {
 		return list.size();
 	}
@@ -110,6 +114,7 @@ public class CommentListAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return position;
 	}
+
 	public class ViewHolder {
 		TextView comment_id;
 		TextView comment_user_name;

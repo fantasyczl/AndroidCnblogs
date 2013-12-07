@@ -1,10 +1,10 @@
 package com.cnblogs.android.enums;
 
 public class EnumActivityType {
-	public enum EnumOrderActivityType{
-		RecommendBlog,//推荐博客
-		TopViewBlogIn48Hours,//48小时阅读排行
-		TopDiggBlogIn10Days,//10天内推荐排行
-		RecommendNews//推荐新闻
+	public enum EnumOrderActivityType {
+		RecommendBlog, // 鎺ㄨ崘鍗氬
+		TopViewBlogIn48Hours, // 48灏忔椂闃呰鎺掕
+		TopDiggBlogIn10Days, // 10澶╁唴鎺ㄨ崘鎺掕
+		RecommendNews// 鎺ㄨ崘鏂伴椈
 	}
 }

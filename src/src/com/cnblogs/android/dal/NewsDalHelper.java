@@ -25,11 +25,7 @@ public class NewsDalHelper {
 	public void Close(){
 		dbHelper.close();
 	}
-	/**
-	 * �ж��Ƿ��Ѿ�����
-	 * @param blogId
-	 * @return
-	 */
+
 	private boolean Exist(int newsId){
 		String where = "NewsId=" + newsId;
 		Cursor cursor = db.query(Config.DB_NEWS_TABLE, null, where, null, null, null, null);
@@ -38,10 +34,7 @@ public class NewsDalHelper {
 		
 		return isExist;
 	}
-	/**
-	 * �õ�ͷ��
-	 * @return
-	 */
+
 	public List<News> GetTopNewsList(){
 		String limit = "10";
 		String where = "IsFull=?";
@@ -49,18 +42,14 @@ public class NewsDalHelper {
 		
 		return GetNewsListByWhere(limit, where, args);
 	}
-	/*
-	 * ��ҳ
-	 */
+
 	public List<News> GetNewsListByPage(int pageIndex,int pageSize){
 		String limit = String.valueOf((pageIndex-1)*pageSize) + "," + String.valueOf(pageSize);
 		List<News> list = GetNewsListByWhere(limit,null,null);
 		
 		return list;
 	}
-	/*
-	 * �õ�����
-	 */
+
 	public News GetNewsEntity(int newsId){
 		String limit="1";
 		String where="NewsId=?";
@@ -72,11 +61,7 @@ public class NewsDalHelper {
 		
 		return null;
 	}
-	/**
-	 * ��������õ�
-	 * @param top
-	 * @param where
-	 */
+
 	public List<News> GetNewsListByWhere(String limit,String where,String[] args){
 		List<News> listNews = new ArrayList<News>();
 		String orderBy = "NewsID desc";
@@ -109,11 +94,7 @@ public class NewsDalHelper {
 		
 		return listNews;
 	}
-	/**
-	 * �Ƿ��Ѷ�
-	 * @param blogId
-	 * @return
-	 */
+
 	public boolean GetIsReaded(int newsId){
 		News entity=GetNewsEntity(newsId);
 		if(entity!=null){
@@ -121,11 +102,7 @@ public class NewsDalHelper {
 		}
 		return false;
 	}
-	/**
-	 * �ж��Ƿ��Ѿ�д������
-	 * @param blogId
-	 * @return
-	 */
+
 	private boolean IsFull(int newsId){
 		String where="NewsId=?";
 		String[] args={String.valueOf(newsId)};
@@ -140,11 +117,7 @@ public class NewsDalHelper {
 		
 		return isFull;
 	}
-	/**
-	 * ����������ͬ������ݿ�
-	 * @param newsId
-	 * @param newsContent
-	 */
+
 	public void SynchronyContent2DB(int newsId,String newsContent){
 		if(newsContent.equals("")){
 			return;
@@ -153,19 +126,13 @@ public class NewsDalHelper {
 		String[] args={newsContent,String.valueOf(newsId)};
 		db.execSQL(sql,args);
 	}
-	/**
-	 * ��־Ϊ�Ѷ�
-	 * @param blogId
-	 */
+
 	public void MarkAsReaded(int newsId){
 		String sql="update NewsList set IsReaded=1 where NewsId=?";
 		String[] args={String.valueOf(newsId)};
 		db.execSQL(sql,args);
 	}
-	/**
-	 * ����
-	 * @param list
-	 */
+
 	public void SynchronyData2DB(List<News> newsList){
 		List<ContentValues> list = new ArrayList<ContentValues>();
 		for(int i=0,len=newsList.size();i<len;i++){
@@ -191,10 +158,6 @@ public class NewsDalHelper {
 		synchronized(_writeLock){
 			db.beginTransaction();
 			try{
-				//�������
-				//String where="IsFull=?";
-				//String[] args={"0"};
-				//db.delete(DB_NEWS_TABLE, where, args);
 				for(int i=0, len=list.size(); i<len; i++){
 					int newsId=list.get(i).getAsInteger("NewsId");
 					boolean isExist=Exist(newsId);

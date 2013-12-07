@@ -1,11 +1,11 @@
 package com.cnblogs.android.enums;
 
 public class EnumResultType {
-	public enum EnumActionResultType{
-		Succ,//²Ù×÷³É¹¦ 
-		Fail,//²Ù×÷Ê§°Ü
-		Exist,//ÒÑ¾­´æÔÚ
-		NetworkUnavailable,//ÍøÂç²»¿ÉÓÃ
-		UnknownErr//Î´Öª´íÎó
+	public enum EnumActionResultType {
+		Succ, // æ“ä½œæˆåŠŸ
+		Fail, // æ“ä½œå¤±è´¥
+		Exist, // å·²ç»å­˜åœ¨
+		NetworkUnavailable, // ç½‘ç»œä¸å¯ç”¨
+		UnknownErr// æœªçŸ¥é”™è¯¯
 	}
 }

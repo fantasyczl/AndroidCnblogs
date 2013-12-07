@@ -2,11 +2,6 @@ package com.cnblogs.android.entity;
 
 import java.util.Date;
 
-/**
- * 评论实体类
- * @author walkingp
- *
- */
 public class Comment {
 	private int _commentId;
 	private String _postUserUrl;
@@ -17,8 +12,8 @@ public class Comment {
 	private int _contentId;
 	
 	public enum EnumCommentType{
-		Blog,//0:博客
-		News//1:文章
+		Blog,
+		News
 	}
 	
 	public void SetCommentId(int commentId){
@@ -57,9 +52,7 @@ public class Comment {
 	public Date GetAddTime(){
 		return _addTime;
 	}
-	/**
-	 * 重写
-	 */
+
 	@Override
 	public boolean equals(Object obj){
 		if (obj instanceof Comment){
