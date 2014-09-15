@@ -1,17 +1,17 @@
 package com.cnblogs.android.dal;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.cnblogs.android.core.Config;
 import com.cnblogs.android.entity.Blog;
 import com.cnblogs.android.utility.AppUtil;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class BlogDalHelper {
 	private DBHelper.DatabaseHelper dbHelper;
@@ -61,7 +61,8 @@ public class BlogDalHelper {
 	
 	
 	public List<Blog> GetBlogListByPage(int pageIndex, int pageSize) {
-		String limit = String.valueOf((pageIndex - 1) * pageSize) + ","	+ String.valueOf(pageSize);
+//		String limit = String.valueOf((pageIndex - 1) * pageSize) + ","	+ String.valueOf(pageSize);
+        String limit = String.format("%d,%d", (pageIndex - 1) * pageSize, pageSize);
 		List<Blog> list = GetBlogListByWhere(limit, null, null);
 
 		return list;
@@ -92,6 +93,7 @@ public class BlogDalHelper {
 		List<Blog> listBlog = new ArrayList<Blog>();
 		String orderBy = "BlogID desc";
 		Cursor cursor = db.query(Config.DB_BLOG_TABLE, null, where, args, null, null, orderBy, limit);
+
 		while (cursor != null && cursor.moveToNext()) {
 			Blog entity = new Blog();
 			String addTimeStr = cursor.getString(cursor.getColumnIndex("Published"));
@@ -131,7 +133,9 @@ public class BlogDalHelper {
 
 			listBlog.add(entity);
 		}
-		cursor.close();
+
+        if (cursor != null)
+		    cursor.close();
 
 		return listBlog;
 	}

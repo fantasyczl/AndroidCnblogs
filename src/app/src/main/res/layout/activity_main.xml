@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.app.FragmentTabHost xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v13.app.FragmentTabHost
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
 	android:background="@color/black"
@@ -64,5 +65,5 @@
     			style="@style/main_tab_bottom"/>
     	</RadioGroup>
     </LinearLayout>
-</android.support.v4.app.FragmentTabHost>
+</android.support.v13.app.FragmentTabHost>
 	

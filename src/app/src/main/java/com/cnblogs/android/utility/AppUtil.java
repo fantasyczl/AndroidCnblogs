@@ -1,20 +1,5 @@
 package com.cnblogs.android.utility;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.cnblogs.android.R;
-import com.cnblogs.android.SettingActivity;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -29,6 +14,21 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
+import com.cnblogs.android.R;
+import com.cnblogs.android.SettingActivity;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class AppUtil {
 	/**
      * String转换为时间
@@ -36,7 +36,7 @@ public class AppUtil {
      * @return
      */
     public static Date ParseDate(String str){
-    	SimpleDateFormat dateFormat =new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
+    	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     	Date addTime = null;
     	try {
     		addTime = dateFormat.parse(str);

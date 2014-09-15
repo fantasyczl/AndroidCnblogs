@@ -275,9 +275,9 @@ public class NewsRecommendActivity extends BaseActivity {
 				listView.setAdapter(adapter);
 
 				// 传递参数
-				((PullToRefreshListView) listView).SetDataRow(listNews.size());
+				((PullToRefreshListView) listView).setDataRow(listNews.size());
 				((PullToRefreshListView) listView)
-						.SetPageSize(Config.NEWS_PAGE_SIZE);
+						.setPageSize(Config.NEWS_PAGE_SIZE);
 			} else if (curPageIndex == 1) {// 刷新
 				if (adapter != null && adapter.GetData() != null) {
 					adapter.GetData().clear();

@@ -1,23 +1,12 @@
 package com.cnblogs.android.fragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.cnblogs.android.AuthorBlogActivity;
-import com.cnblogs.android.OrderActivity;
-import com.cnblogs.android.R;
-import com.cnblogs.android.adapter.UserListAdapter;
-import com.cnblogs.android.core.UserHelper;
-import com.cnblogs.android.entity.Users;
-import com.cnblogs.android.utility.NetHelper;
-
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +21,17 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.cnblogs.android.AuthorBlogActivity;
+import com.cnblogs.android.OrderActivity;
+import com.cnblogs.android.R;
+import com.cnblogs.android.adapter.UserListAdapter;
+import com.cnblogs.android.core.UserHelper;
+import com.cnblogs.android.entity.Users;
+import com.cnblogs.android.utility.NetHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SearchFragment extends Fragment {
 	 EditText txtSearch;

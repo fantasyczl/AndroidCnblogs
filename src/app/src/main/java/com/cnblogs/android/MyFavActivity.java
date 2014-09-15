@@ -387,9 +387,9 @@ public class MyFavActivity extends BaseActivity {
 				listView.setAdapter(adapter);
 
 				// 传递参数
-				((PullToRefreshListView) listView).SetDataRow(listBlog.size());
+				((PullToRefreshListView) listView).setDataRow(listBlog.size());
 				((PullToRefreshListView) listView)
-						.SetPageSize(Config.BLOG_PAGE_SIZE);
+						.setPageSize(Config.BLOG_PAGE_SIZE);
 			} else if (curPageIndex == 1) {// 刷新
 				try {// 避免首页无网络加载，按刷新按钮
 					if (adapter != null && adapter.GetData() != null) {

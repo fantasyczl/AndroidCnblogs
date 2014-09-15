@@ -1,10 +1,10 @@
 package com.cnblogs.android;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTabHost;
+import android.support.v13.app.FragmentTabHost;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RadioButton;
@@ -16,7 +16,7 @@ import com.cnblogs.android.fragment.NewsFragment;
 import com.cnblogs.android.fragment.RssFragment;
 import com.cnblogs.android.fragment.SearchFragment;
 
-public class MainActivity extends FragmentActivity  implements OnCheckedChangeListener {
+public class MainActivity extends Activity implements OnCheckedChangeListener {
 	private FragmentTabHost mTabHost;
 	private RadioButton rbBlog;
 	private RadioButton rbNews;
@@ -27,19 +27,20 @@ public class MainActivity extends FragmentActivity  implements OnCheckedChangeLi
     public String whichTab = "";
 
 	Resources res;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		setContentView(R.layout.activity_main);
 
-		res = this.getResources();
+		res = getResources();
 
-		InitialRadios();
-		InitialTab();
+		initialRadios();
+		initialTab();
 		initialSelectedTab();
 	}
 
-	private void InitialRadios() {
+	private void initialRadios() {
 		rbBlog = (RadioButton) findViewById(R.id.TabBlog);
 		rbBlog.setOnCheckedChangeListener(this);
 		rbNews = (RadioButton) findViewById(R.id.TabNews);
@@ -52,9 +53,9 @@ public class MainActivity extends FragmentActivity  implements OnCheckedChangeLi
 		rbMore.setOnCheckedChangeListener(this);
 	}
 
-	private void InitialTab() {
+	private void initialTab() {
 		mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
-		mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
+		mTabHost.setup(this, getFragmentManager(), android.R.id.tabcontent);
 
 		TabSpec blogSpec = mTabHost.newTabSpec("blog");
 		blogSpec.setIndicator(getString(R.string.main_home), res.getDrawable(R.drawable.icon));
@@ -63,15 +64,15 @@ public class MainActivity extends FragmentActivity  implements OnCheckedChangeLi
 		TabSpec newsSpec = mTabHost.newTabSpec("news");
 		newsSpec.setIndicator(getString(R.string.main_news), res.getDrawable(R.drawable.icon));
 		mTabHost.addTab(newsSpec, NewsFragment.class, null);
-		
+
 		TabSpec rssSpec = mTabHost.newTabSpec("rss");
 		rssSpec.setIndicator(getString(R.string.main_rss), res.getDrawable(R.drawable.icon));
 		mTabHost.addTab(rssSpec, RssFragment.class, null);
-		
+
 		TabSpec searchSpec = mTabHost.newTabSpec("search");
 		searchSpec.setIndicator(getString(R.string.main_search), res.getDrawable(R.drawable.icon));
 		mTabHost.addTab(searchSpec, SearchFragment.class, null);
-		
+
 		TabSpec moreSpec = mTabHost.newTabSpec("more");
 		moreSpec.setIndicator(getString(R.string.main_more), res.getDrawable(R.drawable.icon));
 		mTabHost.addTab(moreSpec, MoreFragment.class, null);
@@ -92,7 +93,7 @@ public class MainActivity extends FragmentActivity  implements OnCheckedChangeLi
 			rbMore.setChecked(true);
 	}
 
-
+    @Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		if (!isChecked) {
 			return;
@@ -121,6 +122,7 @@ public class MainActivity extends FragmentActivity  implements OnCheckedChangeLi
 		}
 	}
 
+    @Override
 	protected void onDestroy() {
 		SharedPreferences settings = getSharedPreferences( getString(R.string.preferences_key), MODE_PRIVATE);
 		SharedPreferences.Editor editor = settings.edit();

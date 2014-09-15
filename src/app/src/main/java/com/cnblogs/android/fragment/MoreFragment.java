@@ -1,19 +1,10 @@
 package com.cnblogs.android.fragment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.cnblogs.android.R;
-import com.cnblogs.android.WebActivity;
-import com.cnblogs.android.utility.NetHelper;
-
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +16,15 @@ import android.widget.SimpleAdapter;
 import android.widget.SimpleAdapter.ViewBinder;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.cnblogs.android.R;
+import com.cnblogs.android.WebActivity;
+import com.cnblogs.android.utility.NetHelper;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MoreFragment extends Fragment {
 	Resources res;

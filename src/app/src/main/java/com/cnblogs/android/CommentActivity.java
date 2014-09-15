@@ -300,10 +300,10 @@ public class CommentActivity extends BaseActivity {
 				listView.setAdapter(adapter);
 
 				// 传递参数
-				((PullToRefreshListView) listView).SetDataRow(listComment
-						.size());
+				((PullToRefreshListView) listView).setDataRow(listComment
+                        .size());
 				((PullToRefreshListView) listView)
-						.SetPageSize(Config.COMMENT_PAGE_SIZE);
+						.setPageSize(Config.COMMENT_PAGE_SIZE);
 			} else if (curPageIndex == 1) {// 刷新
 				try {// 避免首页无网络加载，按刷新按钮
 					if (adapter != null && adapter.GetData() != null) {

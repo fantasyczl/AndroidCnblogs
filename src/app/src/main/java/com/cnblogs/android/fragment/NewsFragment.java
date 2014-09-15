@@ -1,20 +1,6 @@
 package com.cnblogs.android.fragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.cnblogs.android.CommentActivity;
-import com.cnblogs.android.NewsDetailActivity;
-import com.cnblogs.android.R;
-import com.cnblogs.android.adapter.NewsListAdapter;
-import com.cnblogs.android.dal.NewsDalHelper;
-import com.cnblogs.android.entity.News;
-import com.cnblogs.android.utility.NetHelper;
-import com.cnblogs.android.controls.PullToRefreshListView;
-import com.cnblogs.android.controls.PullToRefreshListView.OnRefreshListener;
-import com.cnblogs.android.core.NewsHelper;
-import com.cnblogs.android.core.Config;
-
+import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,7 +9,6 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -42,6 +27,21 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.cnblogs.android.CommentActivity;
+import com.cnblogs.android.NewsDetailActivity;
+import com.cnblogs.android.R;
+import com.cnblogs.android.adapter.NewsListAdapter;
+import com.cnblogs.android.controls.PullToRefreshListView;
+import com.cnblogs.android.controls.PullToRefreshListView.OnRefreshListener;
+import com.cnblogs.android.core.Config;
+import com.cnblogs.android.core.NewsHelper;
+import com.cnblogs.android.dal.NewsDalHelper;
+import com.cnblogs.android.entity.News;
+import com.cnblogs.android.utility.NetHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 新闻列表
@@ -326,9 +326,9 @@ public class NewsFragment extends Fragment {
 				listView.setAdapter(adapter);
 				
 				// 传递参数
-				((PullToRefreshListView) listView).SetDataRow(listNews.size());
+				((PullToRefreshListView) listView).setDataRow(listNews.size());
 				((PullToRefreshListView) listView)
-				.SetPageSize(Config.NEWS_PAGE_SIZE);
+				.setPageSize(Config.NEWS_PAGE_SIZE);
 			} else if (curPageIndex == 1) {// 刷新
 				if (adapter != null && adapter.GetData() != null) {
 					adapter.GetData().clear();

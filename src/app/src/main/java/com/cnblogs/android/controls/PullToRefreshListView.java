@@ -1,7 +1,5 @@
 package com.cnblogs.android.controls;
 
-import com.cnblogs.android.R;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -19,6 +17,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.cnblogs.android.R;
 
 /**
  * 重写ListView控件，增加了头部，状态栏等控件。
@@ -356,10 +356,10 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
 			}
 		}
 	}
-	public void SetDataRow(int row) {
+	public void setDataRow(int row) {
 		itemRowCount = row;
 	}
-	public void SetPageSize(int size) {
+	public void setPageSize(int size) {
 		pageSize = size;
 	}
 	public interface OnRefreshListener {

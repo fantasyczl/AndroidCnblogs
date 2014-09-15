@@ -1,11 +1,15 @@
 package com.cnblogs.android.utility;
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.List;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Environment;
+import android.util.Log;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -23,16 +27,14 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.util.EntityUtils;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Environment;
-import android.util.Log;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.List;
 
 public class NetHelper {
 
@@ -114,6 +116,7 @@ public class NetHelper {
 			client.getConnectionManager().shutdown();
 			return result;
 		} catch (Exception e) {
+            e.printStackTrace();
 			Log.e("NetHelper", "______________读取数据失败" + e.toString() + "_____________");
 			return "";
 		}
@@ -131,7 +134,6 @@ public class NetHelper {
 	/**
 	 * 读取网络数据
 	 * 
-	 * @param _url
 	 * @return
 	 * @throws IOException
 	 * @throws ClientProtocolException
@@ -154,6 +156,7 @@ public class NetHelper {
 			client.getConnectionManager().shutdown();
 			return result;
 		} catch (Exception e) {
+            e.printStackTrace();
 			Log.e("NetHelper", "______________失败" + e.toString()
 					+ "_____________");
 			return "";
@@ -219,6 +222,7 @@ public class NetHelper {
 				return drawable;
 			}
 		} catch (Exception e) {
+            e.printStackTrace();
 			Log.e("download_img_err", e.toString());
 		}
 		return null;
@@ -232,6 +236,7 @@ public class NetHelper {
 			URL imageUrl = new URL(url.replace(fileName, encodeFileName));
 			is = (InputStream) imageUrl.getContent();
 		} catch (Exception e) {
+            e.printStackTrace();
 			Log.e("There", e.toString());
 		}
 		Drawable d = Drawable.createFromStream(is, "src");

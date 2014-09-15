@@ -1,8 +1,6 @@
 package com.cnblogs.android.fragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +9,6 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -46,9 +43,12 @@ import com.cnblogs.android.dal.BlogDalHelper;
 import com.cnblogs.android.entity.Blog;
 import com.cnblogs.android.utility.NetHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BlogFragment extends Fragment {
 	static final String TAG = "BlogFragment";
-	
+
 	List<Blog> listBlog = new ArrayList<Blog>();
 
 	int pageIndex = 1;
@@ -210,6 +210,7 @@ public class BlogFragment extends Fragment {
 						return listT;
 				}
 			} else {
+                Toast.makeText(getActivity(), "请检查网络", Toast.LENGTH_SHORT).show();
 				isLocalData = true;
 				if (curPageIndex == -1) {
 					return null;
@@ -257,8 +258,8 @@ public class BlogFragment extends Fragment {
 				adapter = new BlogListAdapter(getActivity().getApplicationContext(), listBlog, mListView);
 				mListView.setAdapter(adapter);
 
-				((PullToRefreshListView) mListView).SetDataRow(listBlog.size());
-				((PullToRefreshListView) mListView).SetPageSize(Config.BLOG_PAGE_SIZE);
+				((PullToRefreshListView) mListView).setDataRow(listBlog.size());
+				((PullToRefreshListView) mListView).setPageSize(Config.BLOG_PAGE_SIZE);
 			} else if (curPageIndex == 1) {
 				try {
 					listBlog = result;
@@ -270,9 +271,10 @@ public class BlogFragment extends Fragment {
 						mListView.setAdapter(adapter);
 					}
 					
-					((PullToRefreshListView) mListView).SetDataRow(listBlog.size());
-					((PullToRefreshListView) mListView).SetPageSize(Config.BLOG_PAGE_SIZE);
+					((PullToRefreshListView) mListView).setDataRow(listBlog.size());
+					((PullToRefreshListView) mListView).setPageSize(Config.BLOG_PAGE_SIZE);
 				} catch (Exception ex) {
+                    ex.printStackTrace();
 					Log.e("BlogActivity", ex.getMessage());
 				}
 			} else {

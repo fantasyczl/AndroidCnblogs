@@ -1,16 +1,6 @@
 package com.cnblogs.android.fragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.cnblogs.android.AuthorBlogActivity;
-import com.cnblogs.android.R;
-import com.cnblogs.android.RssCateActivity;
-import com.cnblogs.android.RssItemsActivity;
-import com.cnblogs.android.adapter.RssListAdapter;
-import com.cnblogs.android.dal.RssListDalHelper;
-import com.cnblogs.android.entity.RssList;
-
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -19,7 +9,6 @@ import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -35,6 +24,17 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.cnblogs.android.AuthorBlogActivity;
+import com.cnblogs.android.R;
+import com.cnblogs.android.RssCateActivity;
+import com.cnblogs.android.RssItemsActivity;
+import com.cnblogs.android.adapter.RssListAdapter;
+import com.cnblogs.android.dal.RssListDalHelper;
+import com.cnblogs.android.entity.RssList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class RssFragment extends Fragment {
