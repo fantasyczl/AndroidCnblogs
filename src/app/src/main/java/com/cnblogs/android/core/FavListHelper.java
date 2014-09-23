@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 import android.content.Context;
 
-import com.cnblogs.android.db.BlogDalHelper;
+import com.cnblogs.android.db.BlogListDBTask;
 import com.cnblogs.android.db.FavDalHelper;
 import com.cnblogs.android.entity.FavList;
 import com.cnblogs.android.enums.EnumResultType;
@@ -47,7 +47,7 @@ public class FavListHelper {
 		switch (contentType) {
 		case Blog:
 		default:
-			obj = new BlogDalHelper(context).GetBlogEntity(contentId);
+			obj = new BlogListDBTask(context).GetBlogEntity(contentId);
 			break;
 		}
 		return obj;

@@ -20,14 +20,14 @@ public class SplashActivity extends BaseActivity{
 
 		new Handler().postDelayed(new Runnable(){
 			public void run() {
-				RedirectMainActivity();
+				redirectMainActivity();
 			}
-		},3000);
+		}, 1500);
 	}
 
-	private void RedirectMainActivity(){
-		Intent i = new Intent(SplashActivity.this, MainActivity.class);
+	private void redirectMainActivity(){
+		Intent i = new Intent(this, MainActivity.class);
 		startActivity(i);
-		SplashActivity.this.finish();
+		finish();
 	}
 }

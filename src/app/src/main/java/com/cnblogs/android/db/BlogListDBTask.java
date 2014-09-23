@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.cnblogs.android.core.Config;
+import com.cnblogs.android.db.table.BlogListTable;
 import com.cnblogs.android.entity.Blog;
 import com.cnblogs.android.utility.AppUtil;
 
@@ -13,12 +14,23 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class BlogDalHelper {
+public class BlogListDBTask {
+
+    private static SQLiteDatabase getRsd() {
+        return DatabaseHelper.getInstance().getReadableDatabase();
+    }
+
+    private static SQLiteDatabase getWsd() {
+        return DatabaseHelper.getInstance().getWritableDatabase();
+    }
+
+
+
 	private DBHelper.DatabaseHelper dbHelper;
 	private SQLiteDatabase db;
 	public final static byte[] _writeLock = new byte[0];
 	Context context;
-	public BlogDalHelper(Context context) {
+	public BlogListDBTask(Context context) {
 		dbHelper = new DBHelper.DatabaseHelper(context);
 		db = dbHelper.getWritableDatabase();
 	}
@@ -59,23 +71,20 @@ public class BlogDalHelper {
 		String limit = "10";
 		String where = "";
 
-		return GetBlogListByWhere(limit, where, null);
+		return getBlogListByWhere(limit, where, null);
 	}
 	
 	
-	public List<Blog> GetBlogListByPage(int pageIndex, int pageSize) {
-//		String limit = String.valueOf((pageIndex - 1) * pageSize) + ","	+ String.valueOf(pageSize);
+	public static List<Blog> getBlogListByPage(int pageIndex, int pageSize) {
         String limit = String.format("%d,%d", (pageIndex - 1) * pageSize, pageSize);
-		List<Blog> list = GetBlogListByWhere(limit, null, null);
-
-		return list;
+		return getBlogListByWhere(limit, null, null);
 	}
 
 	public List<Blog> GetBlogListByAuthor(String author,int pageIndex,int pageSize){
 		String limit = String.valueOf((pageIndex - 1) * pageSize) + "," + String.valueOf(pageSize);
 		String where="AuthorName=?";
 		String[] args={author};
-		List<Blog> list = GetBlogListByWhere(limit, where, args);
+		List<Blog> list = getBlogListByWhere(limit, where, args);
 		
 		return list;
 	}
@@ -84,7 +93,7 @@ public class BlogDalHelper {
 		String limit = "1";
 		String where = "BlogId=?";
 		String[] args = {String.valueOf(blogId)};
-		List<Blog> list = GetBlogListByWhere(limit, where, args);
+		List<Blog> list = getBlogListByWhere(limit, where, args);
 		if (list.size() > 0) {
 			return list.get(0);
 		}
@@ -92,47 +101,31 @@ public class BlogDalHelper {
 		return null;
 	}
 
-	public List<Blog> GetBlogListByWhere(String limit, String where, String[] args) {
+	public static List<Blog> getBlogListByWhere(String limit, String where, String[] args) {
 		List<Blog> listBlog = new ArrayList<Blog>();
-		String orderBy = "BlogID desc";
-		Cursor cursor = db.query(Config.DB_BLOG_TABLE, null, where, args, null, null, orderBy, limit);
+		String orderBy = BlogListTable.BlogId + " desc";//"BlogID desc";
+		Cursor cursor = getRsd().query(BlogListTable.TABLE_NAME, null, where, args, null, null, orderBy, limit);
 
 		while (cursor != null && cursor.moveToNext()) {
 			Blog entity = new Blog();
-			String addTimeStr = cursor.getString(cursor.getColumnIndex("Published"));
-			Date addTime = AppUtil.ParseDate(addTimeStr);
-			entity.SetAddTime(addTime);
-			entity.SetAuthor(cursor.getString(cursor.getColumnIndex("AuthorName")));
-			entity.SetAuthorUrl(cursor.getString(cursor.getColumnIndex("AuthorUrl")));
-			entity.SetAvator(cursor.getString(cursor.getColumnIndex("AuthorAvatar")));
-			entity.SetBlogContent(cursor.getString(cursor.getColumnIndex("Content")));
-			entity.SetBlogId(cursor.getInt(cursor.getColumnIndex("BlogId")));
-			entity.SetBlogTitle(cursor.getString(cursor.getColumnIndex("BlogTitle")));
-			String blogUrl = "";
-			if (cursor.getString(cursor.getColumnIndex("BlogUrl")) != null) {
-				blogUrl = cursor.getString(cursor.getColumnIndex("BlogUrl"));
-			}
-			entity.SetBlogUrl(blogUrl);
-			entity.SetCateId(cursor.getInt(cursor.getColumnIndex("CateId")));
-			String cateName = "";
-			if (cursor.getString(cursor.getColumnIndex("CateName")) != null) {
-				cateName = cursor.getString(cursor.getColumnIndex("CateName"));
-			}
-			entity.SetCateName(cateName);
-			entity.SetCommentNum(cursor.getInt(cursor.getColumnIndex("Comments")));
-			entity.SetDiggsNum(cursor.getInt(cursor.getColumnIndex("Digg")));
-			boolean isFull = cursor.getString(cursor.getColumnIndex("IsFull")).equals("1");
-			entity.SetIsFullText(isFull);
-			entity.SetSummary(cursor.getString(cursor.getColumnIndex("Summary")));
-			Date updateTime = new java.util.Date();
-			if (cursor.getString(cursor.getColumnIndex("Updated")) != null) {
-				updateTime = AppUtil.ParseDate(cursor.getString(cursor.getColumnIndex("Updated")));
-			}
-			entity.SetUpdateTime(updateTime);
-			entity.SetViewNum(cursor.getInt(cursor.getColumnIndex("View")));
-			boolean isRead = cursor.getString(cursor.getColumnIndex("IsReaded")).equals("1");
-			entity.SetIsReaded(isRead);
-			entity.SetUserName(cursor.getString(cursor.getColumnIndex("UserName")));
+			entity.setAddTime(cursor.getString(cursor.getColumnIndex(BlogListTable.Published)));
+			entity.SetAuthor(cursor.getString(cursor.getColumnIndex(BlogListTable.AuthorName)));
+			entity.SetAuthorUrl(cursor.getString(cursor.getColumnIndex(BlogListTable.AuthorUrl)));
+			entity.SetAvator(cursor.getString(cursor.getColumnIndex(BlogListTable.AuthorAvatar)));
+			entity.SetBlogContent(cursor.getString(cursor.getColumnIndex(BlogListTable.Content)));
+			entity.SetBlogId(cursor.getInt(cursor.getColumnIndex(BlogListTable.BlogId)));
+			entity.SetBlogTitle(cursor.getString(cursor.getColumnIndex(BlogListTable.BlogTitle)));
+			entity.setBlogUrl(cursor.getString(cursor.getColumnIndex(BlogListTable.BlogUrl)));
+			entity.SetCateId(cursor.getInt(cursor.getColumnIndex(BlogListTable.CateId)));
+			entity.SetCateName(cursor.getString(cursor.getColumnIndex(BlogListTable.CateName)));
+			entity.SetCommentNum(cursor.getInt(cursor.getColumnIndex(BlogListTable.Comments)));
+			entity.SetDiggsNum(cursor.getInt(cursor.getColumnIndex(BlogListTable.Digg)));
+			entity.setIsFullText(cursor.getString(cursor.getColumnIndex(BlogListTable.IsFull)));
+			entity.SetSummary(cursor.getString(cursor.getColumnIndex(BlogListTable.Summary)));
+			entity.setUpdateTime(cursor.getString(cursor.getColumnIndex(BlogListTable.Updated)));
+			entity.SetViewNum(cursor.getInt(cursor.getColumnIndex(BlogListTable.View)));
+			entity.setIsReaded(cursor.getString(cursor.getColumnIndex(BlogListTable.IsReaded)));
+			entity.SetUserName(cursor.getString(cursor.getColumnIndex(BlogListTable.UserName)));
 
 			listBlog.add(entity);
 		}

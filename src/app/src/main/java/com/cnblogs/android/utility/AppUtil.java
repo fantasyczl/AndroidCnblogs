@@ -12,7 +12,6 @@ import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.cnblogs.android.R;
@@ -31,30 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AppUtil {
-	/**
-     * String转换为时间
-     * @param str
-     * @return
-     */
-    public static Date ParseDate(String str){
-        Date addTime = null;
 
-        if (TextUtils.isEmpty(str)) {
-            return new Date();
-        }
-
-    	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
-    	try {
-            if (str.length() <= 10) {
-                dateFormat.applyPattern(TimeTools.YMD);
-            }
-    		addTime = dateFormat.parse(str);
-    	} catch (ParseException e) {
-    		e.printStackTrace();
-    	}
-    	return addTime;
-    }
     /**
      * 将日期转换为字符串
      * @param date

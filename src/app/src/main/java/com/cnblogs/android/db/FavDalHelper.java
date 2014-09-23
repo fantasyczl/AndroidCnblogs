@@ -8,6 +8,7 @@ import com.cnblogs.android.core.Config;
 import com.cnblogs.android.entity.FavList;
 import com.cnblogs.android.enums.EnumResultType;
 import com.cnblogs.android.utility.AppUtil;
+import com.cnblogs.android.utility.TimeTools;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -109,7 +110,7 @@ public class FavDalHelper {
 			FavList entity = new FavList();
 			String addTimeStr = cursor.getString(cursor
 					.getColumnIndex("AddTime"));
-			Date addTime = AppUtil.ParseDate(addTimeStr);
+			Date addTime = TimeTools.parseDate(addTimeStr);
 			entity.SetAddTime(addTime);
 			entity.SetFavId(cursor.getInt(cursor.getColumnIndex("FavId")));
 			entity.SetContentType(FavList.EnumContentType.values()[cursor

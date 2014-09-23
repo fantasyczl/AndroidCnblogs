@@ -158,7 +158,7 @@
 		<item name="android:textColor">@color/blue</item>		
 	</style>
 	<!--Activity主题-->
-	<style name="ContentOverlay" parent="@android:style/Theme">
+	<style name="ContentOverlay" parent="@android:style/Theme.Holo">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowContentOverlay">@null</item>

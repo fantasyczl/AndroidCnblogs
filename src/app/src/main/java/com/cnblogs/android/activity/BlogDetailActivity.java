@@ -7,7 +7,7 @@ import com.cnblogs.android.core.BlogHelper;
 import com.cnblogs.android.core.Config;
 import com.cnblogs.android.core.FavListHelper;
 import com.cnblogs.android.core.UserHelper;
-import com.cnblogs.android.db.BlogDalHelper;
+import com.cnblogs.android.db.BlogListDBTask;
 import com.cnblogs.android.entity.FavList;
 import com.cnblogs.android.enums.EnumResultType;
 import com.cnblogs.android.utility.AppUtil;
@@ -96,7 +96,7 @@ public class BlogDetailActivity extends BaseActivity implements OnGestureListene
      */
     private void MarkAsReaded() {
     	// 更新为已读
-    	BlogDalHelper helper = new BlogDalHelper(getApplicationContext());
+    	BlogListDBTask helper = new BlogListDBTask(getApplicationContext());
     	helper.MarkAsReaded(blogId);
     	// 广播
     	Intent intent = new Intent();

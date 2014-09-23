@@ -10,13 +10,20 @@ import com.cnblogs.android.utility.DevOpts;
  */
 public class GlobalContext extends Application {
 
+    private static GlobalContext mInstance;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        mInstance = this;
 
         if (DevOpts.isDeveloperMode()) {
             DevOpts.setThreadPolicy();
             DevOpts.setVmPolicy();
         }
+    }
+
+    public static GlobalContext getInstance() {
+        return mInstance;
     }
 }

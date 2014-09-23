@@ -13,8 +13,6 @@ import org.xml.sax.Attributes;
 import com.cnblogs.android.entity.*;
 import com.cnblogs.android.utility.AppUtil;
 
-import org.apache.commons.lang.*;
-
 /**
  * Blog返回xml解析器
  * @author walkingp
@@ -82,7 +80,7 @@ public class BlogListXmlParser extends DefaultHandler {
 			isStartParse = true;
 		}
 		if (isStartParse && localName.equalsIgnoreCase(ENTRY_URL_TAG)) {
-			entity.SetBlogUrl(attributes.getValue(ENTRY_URL_ATTRIBUTE_TAG));
+			entity.setBlogUrl(attributes.getValue(ENTRY_URL_ATTRIBUTE_TAG));
 		}
 	}
 	/**
@@ -130,10 +128,10 @@ public class BlogListXmlParser extends DefaultHandler {
 				entity.SetBlogId(id);
 			} else if (localName.equalsIgnoreCase(ENTRY_PUBLISHED_TAG)) {// 发布时间
 				Date addTime = AppUtil.ParseUTCDate(chars);
-				entity.SetAddTime(addTime);
+				entity.setAddTime(addTime);
 			} else if (localName.equalsIgnoreCase(ENTRY_UPDATED_TAG)) {// 修改时间
 				Date updateTime = AppUtil.ParseUTCDate(chars);
-				entity.SetUpdateTime(updateTime);
+				entity.setUpdateTime(updateTime);
 			} else if (localName.equalsIgnoreCase(ENTRY_AUTHOR_NAME_TAG)) {// 作者名称
 				entity.SetAuthor(chars);
 			} else if (localName.equalsIgnoreCase(ENTRY_USER_NAME_TAG)) {// 作者用户名
@@ -148,7 +146,7 @@ public class BlogListXmlParser extends DefaultHandler {
 				entity.SetAvator(chars);
 				Log.i("BlogXml", chars);
 			} else if (localName.equalsIgnoreCase(ENTRY_AUTHOR_URL_TAG)) {// 用户主页
-				entity.SetBlogUrl(chars);
+				entity.setBlogUrl(chars);
 			} else if (localName.equalsIgnoreCase(ENTRY_TAG)) {// 截止
 				listBlog.add(entity);
 				isStartParse = false;

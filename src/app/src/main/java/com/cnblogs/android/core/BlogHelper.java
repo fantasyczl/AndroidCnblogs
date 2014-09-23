@@ -15,7 +15,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import android.content.Context;
 
-import com.cnblogs.android.db.BlogDalHelper;
+import com.cnblogs.android.db.BlogListDBTask;
 import com.cnblogs.android.entity.*;
 import com.cnblogs.android.parser.BlogListXmlParser;
 import com.cnblogs.android.parser.BlogXmlParser;
@@ -60,7 +60,7 @@ public class BlogHelper extends DefaultHandler {
     				.GetBlogId());
     		listBlogs.get(i).SetBlogContent(content);
 
-    		listBlogs.get(i).SetIsFullText(true);// 更新全文标志
+    		listBlogs.get(i).setIsFullText(true);// 更新全文标志
     	}
 
     	return listBlogs;
@@ -181,7 +181,7 @@ public class BlogHelper extends DefaultHandler {
     public static String GetBlogById(int blogId, Context context) {
     	String blogContent = "";
     	// 优先考虑本地数据
-    	BlogDalHelper helper = new BlogDalHelper(context);
+    	BlogListDBTask helper = new BlogListDBTask(context);
     	Blog entity = helper.GetBlogEntity(blogId);
     	if (null == entity || entity.GetBlogContent().equals("")) {
     		blogContent = GetBlogContentByIdWithNet(blogId);

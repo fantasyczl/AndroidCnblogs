@@ -38,7 +38,7 @@ import com.cnblogs.android.controls.PullToRefreshListView;
 import com.cnblogs.android.controls.PullToRefreshListView.OnRefreshListener;
 import com.cnblogs.android.core.Config;
 import com.cnblogs.android.core.FavListHelper;
-import com.cnblogs.android.db.BlogDalHelper;
+import com.cnblogs.android.db.BlogListDBTask;
 import com.cnblogs.android.entity.Blog;
 import com.cnblogs.android.entity.FavList;
 import com.cnblogs.android.utility.NetHelper;
@@ -334,7 +334,7 @@ public class MyFavActivity extends BaseActivity {
 				}
 
 				for (int i = 0, len = listFav.size(); i < len; i++) {
-					BlogDalHelper helper = new BlogDalHelper(
+					BlogListDBTask helper = new BlogListDBTask(
 							getApplicationContext());
 					Blog entity = helper.GetBlogEntity(listFav.get(i)
 							.GetContentId());

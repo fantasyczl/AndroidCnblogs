@@ -39,7 +39,7 @@ import com.cnblogs.android.controls.PullToRefreshListView.OnRefreshListener;
 import com.cnblogs.android.core.BlogHelper;
 import com.cnblogs.android.core.Config;
 import com.cnblogs.android.core.UserHelper;
-import com.cnblogs.android.db.BlogDalHelper;
+import com.cnblogs.android.db.BlogListDBTask;
 import com.cnblogs.android.db.RssListDalHelper;
 import com.cnblogs.android.entity.Blog;
 import com.cnblogs.android.entity.RssList;
@@ -280,7 +280,7 @@ public class AuthorBlogActivity extends BaseActivity {
 				// 订阅 取消订阅
 				String url = entity.GetBlogUrl();
 				RssList entity = new RssList();
-				// entity.SetAddTime(new java.util.Date());
+				// entity.setAddTime(new java.util.Date());
 				entity.SetAuthor(author);// 注意此处是用户名，不是博客名
 				entity.SetCateId(0);
 				entity.SetCateName("");
@@ -389,7 +389,7 @@ public class AuthorBlogActivity extends BaseActivity {
 		boolean isRefresh = false;
 		int curPageIndex = 0;
 		boolean isLocalData = false;// 是否是从本地读取的数据
-		BlogDalHelper dbHelper = new BlogDalHelper(getApplicationContext());
+		BlogListDBTask dbHelper = new BlogListDBTask(getApplicationContext());
 
 		public PageTask(int page, boolean isRefresh) {
 			curPageIndex = page;

@@ -81,7 +81,7 @@ public class RssListAdapter extends BaseAdapter {
 						String url = viewHolder.rss_item_url.getText()
 								.toString();
 						RssList entity = new RssList();
-						// entity.SetAddTime(new java.util.Date());
+						// entity.setAddTime(new java.util.Date());
 						entity.SetAuthor(viewHolder.rss_item_author.getText()
 								.toString());
 						entity.SetCateId(0);

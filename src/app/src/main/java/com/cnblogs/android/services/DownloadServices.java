@@ -10,7 +10,7 @@ import com.cnblogs.android.core.BlogHelper;
 import com.cnblogs.android.core.CommentHelper;
 import com.cnblogs.android.core.Config;
 import com.cnblogs.android.core.NewsHelper;
-import com.cnblogs.android.db.BlogDalHelper;
+import com.cnblogs.android.db.BlogListDBTask;
 import com.cnblogs.android.db.CommentDalHelper;
 import com.cnblogs.android.db.NewsDalHelper;
 import com.cnblogs.android.entity.Blog;
@@ -190,7 +190,7 @@ public class DownloadServices extends Service {
 					content = ImageCacher.FormatLocalHtmlWithImg(
 							ImageCacher.EnumImageType.Blog, content);
 					listBlogs.get(i).SetBlogContent(content);
-					listBlogs.get(i).SetIsFullText(true);
+					listBlogs.get(i).setIsFullText(true);
 
 					// 下载评论
 					List<Comment> listComment = CommentHelper.GetCommentList(
@@ -205,7 +205,7 @@ public class DownloadServices extends Service {
 					currentText = "下载(" + (i + 1) + "/" + size + ")："
 							+ listBlogs.get(i).GetBlogTitle();
 				}
-				BlogDalHelper helper = new BlogDalHelper(
+				BlogListDBTask helper = new BlogListDBTask(
 						getApplicationContext());
 				helper.SynchronyData2DB(listBlogs);
 				Log.i("downloadservices", "下载内容结束");

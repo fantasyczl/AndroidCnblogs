@@ -1,9 +1,5 @@
 package com.cnblogs.android.db;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -12,6 +8,11 @@ import android.database.sqlite.SQLiteDatabase;
 import com.cnblogs.android.core.Config;
 import com.cnblogs.android.entity.News;
 import com.cnblogs.android.utility.AppUtil;
+import com.cnblogs.android.utility.TimeTools;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class NewsDalHelper {
 	private DBHelper.DatabaseHelper		dbHelper;
@@ -69,7 +70,7 @@ public class NewsDalHelper {
 		while(cursor != null && cursor.moveToNext()){
 			News entity = new News();
 			String addTimeStr = cursor.getString(cursor.getColumnIndex("Published"));
-			Date addTime = AppUtil.ParseDate(addTimeStr);
+			Date addTime = TimeTools.parseDate(addTimeStr);
 			entity.SetAddTime(addTime);		
 			entity.SetNewsContent(cursor.getString(cursor.getColumnIndex("Content")));
 			entity.SetNewsTitle(cursor.getString(cursor.getColumnIndex("NewsTitle")));

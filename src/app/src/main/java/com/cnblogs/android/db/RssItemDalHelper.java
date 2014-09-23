@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.cnblogs.android.core.Config;
 import com.cnblogs.android.entity.RssItem;
 import com.cnblogs.android.utility.AppUtil;
+import com.cnblogs.android.utility.TimeTools;
 
 public class RssItemDalHelper {
 	private DBHelper.DatabaseHelper dbHelper;
@@ -93,7 +94,7 @@ public class RssItemDalHelper {
 			RssItem entity = new RssItem();
 			String addTimeStr = cursor.getString(cursor
 					.getColumnIndex("AddDate"));
-			Date addTime = AppUtil.ParseDate(addTimeStr);
+			Date addTime = TimeTools.parseDate(addTimeStr);
 			entity.SetAddDate(addTime);
 			entity.SetDescription(cursor.getString(cursor
 					.getColumnIndex("Description")));

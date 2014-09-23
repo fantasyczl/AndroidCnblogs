@@ -1,14 +1,14 @@
 package com.cnblogs.android.db;
 
-import java.util.List;
-
-import com.cnblogs.android.core.Config;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import com.cnblogs.android.core.Config;
+
+import java.util.List;
 
 public class DBHelper {
 
@@ -34,8 +34,7 @@ public class DBHelper {
 	 * 插入
 	 * 
 	 * @param list
-	 * @param table
-	 *            表名
+	 * @param tableName 表名
 	 */
 	public void Insert(List<ContentValues> list, String tableName) {
 		synchronized (_writeLock) {
@@ -256,8 +255,6 @@ public class DBHelper {
 
 		/**
 		 * 清空数据表（仅清空无用数据）
-		 * 
-		 * @param db
 		 */
 		public static void ClearData(Context context) {
 			DatabaseHelper dbHelper = new DBHelper.DatabaseHelper(context);

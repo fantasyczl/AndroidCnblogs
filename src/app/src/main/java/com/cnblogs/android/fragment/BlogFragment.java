@@ -25,21 +25,20 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cnblogs.android.R;
 import com.cnblogs.android.activity.AuthorBlogActivity;
 import com.cnblogs.android.activity.BlogDetailActivity;
 import com.cnblogs.android.activity.CommentActivity;
-import com.cnblogs.android.R;
 import com.cnblogs.android.adapter.BlogListAdapter;
 import com.cnblogs.android.controls.PullToRefreshListView;
 import com.cnblogs.android.controls.PullToRefreshListView.OnRefreshListener;
 import com.cnblogs.android.core.BlogHelper;
 import com.cnblogs.android.core.Config;
-import com.cnblogs.android.db.BlogDalHelper;
+import com.cnblogs.android.db.BlogListDBTask;
 import com.cnblogs.android.entity.Blog;
 import com.cnblogs.android.utility.NetHelper;
 
@@ -53,7 +52,7 @@ public class BlogFragment extends Fragment {
 
 	int pageIndex = 1;
 
-	ListView mListView;
+    PullToRefreshListView mListView;
 	private BlogListAdapter adapter;
 
 	ProgressBar blogBody_progressBar;
@@ -61,12 +60,10 @@ public class BlogFragment extends Fragment {
 	ProgressBar blog_progress_bar;
 
 	private LinearLayout viewFooter;
-	TextView tvFooterMore;
-	ProgressBar list_footer_progress;
 
 	Resources res;
 	private int lastItem;
-	BlogDalHelper dbHelper;
+	BlogListDBTask dbHelper;
     UpdateListViewReceiver mReceiver;
 
     public BlogFragment(){}
@@ -80,7 +77,7 @@ public class BlogFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.blog_layout, null);
+		View rootView = inflater.inflate(R.layout.blog_layout, container, false);
 
 		initialControls(rootView);
 		bindControls();
@@ -96,7 +93,7 @@ public class BlogFragment extends Fragment {
 	}
 	
 	private void initialControls(View rootView) {
-		mListView = (ListView)rootView.findViewById(R.id.blog_list);
+		mListView = (PullToRefreshListView)rootView.findViewById(R.id.blog_list);
 		blogBody_progressBar = (ProgressBar)rootView.findViewById(R.id.blogList_progressBar);
 		blogBody_progressBar.setVisibility(View.VISIBLE);
 
@@ -105,7 +102,7 @@ public class BlogFragment extends Fragment {
 
 		LayoutInflater mInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		viewFooter = (LinearLayout) mInflater.inflate(R.layout.listview_footer, null, false);
-		dbHelper = new BlogDalHelper(getActivity().getApplicationContext());
+		dbHelper = new BlogListDBTask(getActivity().getApplicationContext());
 	}
 	
 	private void bindControls() {
@@ -114,12 +111,12 @@ public class BlogFragment extends Fragment {
 				new PageTask(1, true).execute();
 			}
 		});
-		((PullToRefreshListView) mListView).setOnRefreshListener(new OnRefreshListener() {
-			@Override
-			public void onRefresh() {
-				new PageTask(-1, true).execute();
-			}
-		});
+		mListView.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new PageTask(-1, true).execute();
+            }
+        });
 		mListView.setOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -140,7 +137,7 @@ public class BlogFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v,
 					int position, long id) {
-				RedirectDetailActivity(v);
+				redirectDetailActivity(v);
 			}
 		});
 		mListView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
@@ -178,7 +175,7 @@ public class BlogFragment extends Fragment {
 				_pageIndex = 1;
 			}
 			
-			List<Blog> listBlogLocal = dbHelper.GetBlogListByPage(_pageIndex, Config.BLOG_PAGE_SIZE);
+			List<Blog> listBlogLocal = BlogListDBTask.getBlogListByPage(_pageIndex, Config.BLOG_PAGE_SIZE);
 			
 			if (isNetworkAvailable) {
 				List<Blog> listBlogNew = BlogHelper.GetBlogList(_pageIndex);
@@ -318,7 +315,7 @@ public class BlogFragment extends Fragment {
 	}
 	
 	
-	private void RedirectCommentActivity(View v) {
+	private void redirectCommentActivity(View v) {
 		TextView tvBlogCommentCount = (TextView)v.findViewById(R.id.recommend_text_comments);
 		TextView tvBlogId = (TextView)v.findViewById(R.id.recommend_text_id);
 		TextView tvBlogTitle = (TextView) v.findViewById(R.id.recommend_text_title);
@@ -346,7 +343,7 @@ public class BlogFragment extends Fragment {
 		startActivity(intent);
 	}
 		
-	private void RedirectDetailActivity(View v) {
+	private void redirectDetailActivity(View v) {
 		Intent intent = new Intent();
 		try {
 			intent.setClass( getActivity(), BlogDetailActivity.class);
@@ -388,15 +385,15 @@ public class BlogFragment extends Fragment {
 		}
 	}
 
-	private void ViewInBrowser(View v) {
-		TextView tvBlogUrl = (TextView) (v.findViewById(R.id.recommend_text_url));
+	private void viewInBrowser(View v) {
+		TextView tvBlogUrl = (TextView) v.findViewById(R.id.recommend_text_url);
 		String blogUrl = tvBlogUrl.getText().toString();
 		Uri blogUri = Uri.parse(blogUrl);
 		Intent it = new Intent(Intent.ACTION_VIEW, blogUri);
 		startActivity(it);
 	}
 		
-	private void RedirectAuthorActivity(View v) {
+	private void redirectAuthorActivity(View v) {
 		TextView tvUserName=(TextView)v.findViewById(R.id.recommend_user_name);
 		String userName=tvUserName.getText().toString();
 		if (userName.equals("")) {
@@ -418,7 +415,7 @@ public class BlogFragment extends Fragment {
 		startActivity(intent);
 	}
 		
-	private void ShareTo(View v) {
+	private void shareTo(View v) {
 		TextView tvBlogTitle = (TextView) (v.findViewById(R.id.recommend_text_title));
 		String blogTitle = tvBlogTitle.getText().toString();
 		TextView tvBlogAuthor = (TextView) (v.findViewById(R.id.recommend_text_author));
@@ -445,19 +442,19 @@ public class BlogFragment extends Fragment {
 		View v = menuInfo.targetView;
 		switch (itemIndex) {
 		case R.id.menu_blog_view :
-			RedirectDetailActivity(v);
+			redirectDetailActivity(v);
 			break;
 		case R.id.menu_blog_comment :
-			RedirectCommentActivity(v);
+			redirectCommentActivity(v);
 			break;
 		case R.id.menu_blog_author :
-			RedirectAuthorActivity(v);
+			redirectAuthorActivity(v);
 			break;
 		case R.id.menu_blog_browser :
-			ViewInBrowser(v);
+			viewInBrowser(v);
 			break;
 		case R.id.menu_blog_share :
-			ShareTo(v);
+			shareTo(v);
 			break;
 		}
 
@@ -491,8 +488,8 @@ public class BlogFragment extends Fragment {
 			for(int i = 0, len = blogIdArr.length; i < len; i++){
 				for(int j = 0, size = listBlog.size(); j < size; j++){
 					if(blogIdArr[i] == listBlog.get(j).GetBlogId()){
-						listBlog.get(i).SetIsFullText(true);
-						listBlog.get(i).SetIsReaded(true);
+						listBlog.get(i).setIsFullText(true);
+						listBlog.get(i).setIsReaded(true);
 					}
 				}
 			}
