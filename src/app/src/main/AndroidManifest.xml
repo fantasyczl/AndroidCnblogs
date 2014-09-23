@@ -16,7 +16,7 @@
 		android:icon="@drawable/icon"
 		android:label="@string/app_name"
 		android:allowBackup="true"
-		android:theme="@android:style/Theme.NoTitleBar">
+		>
 		
 		<activity
 			android:windowAnimationStyle="@android:style/Animation.Translucent"
@@ -54,10 +54,6 @@
 		<activity
 			android:theme="@style/ContentOverlay"
 			android:name=".activity.RssCateActivity"
-			android:configChanges="orientation|keyboardHidden" />
-		<activity
-			android:theme="@style/ContentOverlay"
-			android:name=".MyRssActivity"
 			android:configChanges="orientation|keyboardHidden" />
 		<activity
 			android:theme="@style/ContentOverlay"
