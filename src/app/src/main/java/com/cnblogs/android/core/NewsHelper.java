@@ -36,7 +36,7 @@ public class NewsHelper extends DefaultHandler {
 		String url = Config.URL_GET_NEWS_LIST.replace("{pageIndex}",
 				String.valueOf(pageIndex)).replace("{pageSize}",
 				String.valueOf(pageSize));// 数据地址
-		String dataString = NetHelper.GetContentFromUrl(url);
+		String dataString = NetHelper.getContentFromUrl(url);
 
 		ArrayList<News> list = ParseString(dataString);
 
@@ -55,7 +55,7 @@ public class NewsHelper extends DefaultHandler {
 		String url = Config.URL_RECOMMEND_NEWS_LIST.replace("{pageIndex}",
 				String.valueOf(pageIndex)).replace("{pageSize}",
 				String.valueOf(pageSize));// 数据地址
-		String dataString = NetHelper.GetContentFromUrl(url);
+		String dataString = NetHelper.getContentFromUrl(url);
 
 		List<News> list = ParseString(dataString);
 
@@ -99,7 +99,7 @@ public class NewsHelper extends DefaultHandler {
 		String newsContent = "";
 		String url = Config.URL_GET_NEWS_DETAIL.replace("{0}",
 				String.valueOf(newsId));// 网址
-		String xml = NetHelper.GetContentFromUrl(url);
+		String xml = NetHelper.getContentFromUrl(url);
 		if (xml == "") {
 			return "";
 		}
@@ -125,7 +125,7 @@ public class NewsHelper extends DefaultHandler {
 			// _newsContent=ImageCacher.FormatLocalHtmlWithImg(ImageCacher.EnumImageType.News,
 			// newsContent);
 			// if (Config.IS_SYNCH2DB_AFTER_READ) {
-			// helper.SynchronyContent2DB(newsId, _newsContent);// 同步至数据库
+			// helper.synchronyContent2DB(newsId, _newsContent);// 同步至数据库
 			// }
 		} else {
 			newsContent = entity.GetNewsContent();

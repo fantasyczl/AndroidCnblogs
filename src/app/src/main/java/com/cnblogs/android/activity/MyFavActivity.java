@@ -334,10 +334,8 @@ public class MyFavActivity extends BaseActivity {
 				}
 
 				for (int i = 0, len = listFav.size(); i < len; i++) {
-					BlogListDBTask helper = new BlogListDBTask(
-							getApplicationContext());
-					Blog entity = helper.GetBlogEntity(listFav.get(i)
-							.GetContentId());
+					Blog entity = BlogListDBTask.getBlogEntity(listFav.get(i)
+                            .GetContentId());
 					listBlogTmp.add(entity);
 				}
 				return listBlogTmp;
@@ -381,7 +379,7 @@ public class MyFavActivity extends BaseActivity {
 			if (curPageIndex == -1) {// 上拉刷新
 				adapter.InsertData(result);
 			} else if (curPageIndex == 0) {// 首次加载
-				listBlog = result;// dbHelper.GetTopBlogList();
+				listBlog = result;// dbHelper.getTopBlogList();
 
 				blogBody_progressBar.setVisibility(View.GONE);
 				adapter = new MyFavListAdapter(getApplicationContext(),

@@ -41,7 +41,7 @@ public class CommentHelper extends DefaultHandler {
 		url = url.replace("{contentId}", String.valueOf(contentId))
 				.replace("{pageIndex}", String.valueOf(pageIndex))
 				.replace("{pageSize}", String.valueOf(pageSize));// 数据地址
-		String dataString = NetHelper.GetContentFromUrl(url);
+		String dataString = NetHelper.getContentFromUrl(url);
 
 		ArrayList<Comment> list = ParseString(contentId, dataString,
 				commentType);

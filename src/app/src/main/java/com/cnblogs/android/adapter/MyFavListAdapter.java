@@ -1,17 +1,18 @@
 package com.cnblogs.android.adapter;
 
-import java.util.List;
-
-import com.cnblogs.android.R;
-import com.cnblogs.android.entity.Blog;
-import com.cnblogs.android.utility.AppUtil;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.cnblogs.android.R;
+import com.cnblogs.android.entity.Blog;
+import com.cnblogs.android.utility.AppUtil;
+import com.cnblogs.android.utility.TimeTools;
+
+import java.util.List;
 
 public class MyFavListAdapter extends BaseAdapter {
 	private List<Blog> list;
@@ -65,8 +66,8 @@ public class MyFavListAdapter extends BaseAdapter {
 		viewHolder.text_comments
 				.setText(String.valueOf(entity.GetCommentNum()));
 		viewHolder.text_view.setText(String.valueOf(entity.GetViewNum()));
-		viewHolder.text_date.setText(AppUtil.ParseDateToString(entity
-				.GetAddTime()));
+		viewHolder.text_date.setText(TimeTools.parseDateToString(entity
+                .GetAddTime()));
 		String simpleDateString = AppUtil.DateToChineseString(entity
 				.GetAddTime());
 		viewHolder.text_formatdate.setText(simpleDateString);

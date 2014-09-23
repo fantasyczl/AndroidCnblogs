@@ -1,17 +1,17 @@
 package com.cnblogs.android.parser;
 
-import java.util.ArrayList;
-import java.util.Date;
+import android.util.Log;
 
+import com.cnblogs.android.entity.Blog;
+import com.cnblogs.android.utility.AppUtil;
+
+import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import android.util.Log;
-
-import org.xml.sax.Attributes;
-
-import com.cnblogs.android.entity.*;
-import com.cnblogs.android.utility.AppUtil;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Blog返回xml解析器
@@ -39,32 +39,32 @@ public class BlogListXmlParser extends DefaultHandler {
 	private Blog entity;// 单个对象
 	private boolean isStartParse;// 开始解析
 	private StringBuilder currentDataBuilder;// 当前取到的值
+
 	/**
 	 * 默认构造函数
 	 */
 	public BlogListXmlParser() {
 		super();
 	}
-	/**
+
+    /**
 	 * 构造函数
 	 * @return
 	 */
 	public BlogListXmlParser(ArrayList<Blog> list) {
 		this.listBlog = list;
 	}
-	/**
+
+    /**
 	 * 将结果返回
-	 * 
-	 * @return
 	 */
-	public ArrayList<Blog> GetBlogList() {
+	public List<Blog> getBlogList() {
 		return listBlog;
 	}
 	/**
 	 * 文档开始时触发
 	 */
 	public void startDocument() throws SAXException {
-		Log.i("Blog", "文档解析开始");
 		super.startDocument();
 		listBlog = new ArrayList<Blog>();
 		currentDataBuilder = new StringBuilder();
@@ -72,14 +72,15 @@ public class BlogListXmlParser extends DefaultHandler {
 	/**
 	 * 读取并解析XML数据
 	 */
-	public void startElement(String uri, String localName, String qName,
-			Attributes attributes) throws SAXException {
+	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		super.startElement(uri, localName, qName, attributes);
-		if (localName.equalsIgnoreCase(ENTRY_TAG)) {
+
+        if (localName.equalsIgnoreCase(ENTRY_TAG)) {
 			entity = new Blog();
 			isStartParse = true;
 		}
-		if (isStartParse && localName.equalsIgnoreCase(ENTRY_URL_TAG)) {
+
+        if (isStartParse && localName.equalsIgnoreCase(ENTRY_URL_TAG)) {
 			entity.setBlogUrl(attributes.getValue(ENTRY_URL_ATTRIBUTE_TAG));
 		}
 	}

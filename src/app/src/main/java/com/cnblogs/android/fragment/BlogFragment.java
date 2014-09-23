@@ -102,7 +102,6 @@ public class BlogFragment extends Fragment {
 
 		LayoutInflater mInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		viewFooter = (LinearLayout) mInflater.inflate(R.layout.listview_footer, null, false);
-		dbHelper = new BlogListDBTask(getActivity().getApplicationContext());
 	}
 	
 	private void bindControls() {
@@ -175,10 +174,8 @@ public class BlogFragment extends Fragment {
 				_pageIndex = 1;
 			}
 			
-			List<Blog> listBlogLocal = BlogListDBTask.getBlogListByPage(_pageIndex, Config.BLOG_PAGE_SIZE);
-			
 			if (isNetworkAvailable) {
-				List<Blog> listBlogNew = BlogHelper.GetBlogList(_pageIndex);
+				List<Blog> listBlogNew = BlogHelper.getBlogList(_pageIndex);
 				switch (curPageIndex) {
 					case -1 :
 						List<Blog> listTmp = new ArrayList<Blog>();
@@ -195,10 +192,7 @@ public class BlogFragment extends Fragment {
 						return listTmp;
 					case 0 :
 					case 1 :
-						if (listBlogNew != null && listBlogNew.size() > 0) {
-							return listBlogNew;
-						}
-						break;
+					    return listBlogNew;
 					default :
 						List<Blog> listT = new ArrayList<Blog>();
 						if (listBlog != null && listBlog.size() > 0) {
@@ -214,15 +208,14 @@ public class BlogFragment extends Fragment {
 						return listT;
 				}
 			} else {
-                Toast.makeText(getActivity(), "请检查网络", Toast.LENGTH_SHORT).show();
 				isLocalData = true;
-				if (curPageIndex == -1) {
+
+                if (curPageIndex == -1) {
 					return null;
 				}
-				return listBlogLocal;
-			}
 
-			return null;
+				return BlogListDBTask.getBlogListByPage(_pageIndex, Config.BLOG_PAGE_SIZE);
+			}
 		}
 
 		@Override
@@ -236,27 +229,27 @@ public class BlogFragment extends Fragment {
 			blog_refresh_btn.setVisibility(View.VISIBLE);
 
 			if (result == null || result.size() == 0) {
-				((PullToRefreshListView) mListView).onRefreshComplete();
-				if (!NetHelper.networkIsAvailable(getActivity().getApplicationContext()) && curPageIndex > 1) {
-					Toast.makeText(getActivity().getApplicationContext(), R.string.sys_network_error, Toast.LENGTH_SHORT)
-							.show();
+				mListView.onRefreshComplete();
+				if (!NetHelper.networkIsAvailable(getActivity()) && curPageIndex > 1) {
+					Toast.makeText(getActivity(), R.string.sys_network_error, Toast.LENGTH_SHORT).show();
 					// listView.removeFooterView(viewFooter);
 				}
 				return;
 			}
-			int size = result.size();
+
+            int size = result.size();
 			if (size >= Config.BLOG_PAGE_SIZE && mListView.getFooterViewsCount() == 0) {
 				mListView.addFooterView(viewFooter);
 			}
 
 			if (!isLocalData) {
-				dbHelper.SynchronyData2DB(result);
+				dbHelper.synchronyData2DB(result);
 			}
 
 			if (curPageIndex == -1) {
 				adapter.InsertData(result);
 			} else if (curPageIndex == 0) {
-				listBlog = result;// dbHelper.GetTopBlogList();
+				listBlog = result;// dbHelper.getTopBlogList();
 
 				blogBody_progressBar.setVisibility(View.GONE);
 				adapter = new BlogListAdapter(getActivity().getApplicationContext(), listBlog, mListView);

@@ -1,9 +1,5 @@
 package com.cnblogs.android.db;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -11,8 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.cnblogs.android.core.Config;
 import com.cnblogs.android.entity.RssList;
-import com.cnblogs.android.utility.AppUtil;
 import com.cnblogs.android.utility.TimeTools;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class RssListDalHelper {
 	private DBHelper.DatabaseHelper dbHelper;
@@ -201,8 +200,6 @@ public class RssListDalHelper {
 
 	/**
 	 * 插入
-	 * 
-	 * @param list
 	 */
 	public void SynchronyData2DB(List<RssList> listRss) {
 		List<ContentValues> list = new ArrayList<ContentValues>();
@@ -218,9 +215,9 @@ public class RssListDalHelper {
 			}
 			contentValues.put("Description", description);
 			contentValues.put("AddTime",
-					AppUtil.ParseDateToString(listRss.get(i).GetAddTime()));
+					TimeTools.parseDateToString(listRss.get(i).GetAddTime()));
 			contentValues.put("Updated",
-					AppUtil.ParseDateToString(listRss.get(i).GetUpdated()));
+					TimeTools.parseDateToString(listRss.get(i).GetUpdated()));
 			contentValues.put("Image", listRss.get(i).GetImage());
 			contentValues.put("IsCnblogs", listRss.get(i).GetIsCnblogs());
 			contentValues.put("Author", listRss.get(i).GetAuthor());

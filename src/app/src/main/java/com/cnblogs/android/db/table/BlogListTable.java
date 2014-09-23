@@ -41,7 +41,7 @@ public class BlogListTable {
         sb.append(Summary);
         sb.append("] NVARCHAR(500) NOT NULL DEFAULT (''), [");
         sb.append(Content);
-        sb.append("] NTEXT NOT NULL DEFAULT (''), [");
+        sb.append("] NTEXT DEFAULT (''), ["); // NTEXT NOT NULL DEFAULT (''),
         sb.append(Published);
         sb.append("] DATETIME, [");
         sb.append(Updated);

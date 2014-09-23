@@ -47,7 +47,7 @@ public class FavListHelper {
 		switch (contentType) {
 		case Blog:
 		default:
-			obj = new BlogListDBTask(context).GetBlogEntity(contentId);
+			obj = BlogListDBTask.getBlogEntity(contentId);
 			break;
 		}
 		return obj;

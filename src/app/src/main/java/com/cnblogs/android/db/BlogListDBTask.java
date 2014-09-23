@@ -1,17 +1,15 @@
 package com.cnblogs.android.db;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
-import com.cnblogs.android.core.Config;
 import com.cnblogs.android.db.table.BlogListTable;
 import com.cnblogs.android.entity.Blog;
-import com.cnblogs.android.utility.AppUtil;
+import com.cnblogs.android.utility.TimeTools;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class BlogListDBTask {
@@ -24,25 +22,11 @@ public class BlogListDBTask {
         return DatabaseHelper.getInstance().getWritableDatabase();
     }
 
-
-
-	private DBHelper.DatabaseHelper dbHelper;
-	private SQLiteDatabase db;
-	public final static byte[] _writeLock = new byte[0];
-	Context context;
-	public BlogListDBTask(Context context) {
-		dbHelper = new DBHelper.DatabaseHelper(context);
-		db = dbHelper.getWritableDatabase();
-	}
-	public void Close(){
-		dbHelper.close();
-	}
-
-	private boolean Exist(int blogId) {
-		String where = "BlogId=?";
+	private static boolean isExist(int blogId) {
+		String where = BlogListTable.BlogId + "=?";
 		String[] args = {String.valueOf(blogId)};
-		Cursor cursor = db.query(Config.DB_BLOG_TABLE, null, where, args, null,
-				null, null);
+		Cursor cursor = getRsd().query(BlogListTable.TABLE_NAME, null, where, args, null,
+                null, null);
 		boolean isExist = cursor != null && cursor.moveToNext();
 
         if (cursor != null)
@@ -51,23 +35,25 @@ public class BlogListDBTask {
 		return isExist;
 	}
 
-	private boolean IsFull(int blogId){
-		String where="BlogId=?";
-		String[] args={String.valueOf(blogId)};
-		Cursor cursor = db.query(Config.DB_BLOG_TABLE, null, where, args, null,
-				null, null);
+	private static boolean isFull(int blogId){
+		String where = BlogListTable.BlogId + "=?";
+		String[] args = {String.valueOf(blogId)};
+		Cursor cursor = getRsd().query(BlogListTable.TABLE_NAME, null, where, args, null,
+                null, null);
 		
-		if(!cursor.moveToNext() || cursor.getColumnIndex("IsFull")<0){
+		if(!cursor.moveToNext() || cursor.getColumnIndex(BlogListTable.IsFull) < 0){
 			cursor.close();
 			return false;
 		}
-		boolean isFull=cursor.getString(cursor.getColumnIndex("IsFull")).equals("1");
+
+        String str = cursor.getString(cursor.getColumnIndex(BlogListTable.IsFull));
+		boolean isFull = !TextUtils.isEmpty(str) && "1".equals(str);
 
 		cursor.close();
 		return isFull;
 	}
 
-	public List<Blog> GetTopBlogList() {
+	public List<Blog> getTopBlogList() {
 		String limit = "10";
 		String where = "";
 
@@ -80,7 +66,7 @@ public class BlogListDBTask {
 		return getBlogListByWhere(limit, null, null);
 	}
 
-	public List<Blog> GetBlogListByAuthor(String author,int pageIndex,int pageSize){
+	public static List<Blog> getBlogListByAuthor(String author, int pageIndex, int pageSize){
 		String limit = String.valueOf((pageIndex - 1) * pageSize) + "," + String.valueOf(pageSize);
 		String where="AuthorName=?";
 		String[] args={author};
@@ -89,7 +75,7 @@ public class BlogListDBTask {
 		return list;
 	}
 
-	public Blog GetBlogEntity(int blogId) {
+	public static Blog getBlogEntity(int blogId) {
 		String limit = "1";
 		String where = "BlogId=?";
 		String[] args = {String.valueOf(blogId)};
@@ -136,93 +122,76 @@ public class BlogListDBTask {
 		return listBlog;
 	}
 
-	public boolean GetIsReaded(int blogId) {
-		Blog entity = GetBlogEntity(blogId);
+	public boolean getIsReaded(int blogId) {
+		Blog entity = getBlogEntity(blogId);
 		if (entity != null) {
 			return entity.GetIsReaded();
 		}
 		return false;
 	}
 
-	public void MarkAsReaded(int blogId) {
+	public static void markAsReaded(int blogId) {
 		String sql = "update BlogList set IsReaded=1 where BlogId=?";
 		String[] args = {String.valueOf(blogId)};
-		db.execSQL(sql, args);
+		getRsd().execSQL(sql, args);
 	}
 
-	public void SynchronyContent2DB(int blogId, String blogContent) {
-		if (blogContent.equals("")) {
+	public static void synchronyContent2DB(int blogId, String blogContent) {
+		if (TextUtils.isEmpty(blogContent)) {
 			return;
 		}
-		String sql = "update BlogList set Content=?,IsFull=1 where BlogId=?";
+		String sql = "update BlogList set Content=?,isFull=1 where BlogId=?";
 		String[] args = {blogContent, String.valueOf(blogId)};
-		db.execSQL(sql, args);
+		getWsd().execSQL(sql, args);
 	}
 
-	public void SynchronyData2DB(List<Blog> blogList) {
+	public static void synchronyData2DB(List<Blog> blogList) {
 		List<ContentValues> list = new ArrayList<ContentValues>();
+
 		for (int i = 0, len = blogList.size(); i < len; i++) {
+            Blog blog = blogList.get(i);
+
 			ContentValues contentValues = new ContentValues();
-			contentValues.put("BlogId", blogList.get(i).GetBlogId());
-			contentValues.put("BlogTitle", blogList.get(i).GetBlogTitle());
-			contentValues.put("Summary", blogList.get(i).GetSummary());
-			String content = "";
-			if (blogList.get(i).GetBlogContent() != null) {
-				content = blogList.get(i).GetBlogContent();
-			}
-			contentValues.put("Content", content);
-			contentValues.put("Published",
-					AppUtil.ParseDateToString(blogList.get(i).GetAddTime()));
-			Date datetime = new java.util.Date();
-			String updateTime = "";
-			if (blogList.get(i).GetUpdateTime() != null) {
-				updateTime = AppUtil.ParseDateToString(blogList.get(i)
-						.GetUpdateTime());
-			} else {
-				updateTime = AppUtil.ParseDateToString(datetime);
-			}
-			contentValues.put("Updated", updateTime);
-			contentValues.put("AuthorName", blogList.get(i).GetAuthor());
-			contentValues.put("AuthorAvatar", blogList.get(i).GetAvator());
-			String authorUrl = "";
-			if (blogList.get(i).GetAuthorUrl() != null) {
-				authorUrl = blogList.get(i).GetAuthorUrl();
-			}
-			contentValues.put("AuthorUrl", authorUrl);
-			contentValues.put("View", blogList.get(i).GetViewNum());
-			contentValues.put("Comments", blogList.get(i).GetCommentNum());
-			contentValues.put("Digg", blogList.get(i).GetDiggsNum());
-			contentValues.put("IsReaded", false);
-			contentValues.put("CateId", blogList.get(i).GetCateId());
-			String cateName = "";
-			if (blogList.get(i).GetCateName() != null) {
-				cateName = blogList.get(i).GetCateName();
-			}
-			contentValues.put("CateName", cateName);
-			contentValues.put("IsFull", blogList.get(i).GetIsFullText());
-			contentValues.put("BlogUrl", blogList.get(i).GetBlogUrl());
-			contentValues.put("UserName", blogList.get(i).GetUserName());
+			contentValues.put(BlogListTable.BlogId, blog.GetBlogId());
+			contentValues.put(BlogListTable.BlogTitle, blog.GetBlogTitle());
+			contentValues.put(BlogListTable.Summary, blog.GetSummary());
+			contentValues.put(BlogListTable.Content, blog.GetBlogContent());
+			contentValues.put(BlogListTable.Published,
+					TimeTools.parseDateToString(blog.GetAddTime()));
+			contentValues.put(BlogListTable.Updated, TimeTools.parseDateToString(blog.GetUpdateTime()));
+			contentValues.put(BlogListTable.AuthorName, blog.GetAuthor());
+			contentValues.put(BlogListTable.AuthorAvatar, blog.GetAvator());
+			contentValues.put(BlogListTable.AuthorUrl, blog.GetAuthorUrl());
+			contentValues.put(BlogListTable.View, blog.GetViewNum());
+			contentValues.put(BlogListTable.Comments, blog.GetCommentNum());
+			contentValues.put(BlogListTable.Digg, blog.GetDiggsNum());
+			contentValues.put(BlogListTable.IsReaded, false);
+			contentValues.put(BlogListTable.CateId, blog.GetCateId());
+			contentValues.put(BlogListTable.CateName, blog.GetCateName());
+			contentValues.put(BlogListTable.IsFull, blog.GetIsFullText());
+			contentValues.put(BlogListTable.BlogUrl, blog.GetBlogUrl());
+			contentValues.put(BlogListTable.UserName, blog.GetUserName());
 
 			list.add(contentValues);
 		}
-		synchronized (_writeLock) {
-			db.beginTransaction();
-			try {
-				for (int i = 0, len = list.size(); i < len; i++) {
-					int blogId=list.get(i).getAsInteger("BlogId");
-					boolean isExist = Exist(blogId);
-					boolean isFull = IsFull(blogId);
-					if (!isExist) {
-						db.insert(Config.DB_BLOG_TABLE, null, list.get(i));
-					} else if (!isFull) {
-						SynchronyContent2DB(list.get(i).getAsInteger("BlogId"),
-								list.get(i).getAsString("Content"));
-					}
-				}
-				db.setTransactionSuccessful();
-			} finally {
-				db.endTransaction();
-			}
-		}
+
+        getWsd().beginTransaction();
+        try {
+            for (ContentValues values : list) {
+                int blogId = values.getAsInteger(BlogListTable.BlogId);
+                boolean isExist = isExist(blogId);
+                boolean isFull = isFull(blogId);
+
+                if (!isExist) {
+                    getWsd().insert(BlogListTable.TABLE_NAME, null, values);
+                } else if (!isFull) {
+                    synchronyContent2DB(values.getAsInteger(BlogListTable.BlogId),
+                            values.getAsString(BlogListTable.Content));
+                }
+            }
+            getWsd().setTransactionSuccessful();
+        } finally {
+            getWsd().endTransaction();
+        }
 	}
 }

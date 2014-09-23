@@ -1,22 +1,5 @@
 package com.cnblogs.android.services;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.cnblogs.android.activity.MainActivity;
-import com.cnblogs.android.R;
-import com.cnblogs.android.cache.ImageCacher;
-import com.cnblogs.android.core.BlogHelper;
-import com.cnblogs.android.core.CommentHelper;
-import com.cnblogs.android.core.Config;
-import com.cnblogs.android.core.NewsHelper;
-import com.cnblogs.android.db.BlogListDBTask;
-import com.cnblogs.android.db.CommentDalHelper;
-import com.cnblogs.android.db.NewsDalHelper;
-import com.cnblogs.android.entity.Blog;
-import com.cnblogs.android.entity.Comment;
-import com.cnblogs.android.entity.News;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -29,6 +12,23 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.Toast;
+
+import com.cnblogs.android.R;
+import com.cnblogs.android.activity.MainActivity;
+import com.cnblogs.android.cache.ImageCacher;
+import com.cnblogs.android.core.BlogHelper;
+import com.cnblogs.android.core.CommentHelper;
+import com.cnblogs.android.core.Config;
+import com.cnblogs.android.core.NewsHelper;
+import com.cnblogs.android.db.BlogListDBTask;
+import com.cnblogs.android.db.CommentDalHelper;
+import com.cnblogs.android.db.NewsDalHelper;
+import com.cnblogs.android.entity.Blog;
+import com.cnblogs.android.entity.Comment;
+import com.cnblogs.android.entity.News;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DownloadServices extends Service {
 	// 通知栏
@@ -127,7 +127,7 @@ public class DownloadServices extends Service {
 				for (int i = 0; i < pageSize; i++) {
 					List<Blog> list = new ArrayList<Blog>();
 					if (isDownBlog) {
-						list = BlogHelper.GetBlogList(i + 1);
+						list = BlogHelper.getBlogList(i + 1);
 					} else if (isDownAuthor) {
 						list = BlogHelper.GetAuthorBlogList(author, i + 1);
 					}
@@ -147,7 +147,7 @@ public class DownloadServices extends Service {
 				if (top % Config.BLOG_PAGE_SIZE > 0) {
 					List<Blog> list = new ArrayList<Blog>();// 下载最后一页
 					if (isDownBlog) {
-						list = BlogHelper.GetBlogList(pageSize + 1);
+						list = BlogHelper.getBlogList(pageSize + 1);
 					} else if (isDownAuthor) {
 						list = BlogHelper.GetAuthorBlogList(author,
 								pageSize + 1);
@@ -205,9 +205,8 @@ public class DownloadServices extends Service {
 					currentText = "下载(" + (i + 1) + "/" + size + ")："
 							+ listBlogs.get(i).GetBlogTitle();
 				}
-				BlogListDBTask helper = new BlogListDBTask(
-						getApplicationContext());
-				helper.SynchronyData2DB(listBlogs);
+
+				BlogListDBTask.synchronyData2DB(listBlogs);
 				Log.i("downloadservices", "下载内容结束");
 				currentText = "博客内容下载完成";
 				// 广播

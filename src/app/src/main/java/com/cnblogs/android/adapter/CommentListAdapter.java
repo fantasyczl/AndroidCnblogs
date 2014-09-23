@@ -1,19 +1,20 @@
 package com.cnblogs.android.adapter;
 
-import java.util.List;
-
-import com.cnblogs.android.R;
-import com.cnblogs.android.core.Config;
-import com.cnblogs.android.entity.Comment;
-import com.cnblogs.android.utility.AppUtil;
-import com.cnblogs.android.utility.HtmlRegexpUtil;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.cnblogs.android.R;
+import com.cnblogs.android.core.Config;
+import com.cnblogs.android.entity.Comment;
+import com.cnblogs.android.utility.AppUtil;
+import com.cnblogs.android.utility.HtmlRegexpUtil;
+import com.cnblogs.android.utility.TimeTools;
+
+import java.util.List;
 
 public class CommentListAdapter extends BaseAdapter {
 	private List<Comment> list;
@@ -60,8 +61,8 @@ public class CommentListAdapter extends BaseAdapter {
 		content = HtmlRegexpUtil.filterHtml(content);
 		viewHolder.comment_content.setText(content);
 
-		viewHolder.comment_date.setText(AppUtil.ParseDateToString(entity
-				.GetAddTime()));
+		viewHolder.comment_date.setText(TimeTools.parseDateToString(entity
+                .GetAddTime()));
 		String simpleDateString = AppUtil.DateToChineseString(entity
 				.GetAddTime());
 		viewHolder.comment_format_date.setText(simpleDateString);

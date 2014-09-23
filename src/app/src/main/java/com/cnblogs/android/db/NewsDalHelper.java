@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.cnblogs.android.core.Config;
 import com.cnblogs.android.entity.News;
-import com.cnblogs.android.utility.AppUtil;
 import com.cnblogs.android.utility.TimeTools;
 
 import java.util.ArrayList;
@@ -146,7 +145,7 @@ public class NewsDalHelper {
 		    	content=newsList.get(i).GetNewsContent();
 		    }
 			contentValues.put("Content",content);
-			contentValues.put("Published",AppUtil.ParseDateToString(newsList.get(i).GetAddTime()));
+			contentValues.put("Published", TimeTools.parseDateToString(newsList.get(i).GetAddTime()));
 			contentValues.put("View",newsList.get(i).GetViewNum());
 			contentValues.put("Comments",newsList.get(i).GetCommentNum());
 			contentValues.put("Digg",newsList.get(i).GetDiggsNum());

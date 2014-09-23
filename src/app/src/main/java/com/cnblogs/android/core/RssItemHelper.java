@@ -28,7 +28,7 @@ public class RssItemHelper extends DefaultHandler {
 	 * @return
 	 */
 	public static List<RssItem> GetRssList(String url) {
-		String dataString = NetHelper.getData(url, "UTF-8"); // NetHelper.GetContentFromUrl(url);
+		String dataString = NetHelper.getData(url, "UTF-8"); // NetHelper.getContentFromUrl(url);
 		if (dataString.equals("")) {
 			return null;
 		}

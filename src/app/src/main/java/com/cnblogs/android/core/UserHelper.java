@@ -30,7 +30,7 @@ public class UserHelper {
 		String url = Config.URL_GET_BLOG_LIST_BY_AUTHOR
 				.replace("{author}", userName).replace("{pageIndex}", "1")
 				.replace("{pageSize}", "1");
-		String dataString = NetHelper.GetContentFromUrl(url);
+		String dataString = NetHelper.getContentFromUrl(url);
 
 		Users entity = ParseDetailString(dataString);
 
@@ -45,7 +45,7 @@ public class UserHelper {
 	public static ArrayList<Users> GetUserList(String q) {
 		String url = Config.URL_USER_SEARCH_AUTHOR_LIST
 				.replace("{username}", q);// 数据地址
-		String dataString = NetHelper.GetContentFromUrl(url);
+		String dataString = NetHelper.getContentFromUrl(url);
 
 		ArrayList<Users> list = ParseString(dataString);
 
@@ -62,7 +62,7 @@ public class UserHelper {
 		String url = Config.URL_RECOMMEND_USER_LIST.replace("{pageIndex}",
 				String.valueOf(pageIndex)).replace("{pageSize}",
 				String.valueOf(Config.NUM_RECOMMEND_USER));
-		String dataString = NetHelper.GetContentFromUrl(url);
+		String dataString = NetHelper.getContentFromUrl(url);
 
 		ArrayList<Users> list = ParseString(dataString);
 

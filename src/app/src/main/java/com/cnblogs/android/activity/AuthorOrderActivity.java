@@ -282,7 +282,7 @@ public class AuthorOrderActivity extends BaseActivity {
 			if (curPageIndex == -1) {// 上拉刷新
 				adapter.InsertData(result);
 			} else if (curPageIndex == 0) {// 首次加载
-				listUsers = result;// dbHelper.GetTopBlogList();
+				listUsers = result;// dbHelper.getTopBlogList();
 
 				blogBody_progressBar.setVisibility(View.GONE);
 				adapter = new UserListAdapter(getApplicationContext(),

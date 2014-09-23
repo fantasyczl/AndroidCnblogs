@@ -99,7 +99,7 @@ public class NetHelper {
 	 * @param url
 	 * @return
 	 */
-	public static String GetContentFromUrl(String url) {
+	public static String getContentFromUrl(String url) {
 		String result = "";
 		try {
 			DefaultHttpClient client = new DefaultHttpClient();
@@ -117,7 +117,6 @@ public class NetHelper {
 			return result;
 		} catch (Exception e) {
             e.printStackTrace();
-			Log.e("NetHelper", "______________读取数据失败" + e.toString() + "_____________");
 			return "";
 		}
 	}

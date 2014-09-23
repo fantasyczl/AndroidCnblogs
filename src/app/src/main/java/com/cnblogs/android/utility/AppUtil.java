@@ -31,25 +31,7 @@ import java.util.regex.Pattern;
 
 public class AppUtil {
 
-    /**
-     * 将日期转换为字符串
-     * @param date
-     * @return
-     */
-    public static String ParseDateToString(Date date){
-    	return ParseDateToString(date,"yyyy-MM-dd HH:mm:ss");
-    }
-    /**
-     * 将日期转换为字符串（重载）
-     * @param date
-     * @param format:时间格式，必须符合yyyy-MM-dd hh:mm:ss
-     * @return
-     */
-    public static String ParseDateToString(Date date,String format){
-    	SimpleDateFormat dateFormat = new SimpleDateFormat(format);
-                    
-    	return dateFormat.format(date);
-    }
+
     /**
      * 将UMT时间转换为本地时间
      * @param str

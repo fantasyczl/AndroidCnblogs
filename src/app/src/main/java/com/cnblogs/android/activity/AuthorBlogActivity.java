@@ -389,7 +389,6 @@ public class AuthorBlogActivity extends BaseActivity {
 		boolean isRefresh = false;
 		int curPageIndex = 0;
 		boolean isLocalData = false;// 是否是从本地读取的数据
-		BlogListDBTask dbHelper = new BlogListDBTask(getApplicationContext());
 
 		public PageTask(int page, boolean isRefresh) {
 			curPageIndex = page;
@@ -405,8 +404,8 @@ public class AuthorBlogActivity extends BaseActivity {
 			}
 
 			// 优先读取本地数据
-			List<Blog> listBlogLocal = dbHelper.GetBlogListByAuthor(author,
-					_pageIndex, Config.BLOG_PAGE_SIZE);
+			List<Blog> listBlogLocal = BlogListDBTask.getBlogListByAuthor(author,
+                    _pageIndex, Config.BLOG_PAGE_SIZE);
 			if (isNetworkAvailable) {// 有网络情况
 				List<Blog> listBlogNew = BlogHelper.GetAuthorBlogList(author,
 						_pageIndex);
@@ -489,13 +488,13 @@ public class AuthorBlogActivity extends BaseActivity {
 
 			// 保存到数据库
 			if (!isLocalData) {
-				dbHelper.SynchronyData2DB(result);
+				BlogListDBTask.synchronyData2DB(result);
 			}
 
 			if (curPageIndex == -1) {// 上拉刷新
 				adapter.InsertData(result);
 			} else if (curPageIndex == 0) {// 首次加载
-				listBlog = result;// dbHelper.GetTopBlogList();
+				listBlog = result;// dbHelper.getTopBlogList();
 
 				blogBody_progressBar.setVisibility(View.GONE);
 				adapter = new AuthorBlogListAdapter(getApplicationContext(),

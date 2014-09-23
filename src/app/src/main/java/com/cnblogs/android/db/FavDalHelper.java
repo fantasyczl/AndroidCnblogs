@@ -139,7 +139,7 @@ public class FavDalHelper {
 			contentValues.put("ContentType", favList.get(i).GetContentType()
 					.ordinal());
 			contentValues.put("AddTime",
-					AppUtil.ParseDateToString(favList.get(i).GetAddTime()));
+					TimeTools.parseDateToString(favList.get(i).GetAddTime()));
 
 			list.add(contentValues);
 		}

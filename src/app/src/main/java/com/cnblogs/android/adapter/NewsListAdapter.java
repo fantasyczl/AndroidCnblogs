@@ -1,11 +1,5 @@
 package com.cnblogs.android.adapter;
 
-import java.util.List;
-
-import com.cnblogs.android.R;
-import com.cnblogs.android.entity.News;
-import com.cnblogs.android.utility.AppUtil;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +7,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.cnblogs.android.R;
+import com.cnblogs.android.entity.News;
+import com.cnblogs.android.utility.AppUtil;
+import com.cnblogs.android.utility.TimeTools;
+
+import java.util.List;
 
 public class NewsListAdapter extends BaseAdapter {
 	private List<News> list;
@@ -70,8 +71,8 @@ public class NewsListAdapter extends BaseAdapter {
 		viewHolder.news_text_view.setText(String.valueOf(entity.GetViewNum()));
 		viewHolder.news_text_diggs
 				.setText(String.valueOf(entity.GetDiggsNum()));
-		viewHolder.news_text_date.setText(AppUtil.ParseDateToString(entity
-				.GetAddTime()));
+		viewHolder.news_text_date.setText(TimeTools.parseDateToString(entity
+                .GetAddTime()));
 		String simpleDateString = AppUtil.DateToChineseString(entity
 				.GetAddTime());
 		viewHolder.news_text_format_date.setText(simpleDateString);

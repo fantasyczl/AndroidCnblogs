@@ -378,7 +378,7 @@ public class SettingActivity extends PreferenceActivity implements
             String url = Config.APP_UPDATE_URL.replace("{alias}",
                     res.getString(R.string.app_alias));
             try {
-                String dataString = NetHelper.GetContentFromUrl(url);
+                String dataString = NetHelper.getContentFromUrl(url);
 
                 // 解析json
                 if (!dataString.equals("")) {

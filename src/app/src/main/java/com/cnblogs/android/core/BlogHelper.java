@@ -1,5 +1,18 @@
 package com.cnblogs.android.core;
 
+import android.content.Context;
+
+import com.cnblogs.android.db.BlogListDBTask;
+import com.cnblogs.android.entity.Blog;
+import com.cnblogs.android.parser.BlogListXmlParser;
+import com.cnblogs.android.parser.BlogXmlParser;
+import com.cnblogs.android.utility.NetHelper;
+
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -7,19 +20,6 @@ import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.DefaultHandler;
-
-import android.content.Context;
-
-import com.cnblogs.android.db.BlogListDBTask;
-import com.cnblogs.android.entity.*;
-import com.cnblogs.android.parser.BlogListXmlParser;
-import com.cnblogs.android.parser.BlogXmlParser;
-import com.cnblogs.android.utility.NetHelper;
 
 /**
  * Blog操作类
@@ -42,12 +42,12 @@ public class BlogHelper extends DefaultHandler {
     	List<Blog> listBlogs = null;
     	// 下载前几页
     	for (int i = 0; i < pageSize; i++) {
-    		List<Blog> list = GetBlogList(i);
+    		List<Blog> list = getBlogList(i);
     		
     		listBlogs.addAll(list);
     	}
     	// 下载剩余内容
-    	List<Blog> list = GetBlogList(pageSize);// 下载最后一页
+    	List<Blog> list = getBlogList(pageSize);// 下载最后一页
     	for (int i = 0, len = list.size(); i < len; i++) {
     		listBlogs.addAll(list);
     		if (list.get(i).GetBlogId() == lastNum) {
@@ -70,80 +70,76 @@ public class BlogHelper extends DefaultHandler {
      * 
      * @return pageIndex:页码，从1开始
      */
-    public static ArrayList<Blog> GetBlogList(int pageIndex) {
+    public static List<Blog> getBlogList(int pageIndex) {
     	int pageSize = Config.BLOG_PAGE_SIZE;
-    	String url = Config.URL_GET_BLOG_LIST.replace("{pageIndex}",
-    			String.valueOf(pageIndex)).replace("{pageSize}",
-    					String.valueOf(pageSize));// 数据地址
-    	String dataString = NetHelper.GetContentFromUrl(url);
+        // 数据地址
+    	String url = Config.URL_GET_BLOG_LIST.replace("{pageIndex}", String.valueOf(pageIndex))
+                                             .replace("{pageSize}", String.valueOf(pageSize));
+    	String dataString = NetHelper.getContentFromUrl(url);
 
-    	ArrayList<Blog> list = ParseString(dataString);
-
-    	return list;
+    	return parseString(dataString);
     }
     /**
      * 返回48小时内阅读排行Blog对象集合
      */
-    public static ArrayList<Blog> Get48HoursTopViewBlogList() {
+    public static List<Blog> Get48HoursTopViewBlogList() {
     	int size = Config.NUM_48HOURS_TOP_VIEW;
     	String url = Config.URL_48HOURS_TOP_VIEW_LIST.replace("{size}",
     			String.valueOf(size));// 数据地址
-    	String dataString = NetHelper.GetContentFromUrl(url);
+    	String dataString = NetHelper.getContentFromUrl(url);
 
-    	ArrayList<Blog> list = ParseString(dataString);
+    	List<Blog> list = parseString(dataString);
 
     	return list;
     }
     /**
      * 返回10天内推荐排行Blog对象集合
      */
-    public static ArrayList<Blog> Get10DaysTopDiggBlogList() {
+    public static List<Blog> Get10DaysTopDiggBlogList() {
     	int size = Config.NUM_TENDAYS_TOP_DIGG;
     	String url = Config.URL_TENDAYS_TOP_DIGG_LIST.replace("{size}",
     			String.valueOf(size));// 数据地址
-    	String dataString = NetHelper.GetContentFromUrl(url);
+    	String dataString = NetHelper.getContentFromUrl(url);
 
-    	ArrayList<Blog> list = ParseString(dataString);
+    	List<Blog> list = parseString(dataString);
 
     	return list;
     }
     /**
      * 根据博客用户编号和页码返回Blog对象集合
      * 
-     * @param userId
+     * @param author
      *            :用户编号
      * @param pageIndex
      *            :页码，从1开始
      * @return
      */
-    public static ArrayList<Blog> GetAuthorBlogList(String author, int pageIndex) {
+    public static List<Blog> GetAuthorBlogList(String author, int pageIndex) {
     	int pageSize = Config.BLOG_LIST_BY_AUTHOR_PAGE_SIZE;
     	String url = Config.URL_GET_BLOG_LIST_BY_AUTHOR
     			.replace("{author}", author)
     			.replace("{pageIndex}", String.valueOf(pageIndex))
     			.replace("{pageSize}", String.valueOf(pageSize));// 数据地址
-    	String dataString = NetHelper.GetContentFromUrl(url);
+    	String dataString = NetHelper.getContentFromUrl(url);
 
-    	ArrayList<Blog> list = ParseString(dataString);
-
-    	return list;
+    	return parseString(dataString);
     }
     /**
      * 将字符串转换为Blog集合
      * 
      * @return
      */
-    private static ArrayList<Blog> ParseString(String dataString) {
+    private static List<Blog> parseString(String dataString) {
     	SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-    	ArrayList<Blog> listBlog = new ArrayList<Blog>();
-    	try {
+
+        try {
     		XMLReader xmlReader = saxParserFactory.newSAXParser()
                                     .getXMLReader();
-    		BlogListXmlParser handler = new BlogListXmlParser(listBlog);
+    		BlogListXmlParser handler = new BlogListXmlParser();
     		xmlReader.setContentHandler(handler);
 
     		xmlReader.parse(new InputSource(new StringReader(dataString)));
-    		listBlog = handler.GetBlogList();
+    		return handler.getBlogList();
     	} catch (SAXException e) {
     		e.printStackTrace();
     	} catch (ParserConfigurationException e) {
@@ -152,7 +148,7 @@ public class BlogHelper extends DefaultHandler {
     		e.printStackTrace();
     	}
 
-    	return listBlog;
+    	return new ArrayList<Blog>();
     }
     /**
      * 根据编号获取博客内容
@@ -164,7 +160,7 @@ public class BlogHelper extends DefaultHandler {
     	String blogContent = "";
     	String url = Config.URL_GET_BLOG_DETAIL.replace("{0}",
     			String.valueOf(blogId));// 网址
-    	String xml = NetHelper.GetContentFromUrl(url);
+    	String xml = NetHelper.getContentFromUrl(url);
     	if (xml == "") {
     		return "";
     	}
@@ -181,13 +177,12 @@ public class BlogHelper extends DefaultHandler {
     public static String GetBlogById(int blogId, Context context) {
     	String blogContent = "";
     	// 优先考虑本地数据
-    	BlogListDBTask helper = new BlogListDBTask(context);
-    	Blog entity = helper.GetBlogEntity(blogId);
+    	Blog entity = BlogListDBTask.getBlogEntity(blogId);
     	if (null == entity || entity.GetBlogContent().equals("")) {
     		blogContent = GetBlogContentByIdWithNet(blogId);
     		/*String _blogContent=ImageCacher.FormatLocalHtmlWithImg(ImageCacher.EnumImageType.Blog, blogContent);
                     if (Config.IS_SYNCH2DB_AFTER_READ) {
-                            helper.SynchronyContent2DB(blogId, _blogContent);// 同步至数据库
+                            helper.synchronyContent2DB(blogId, _blogContent);// 同步至数据库
                     }*/
     	} else {
     		blogContent = entity.GetBlogContent();

@@ -162,7 +162,7 @@ public class RssItemDalHelper {
 			}
 			contentValues.put("Link", link);
 			contentValues.put("AddDate",
-					AppUtil.ParseDateToString(rssItems.get(i).GetAddDate()));
+					TimeTools.parseDateToString(rssItems.get(i).GetAddDate()));
 			contentValues.put("Category", rssItems.get(i).GetCategory());
 			contentValues.put("Author", rssItems.get(i).GetAuthor());
 			contentValues.put("IsReaded", false);

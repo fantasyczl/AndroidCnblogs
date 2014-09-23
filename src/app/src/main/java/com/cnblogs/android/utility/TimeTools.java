@@ -39,4 +39,29 @@ public class TimeTools {
 
         return addTime;
     }
+
+    /**
+     * 将日期转换为字符串
+     * @param date
+     * @return
+     */
+    public static String parseDateToString(Date date){
+        if (date == null) {
+            date = new Date();
+        }
+
+        return ParseDateToString(date, YMDHms);
+    }
+
+    /**
+     * 将日期转换为字符串（重载）
+     * @param date
+     * @param format:时间格式，必须符合yyyy-MM-dd hh:mm:ss
+     * @return
+     */
+    public static String ParseDateToString(Date date,String format){
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+
+        return dateFormat.format(date);
+    }
 }

@@ -96,8 +96,7 @@ public class BlogDetailActivity extends BaseActivity implements OnGestureListene
      */
     private void MarkAsReaded() {
     	// 更新为已读
-    	BlogListDBTask helper = new BlogListDBTask(getApplicationContext());
-    	helper.MarkAsReaded(blogId);
+    	BlogListDBTask.markAsReaded(blogId);
     	// 广播
     	Intent intent = new Intent();
     	Bundle bundle = new Bundle();
@@ -300,7 +299,7 @@ public class BlogDetailActivity extends BaseActivity implements OnGestureListene
     			//下载图片（只有本地完整保存图片时才下载）
     			/*Context context=getApplicationContext();
                             BlogDalHelper helper = new BlogDalHelper(context);                                
-                            Blog entity = helper.GetBlogEntity(blogId);                                
+                            Blog entity = helper.getBlogEntity(blogId);
                             boolean isNetworkAvailable = NetHelper.networkIsAvailable(getApplicationContext());
                             if(isNetworkAvailable && (entity==null || !entity.GetIsFullText())){
                                     ImageCacher imageCacher=new ImageCacher(getApplicationContext());

@@ -127,7 +127,7 @@ public class CommentDalHelper {
 			}
 			contentValues.put("Content", content);
 			contentValues.put("AddTime",
-					AppUtil.ParseDateToString(commentList.get(i).GetAddTime()));
+					TimeTools.parseDateToString(commentList.get(i).GetAddTime()));
 			contentValues.put("CommentType", commentList.get(i)
 					.GetCommentType().ordinal());
 			contentValues.put("ContentId", commentList.get(i).GetContentId());

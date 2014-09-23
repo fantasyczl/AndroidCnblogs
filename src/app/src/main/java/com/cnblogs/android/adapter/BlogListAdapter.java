@@ -1,15 +1,5 @@
 package com.cnblogs.android.adapter;
 
-import java.util.List;
-
-import com.cnblogs.android.R;
-import com.cnblogs.android.activity.SettingActivity;
-import com.cnblogs.android.cache.AsyncImageLoader;
-import com.cnblogs.android.cache.ImageCacher;
-import com.cnblogs.android.cache.AsyncImageLoader.ImageCallback;
-import com.cnblogs.android.entity.Blog;
-import com.cnblogs.android.utility.AppUtil;
-
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -20,6 +10,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.cnblogs.android.R;
+import com.cnblogs.android.activity.SettingActivity;
+import com.cnblogs.android.cache.AsyncImageLoader;
+import com.cnblogs.android.cache.AsyncImageLoader.ImageCallback;
+import com.cnblogs.android.cache.ImageCacher;
+import com.cnblogs.android.entity.Blog;
+import com.cnblogs.android.utility.AppUtil;
+import com.cnblogs.android.utility.TimeTools;
+
+import java.util.List;
 
 public class BlogListAdapter extends BaseAdapter {
 	private ListView listView;
@@ -127,8 +128,8 @@ public class BlogListAdapter extends BaseAdapter {
 		viewHolder.text_comments
 				.setText(String.valueOf(entity.GetCommentNum()));
 		viewHolder.text_view.setText(String.valueOf(entity.GetViewNum()));
-		viewHolder.text_date.setText(AppUtil.ParseDateToString(entity
-				.GetAddTime()));
+		viewHolder.text_date.setText(TimeTools.parseDateToString(entity
+                .GetAddTime()));
 		String simpleDateString = AppUtil.DateToChineseString(entity
 				.GetAddTime());
 		viewHolder.text_formatdate.setText(simpleDateString);
