@@ -1,4 +1,4 @@
-package com.cnblogs.android.dal;
+package com.cnblogs.android.db;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -32,7 +32,10 @@ public class BlogDalHelper {
 		Cursor cursor = db.query(Config.DB_BLOG_TABLE, null, where, args, null,
 				null, null);
 		boolean isExist = cursor != null && cursor.moveToNext();
-		cursor.close();
+
+        if (cursor != null)
+		    cursor.close();
+
 		return isExist;
 	}
 

@@ -28,15 +28,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cnblogs.android.CommentActivity;
-import com.cnblogs.android.NewsDetailActivity;
+import com.cnblogs.android.activity.CommentActivity;
+import com.cnblogs.android.activity.NewsDetailActivity;
 import com.cnblogs.android.R;
 import com.cnblogs.android.adapter.NewsListAdapter;
 import com.cnblogs.android.controls.PullToRefreshListView;
 import com.cnblogs.android.controls.PullToRefreshListView.OnRefreshListener;
 import com.cnblogs.android.core.Config;
 import com.cnblogs.android.core.NewsHelper;
-import com.cnblogs.android.dal.NewsDalHelper;
+import com.cnblogs.android.db.NewsDalHelper;
 import com.cnblogs.android.entity.News;
 import com.cnblogs.android.utility.NetHelper;
 
@@ -72,6 +72,7 @@ public class NewsFragment extends Fragment {
 	static final int MENU_SHARE_TO = Menu.FIRST + 3;// 分享到
 
 	Resources res;// 资源
+    UpdateListViewReceiver mReceiver;
     
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -89,10 +90,10 @@ public class NewsFragment extends Fragment {
 		InitialNewsList();
 		BindEvent();
                 
-		UpdateListViewReceiver receiver=new UpdateListViewReceiver();
+		mReceiver = new UpdateListViewReceiver();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("android.cnblogs.com.update_newslist");
-		getActivity().registerReceiver(receiver, filter);
+		getActivity().registerReceiver(mReceiver, filter);
 		
 		return rootView;
 	}
@@ -481,8 +482,14 @@ public class NewsFragment extends Fragment {
 		intent.putExtra(Intent.EXTRA_TEXT, shareContent);
 		startActivity(Intent.createChooser(intent, newsTitle));
 	}
-    
-	/**
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        getActivity().unregisterReceiver(mReceiver);
+    }
+
+    /**
 	 * 更新ListView为已读状态
 	 * @author walknigp
 	 *

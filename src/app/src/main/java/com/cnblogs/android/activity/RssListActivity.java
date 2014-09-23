@@ -1,6 +1,5 @@
-package com.cnblogs.android;
+package com.cnblogs.android.activity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
@@ -20,27 +19,37 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import com.cnblogs.android.adapter.RssItemsAdapter;
-import com.cnblogs.android.core.RssItemHelper;
-import com.cnblogs.android.entity.RssItem;
 
-public class RssItemsActivity extends BaseActivity {
-	List<RssItem> listBlog = new ArrayList<RssItem>();
+import com.cnblogs.android.R;
+import com.cnblogs.android.adapter.RssListAdapter;
+import com.cnblogs.android.core.RssListHelper;
+import com.cnblogs.android.entity.RssList;
 
+/**
+ * RSS分类下的作者
+ * 
+ * @author walkingp
+ * 
+ */
+public class RssListActivity extends BaseActivity {
 	ListView listView;
-	private RssItemsAdapter adapter;
-	List<RssItem> listRss;
+	private RssListAdapter adapter;// 数据源
+	List<RssList> listRss;
 
-	String itemTitle, itemUrl;
+	int cateId;
+	String cateTitle;
 
-	Button btnBack;
-	ProgressBar bodyProgressBar;
-	ImageButton btnRefresh;
-	ProgressBar topProgressBar;
+	TextView txtNoData;// 没有数据
 
-	TextView txtAppTitle;
-	TextView txtNoData;
-	Resources res;
+	Button btnBack;// 返回
+	ProgressBar bodyProgressBar;// 主题ListView加载框
+	ImageButton btnRefresh;// 刷新按钮
+	ProgressBar topProgressBar;// 加载按钮
+
+	TextView txtAppTitle;// 标题
+
+	Resources res;// 资源
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,6 +62,9 @@ public class RssItemsActivity extends BaseActivity {
 		new PageTask().execute();
 	}
 
+	/**
+	 * 初始化列表
+	 */
 	private void InitialControls() {
 		listView = (ListView) findViewById(R.id.rss_list);
 		bodyProgressBar = (ProgressBar) findViewById(R.id.rssList_progressBar);
@@ -64,51 +76,70 @@ public class RssItemsActivity extends BaseActivity {
 		txtNoData = (TextView) findViewById(R.id.txtNoData);
 	}
 
+	/**
+	 * 初始化数据
+	 */
 	void InitialData() {
-		itemTitle = getIntent().getStringExtra("title");
-		itemUrl = getIntent().getStringExtra("url");
+		cateId = getIntent().getIntExtra("cateId", 0);
+		cateTitle = getIntent().getStringExtra("title");
 	}
 
+	/**
+	 * 绑定事件
+	 */
 	private void BindControls() {
-		txtAppTitle.setText(itemTitle);
+		txtAppTitle.setText(cateTitle);
+		// 跳回
 		btnBack.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				RssItemsActivity.this.finish();
+				RssListActivity.this.finish();
 			}
 		});
+		// 刷新
 		btnRefresh.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				new PageTask().execute();
 			}
 		});
+		// 点击跳转
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v,
 					int position, long id) {
 				TextView tvTitle = (TextView) v
-						.findViewById(R.id.recommend_text_title);
-				TextView tvContent = (TextView) v
-						.findViewById(R.id.recommend_text_full_text);
-				TextView tvLink = (TextView) v
-						.findViewById(R.id.recommend_text_url);
+						.findViewById(R.id.rss_item_title);
+				TextView tvUrl = (TextView) v.findViewById(R.id.rss_item_url);
+				TextView tvIsCnblogs = (TextView) v
+						.findViewById(R.id.rss_item_is_cnblogs);
+				TextView tvAuthor = (TextView) v
+						.findViewById(R.id.rss_item_author);
 				String title = tvTitle.getText().toString();
-				String content = tvContent.getText().toString();
-				String link = tvLink.getText().toString();
+				String url = tvUrl.getText().toString();
+				boolean isCnblogs = tvIsCnblogs.getText().toString()
+						.equals("1");
+				String author = tvAuthor.getText().toString();
 
 				Intent intent = new Intent();
-				intent.setClass(RssItemsActivity.this, RssDetailActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putString("cate",itemTitle);
-				bundle.putString("title", title);
-				bundle.putString("content", content);
-				bundle.putString("link", link);
+				if (isCnblogs) {// 博客园
+					intent.setClass(RssListActivity.this,
+							AuthorBlogActivity.class);
+					bundle.putString("blogName", title);
+					bundle.putString("author", author);
+				} else {
+					intent.setClass(RssListActivity.this,
+							RssItemsActivity.class);
+					bundle.putString("title", title);
+					bundle.putString("url", url);
+				}
 
 				intent.putExtras(bundle);
 
 				startActivity(intent);
 			}
 		});
+		// 长按事件
 		listView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
 			@Override
 			public void onCreateContextMenu(ContextMenu menu, View v,
@@ -120,24 +151,28 @@ public class RssItemsActivity extends BaseActivity {
 		});
 	}
 
-	public class PageTask extends AsyncTask<String, Integer, List<RssItem>> {
+	public class PageTask extends AsyncTask<String, Integer, List<RssList>> {
+
 		@Override
-		protected List<RssItem> doInBackground(String... params) {
-			List<RssItem> listRss = RssItemHelper.GetRssList(itemUrl);
-			return listRss;
+		protected List<RssList> doInBackground(String... params) {
+			List<RssList> list = RssListHelper.GetRssList(cateId);
+			return list;
 		}
+
 		@Override
-		protected void onPostExecute(List<RssItem> result) {
+		protected void onPostExecute(List<RssList> result) {
 			bodyProgressBar.setVisibility(View.GONE);
 			topProgressBar.setVisibility(View.GONE);
 			btnRefresh.setVisibility(View.VISIBLE);
 			if (result == null || result.size() == 0) {
 				txtNoData.setVisibility(View.VISIBLE);
 			} else {
-				adapter = new RssItemsAdapter(getApplicationContext(), result);
+				adapter = new RssListAdapter(getApplicationContext(), result,
+						listView, RssListAdapter.EnumSource.RssList, adapter);
 				listView.setAdapter(adapter);
 			}
 		}
+
 		@Override
 		protected void onPreExecute() {
 			bodyProgressBar.setVisibility(View.VISIBLE);

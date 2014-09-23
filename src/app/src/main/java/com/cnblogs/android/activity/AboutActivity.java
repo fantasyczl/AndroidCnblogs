@@ -1,5 +1,6 @@
-package com.cnblogs.android;
+package com.cnblogs.android.activity;
 
+import com.cnblogs.android.R;
 import com.cnblogs.android.utility.AppUtil;
 
 import android.content.Intent;

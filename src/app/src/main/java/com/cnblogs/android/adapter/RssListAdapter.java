@@ -3,7 +3,7 @@ package com.cnblogs.android.adapter;
 import java.util.List;
 
 import com.cnblogs.android.R;
-import com.cnblogs.android.dal.RssListDalHelper;
+import com.cnblogs.android.db.RssListDalHelper;
 import com.cnblogs.android.entity.RssList;
 
 import android.content.Context;

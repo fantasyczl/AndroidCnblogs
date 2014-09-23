@@ -223,8 +223,8 @@ public class NetHelper {
 			}
 		} catch (Exception e) {
             e.printStackTrace();
-			Log.e("download_img_err", e.toString());
 		}
+
 		return null;
 	}
 

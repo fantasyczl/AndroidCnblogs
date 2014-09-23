@@ -1,10 +1,11 @@
-package com.cnblogs.android;
+package com.cnblogs.android.activity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.cnblogs.android.R;
 import com.cnblogs.android.enums.EnumActivityType;
 
 import android.content.Intent;

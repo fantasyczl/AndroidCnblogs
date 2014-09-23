@@ -1,9 +1,8 @@
-package com.cnblogs.android;
+package com.cnblogs.android.activity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.AsyncTask;
@@ -26,13 +25,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
+
+import com.cnblogs.android.R;
 import com.cnblogs.android.adapter.CommentListAdapter;
 import com.cnblogs.android.controls.PullToRefreshListView;
 import com.cnblogs.android.controls.PullToRefreshListView.OnRefreshListener;
 import com.cnblogs.android.core.CommentHelper;
 import com.cnblogs.android.core.Config;
 import com.cnblogs.android.core.UserHelper;
-import com.cnblogs.android.dal.CommentDalHelper;
+import com.cnblogs.android.db.CommentDalHelper;
 import com.cnblogs.android.entity.Comment;
 import com.cnblogs.android.utility.NetHelper;
 
@@ -167,7 +168,7 @@ public class CommentActivity extends BaseActivity {
 		commentsMore_progressBar.setVisibility(View.VISIBLE);
 
 		// 底部view
-		LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater mInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 		viewFooter = (LinearLayout) mInflater.inflate(R.layout.listview_footer, null, false);
 
 		// 返回
@@ -410,7 +411,7 @@ public class CommentActivity extends BaseActivity {
 	private void CopyText(View v) {
 		TextView tvContent = (TextView) (v.findViewById(R.id.comment_content));
 		String text = tvContent.getText().toString();
-		ClipboardManager clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+		ClipboardManager clip = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
 		clip.setText(text);
 		Toast.makeText(getApplicationContext(), R.string.sys_copy_text,
 				Toast.LENGTH_SHORT).show();

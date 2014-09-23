@@ -1,4 +1,4 @@
-package com.cnblogs.android;
+package com.cnblogs.android.activity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +29,7 @@ import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.cnblogs.android.R;
 import com.cnblogs.android.adapter.AuthorBlogListAdapter;
 import com.cnblogs.android.cache.AsyncImageLoader;
 import com.cnblogs.android.cache.ImageCacher;
@@ -38,8 +39,8 @@ import com.cnblogs.android.controls.PullToRefreshListView.OnRefreshListener;
 import com.cnblogs.android.core.BlogHelper;
 import com.cnblogs.android.core.Config;
 import com.cnblogs.android.core.UserHelper;
-import com.cnblogs.android.dal.BlogDalHelper;
-import com.cnblogs.android.dal.RssListDalHelper;
+import com.cnblogs.android.db.BlogDalHelper;
+import com.cnblogs.android.db.RssListDalHelper;
 import com.cnblogs.android.entity.Blog;
 import com.cnblogs.android.entity.RssList;
 import com.cnblogs.android.entity.Users;

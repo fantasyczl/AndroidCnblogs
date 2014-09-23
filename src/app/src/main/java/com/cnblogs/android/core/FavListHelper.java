@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.List;
 import android.content.Context;
 
-import com.cnblogs.android.dal.BlogDalHelper;
-import com.cnblogs.android.dal.FavDalHelper;
+import com.cnblogs.android.db.BlogDalHelper;
+import com.cnblogs.android.db.FavDalHelper;
 import com.cnblogs.android.entity.FavList;
 import com.cnblogs.android.enums.EnumResultType;
 

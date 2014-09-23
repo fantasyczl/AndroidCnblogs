@@ -1,12 +1,13 @@
-package com.cnblogs.android;
+package com.cnblogs.android.activity;
 
 import java.io.InputStream;
 
+import com.cnblogs.android.R;
 import com.cnblogs.android.core.BlogHelper;
 import com.cnblogs.android.core.Config;
 import com.cnblogs.android.core.FavListHelper;
 import com.cnblogs.android.core.UserHelper;
-import com.cnblogs.android.dal.BlogDalHelper;
+import com.cnblogs.android.db.BlogDalHelper;
 import com.cnblogs.android.entity.FavList;
 import com.cnblogs.android.enums.EnumResultType;
 import com.cnblogs.android.utility.AppUtil;

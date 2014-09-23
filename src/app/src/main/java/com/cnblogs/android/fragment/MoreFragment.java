@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cnblogs.android.R;
-import com.cnblogs.android.WebActivity;
+import com.cnblogs.android.activity.WebActivity;
 import com.cnblogs.android.utility.NetHelper;
 
 import java.util.ArrayList;

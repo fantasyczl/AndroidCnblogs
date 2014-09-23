@@ -1,4 +1,4 @@
-package com.cnblogs.android;
+package com.cnblogs.android.activity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +31,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
+
+import com.cnblogs.android.R;
 import com.cnblogs.android.adapter.MyFavListAdapter;
 import com.cnblogs.android.controls.PullToRefreshListView;
 import com.cnblogs.android.controls.PullToRefreshListView.OnRefreshListener;
 import com.cnblogs.android.core.Config;
 import com.cnblogs.android.core.FavListHelper;
-import com.cnblogs.android.dal.BlogDalHelper;
+import com.cnblogs.android.db.BlogDalHelper;
 import com.cnblogs.android.entity.Blog;
 import com.cnblogs.android.entity.FavList;
 import com.cnblogs.android.utility.NetHelper;
@@ -110,7 +112,7 @@ public class MyFavActivity extends BaseActivity {
 		blog_refresh_btn = (ImageButton) findViewById(R.id.blog_refresh_btn);
 		blog_progress_bar = (ProgressBar) findViewById(R.id.blog_progressBar);
 		// 底部view
-		LayoutInflater mInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater mInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 		viewFooter = (LinearLayout) mInflater.inflate(R.layout.listview_footer,
 				null, false);
 	}

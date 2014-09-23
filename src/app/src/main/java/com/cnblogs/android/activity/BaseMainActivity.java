@@ -1,4 +1,4 @@
-package com.cnblogs.android;
+package com.cnblogs.android.activity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -18,6 +18,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cnblogs.android.R;
 import com.cnblogs.android.services.DownloadServices;
 import com.cnblogs.android.utility.AppUtil;
 import com.cnblogs.android.utility.NetHelper;

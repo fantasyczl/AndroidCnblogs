@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import com.cnblogs.android.MainActivity;
+import com.cnblogs.android.activity.MainActivity;
 import com.cnblogs.android.R;
 import com.cnblogs.android.utility.FileAccess;
 

@@ -12,6 +12,7 @@
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 	
 	<application
+        android:name=".GlobalContext"
 		android:icon="@drawable/icon"
 		android:label="@string/app_name"
 		android:allowBackup="true"
@@ -19,7 +20,7 @@
 		
 		<activity
 			android:windowAnimationStyle="@android:style/Animation.Translucent"
-			android:name=".SplashActivity"
+			android:name=".activity.SplashActivity"
 			android:configChanges="keyboardHidden"
 			android:label="@string/app_name">
 			<intent-filter>
@@ -30,7 +31,7 @@
 		<!--关注微博信息 -->
 		<activity
 			android:windowAnimationStyle="@android:style/Animation.Translucent"
-			android:name=".AboutActivity"
+			android:name=".activity.AboutActivity"
 			android:configChanges="keyboardHidden"
 			android:launchMode="singleInstance">
 			<intent-filter>
@@ -44,15 +45,15 @@
 		</activity>
 		<activity
 			android:theme="@style/ContentOverlay"
-			android:name=".BlogActivity"
+			android:name=".activity.BlogDetailActivity"
 			android:configChanges="orientation|keyboardHidden" />
 		<activity
 			android:theme="@style/ContentOverlay"
-			android:name=".RssListActivity"
+			android:name=".activity.RssListActivity"
 			android:configChanges="orientation|keyboardHidden" />
 		<activity
 			android:theme="@style/ContentOverlay"
-			android:name=".RssCateActivity"
+			android:name=".activity.RssCateActivity"
 			android:configChanges="orientation|keyboardHidden" />
 		<activity
 			android:theme="@style/ContentOverlay"
@@ -60,43 +61,31 @@
 			android:configChanges="orientation|keyboardHidden" />
 		<activity
 			android:theme="@style/ContentOverlay"
-			android:name=".RssItemsActivity"
+			android:name=".activity.RssItemsActivity"
 			android:configChanges="orientation|keyboardHidden" />
 		<activity
 			android:windowAnimationStyle="@android:style/Animation.Translucent"
-			android:name=".RssDetailActivity"
+			android:name=".activity.RssDetailActivity"
 			android:configChanges="orientation|keyboardHidden" />
 		<activity
 			android:theme="@style/ContentOverlay"
-			android:name=".AuthorBlogActivity"
+			android:name=".activity.AuthorBlogActivity"
 			android:configChanges="orientation|keyboardHidden" />
 		<activity
 			android:theme="@style/ContentOverlay"
-			android:name=".NewsActivity"
-			android:configChanges="orientation|keyboardHidden" />
-		<activity
-			android:theme="@style/ContentOverlay"
-			android:name=".SettingActivity"
+			android:name=".activity.SettingActivity"
 			android:configChanges="orientation|keyboardHidden" />
 		<activity
 			android:windowAnimationStyle="@android:style/Animation.Translucent"
-			android:name=".BlogDetailActivity"
-			android:configChanges="orientation|keyboardHidden" />
-		<activity
-			android:windowAnimationStyle="@android:style/Animation.Translucent"
-			android:name=".NewsDetailActivity"
+			android:name=".activity.NewsDetailActivity"
 			android:configChanges="orientation|keyboardHidden" />
 		<activity
 			android:theme="@style/ContentOverlay"
-			android:name=".CommentActivity"
+			android:name=".activity.CommentActivity"
 			android:configChanges="orientation|keyboardHidden" />
 		<activity
 			android:theme="@style/ContentOverlay"
-			android:name=".MoreActivity"
-			android:configChanges="orientation|keyboardHidden" />
-		<activity
-			android:theme="@style/ContentOverlay"
-			android:name=".MainActivity"
+			android:name=".activity.MainActivity"
 			android:windowSoftInputMode="stateHidden|adjustPan"
 			android:launchMode="singleTask"
 			android:alwaysRetainTaskState="true"
@@ -104,31 +93,27 @@
 			android:configChanges="orientation|keyboardHidden" />
 		<activity
 			android:theme="@style/ContentOverlay"
-			android:name=".SearchActivity"
+			android:name=".activity.WebActivity"
 			android:configChanges="orientation|keyboardHidden" />
 		<activity
 			android:theme="@style/ContentOverlay"
-			android:name=".WebActivity"
+			android:name=".activity.OrderActivity"
 			android:configChanges="orientation|keyboardHidden" />
 		<activity
 			android:theme="@style/ContentOverlay"
-			android:name=".OrderActivity"
+			android:name=".activity.BlogTopViewDiggActivity"
 			android:configChanges="orientation|keyboardHidden" />
 		<activity
 			android:theme="@style/ContentOverlay"
-			android:name=".BlogTopViewDiggActivity"
+			android:name=".activity.AuthorOrderActivity"
 			android:configChanges="orientation|keyboardHidden" />
 		<activity
 			android:theme="@style/ContentOverlay"
-			android:name=".AuthorOrderActivity"
+			android:name=".activity.NewsRecommendActivity"
 			android:configChanges="orientation|keyboardHidden" />
 		<activity
 			android:theme="@style/ContentOverlay"
-			android:name=".NewsRecommendActivity"
-			android:configChanges="orientation|keyboardHidden" />
-		<activity
-			android:theme="@style/ContentOverlay"
-			android:name=".MyFavActivity"
+			android:name=".activity.MyFavActivity"
 			android:configChanges="orientation|keyboardHidden" />
 		<service
 			android:enabled="true"
@@ -143,24 +128,9 @@
 		<meta-data
 			android:value="android_market"
 			android:name="UMENG_CHANNEL" />
-		<!-- add feedback Activity -->
-		<activity
-			android:name="com.feedback.ui.SendFeedback"
-			android:windowSoftInputMode="adjustResize" />
-		<activity android:name="com.feedback.ui.FeedbackConversations" />
-		<activity
-			android:name="com.feedback.ui.FeedbackConversation"
-			android:configChanges="keyboard" />
-		<service
-			android:exported="true"
-			android:name="com.exchange.Public.DownloadingService"
-			android:process=":DownloadingService" />
 		<!--多盟 -->
 		<meta-data
 			android:value="56OJyBYYuML8sTo/lf"
 			android:name="DOMOB_PID" />
-		<activity
-			android:name="cn.domob.android.ads.DomobActivity"
-			android:theme="@android:style/Theme.Translucent" />
 	</application>
 </manifest>

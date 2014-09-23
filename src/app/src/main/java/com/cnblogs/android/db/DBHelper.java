@@ -1,4 +1,4 @@
-package com.cnblogs.android.dal;
+package com.cnblogs.android.db;
 
 import java.util.List;
 

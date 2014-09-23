@@ -1,9 +1,11 @@
-package com.cnblogs.android;
+package com.cnblogs.android.activity;
 
 import java.io.InputStream;
+
+import com.cnblogs.android.R;
 import com.cnblogs.android.core.NewsHelper;
 import com.cnblogs.android.core.Config;
-import com.cnblogs.android.dal.NewsDalHelper;
+import com.cnblogs.android.db.NewsDalHelper;
 import com.cnblogs.android.utility.AppUtil;
 import com.cnblogs.android.utility.NetHelper;
 import android.content.Intent;

@@ -1,10 +1,12 @@
-package com.cnblogs.android;
+package com.cnblogs.android.activity;
 
 import java.util.List;
+
+import com.cnblogs.android.R;
 import com.cnblogs.android.adapter.RssCateListAdapter;
 import com.cnblogs.android.core.RssCateHelper;
 import com.cnblogs.android.core.RssListHelper;
-import com.cnblogs.android.dal.RssListDalHelper;
+import com.cnblogs.android.db.RssListDalHelper;
 import com.cnblogs.android.entity.RssCate;
 import com.cnblogs.android.entity.RssList;
 import com.cnblogs.android.utility.NetHelper;

@@ -15,7 +15,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import android.content.Context;
 
-import com.cnblogs.android.dal.BlogDalHelper;
+import com.cnblogs.android.db.BlogDalHelper;
 import com.cnblogs.android.entity.*;
 import com.cnblogs.android.parser.BlogListXmlParser;
 import com.cnblogs.android.parser.BlogXmlParser;

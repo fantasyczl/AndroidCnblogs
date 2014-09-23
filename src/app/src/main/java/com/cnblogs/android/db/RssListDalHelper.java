@@ -1,4 +1,4 @@
-package com.cnblogs.android.dal;
+package com.cnblogs.android.db;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,7 +26,6 @@ public class RssListDalHelper {
 	/**
 	 * 判断是否已经存在
 	 * 
-	 * @param blogId
 	 * @return
 	 */
 	public boolean Exist(String link) {
@@ -35,7 +34,9 @@ public class RssListDalHelper {
 		Cursor cursor = db.query(Config.DB_RSSLIST_TABLE, null, where, args,
 				null, null, null);
 		boolean isExist = cursor != null && cursor.moveToNext();
-		cursor.close();
+
+        if (cursor != null)
+		    cursor.close();
 
 		return isExist;
 	}
@@ -52,7 +53,9 @@ public class RssListDalHelper {
 		Cursor cursor = db.query(Config.DB_RSSLIST_TABLE, null, where, args,
 				null, null, null);
 		boolean isExist = cursor != null && cursor.moveToNext();
-		cursor.close();
+
+        if (cursor != null)
+		    cursor.close();
 
 		return isExist;
 	}
@@ -98,7 +101,6 @@ public class RssListDalHelper {
 	/**
 	 * 根据条件得到
 	 * 
-	 * @param top
 	 * @param where
 	 */
 	public List<RssList> GetRssListByWhere(String limit, String where,

@@ -30,16 +30,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cnblogs.android.AuthorBlogActivity;
-import com.cnblogs.android.BlogDetailActivity;
-import com.cnblogs.android.CommentActivity;
+import com.cnblogs.android.activity.AuthorBlogActivity;
+import com.cnblogs.android.activity.BlogDetailActivity;
+import com.cnblogs.android.activity.CommentActivity;
 import com.cnblogs.android.R;
 import com.cnblogs.android.adapter.BlogListAdapter;
 import com.cnblogs.android.controls.PullToRefreshListView;
 import com.cnblogs.android.controls.PullToRefreshListView.OnRefreshListener;
 import com.cnblogs.android.core.BlogHelper;
 import com.cnblogs.android.core.Config;
-import com.cnblogs.android.dal.BlogDalHelper;
+import com.cnblogs.android.db.BlogDalHelper;
 import com.cnblogs.android.entity.Blog;
 import com.cnblogs.android.utility.NetHelper;
 
@@ -67,8 +67,9 @@ public class BlogFragment extends Fragment {
 	Resources res;
 	private int lastItem;
 	BlogDalHelper dbHelper;
-	
-	public BlogFragment(){}
+    UpdateListViewReceiver mReceiver;
+
+    public BlogFragment(){}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -86,10 +87,10 @@ public class BlogFragment extends Fragment {
 		
 		new PageTask(0, true).execute();
 		
-		UpdateListViewReceiver receiver = new UpdateListViewReceiver();
+		mReceiver = new UpdateListViewReceiver();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("android.cnblogs.com.update_bloglist");
-		getActivity().registerReceiver(receiver, filter);
+		getActivity().registerReceiver(mReceiver, filter);
 		
 		return rootView;
 	}
@@ -152,8 +153,14 @@ public class BlogFragment extends Fragment {
 			}
 		});
 	}
-	
-	public class PageTask extends AsyncTask<String, Integer, List<Blog>> {
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        getActivity().unregisterReceiver(mReceiver);
+    }
+
+    public class PageTask extends AsyncTask<String, Integer, List<Blog>> {
 		boolean isRefresh = false;
 		int curPageIndex = 0;
 		boolean isLocalData = false;

@@ -12,10 +12,11 @@ import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.cnblogs.android.R;
-import com.cnblogs.android.SettingActivity;
+import com.cnblogs.android.activity.SettingActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,9 +37,18 @@ public class AppUtil {
      * @return
      */
     public static Date ParseDate(String str){
+        Date addTime = null;
+
+        if (TextUtils.isEmpty(str)) {
+            return new Date();
+        }
+
     	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-    	Date addTime = null;
+
     	try {
+            if (str.length() <= 10) {
+                dateFormat.applyPattern(TimeTools.YMD);
+            }
     		addTime = dateFormat.parse(str);
     	} catch (ParseException e) {
     		e.printStackTrace();

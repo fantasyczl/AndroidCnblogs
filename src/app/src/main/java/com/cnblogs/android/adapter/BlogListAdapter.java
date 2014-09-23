@@ -3,7 +3,7 @@ package com.cnblogs.android.adapter;
 import java.util.List;
 
 import com.cnblogs.android.R;
-import com.cnblogs.android.SettingActivity;
+import com.cnblogs.android.activity.SettingActivity;
 import com.cnblogs.android.cache.AsyncImageLoader;
 import com.cnblogs.android.cache.ImageCacher;
 import com.cnblogs.android.cache.AsyncImageLoader.ImageCallback;

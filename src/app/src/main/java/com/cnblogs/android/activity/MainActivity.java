@@ -1,4 +1,4 @@
-package com.cnblogs.android;
+package com.cnblogs.android.activity;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -10,6 +10,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.RadioButton;
 import android.widget.TabHost.TabSpec;
 
+import com.cnblogs.android.R;
 import com.cnblogs.android.fragment.BlogFragment;
 import com.cnblogs.android.fragment.MoreFragment;
 import com.cnblogs.android.fragment.NewsFragment;
@@ -127,7 +128,7 @@ public class MainActivity extends Activity implements OnCheckedChangeListener {
 		SharedPreferences settings = getSharedPreferences( getString(R.string.preferences_key), MODE_PRIVATE);
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putString( getString(R.string.preferences_current_tab), whichTab);
-		editor.commit();
+		editor.apply();
 		
 		super.onDestroy();
 	}

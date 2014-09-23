@@ -1,8 +1,9 @@
-package com.cnblogs.android;
+package com.cnblogs.android.activity;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cnblogs.android.R;
 import com.cnblogs.android.adapter.BlogListAdapter;
 import com.cnblogs.android.core.BlogHelper;
 import com.cnblogs.android.entity.Blog;

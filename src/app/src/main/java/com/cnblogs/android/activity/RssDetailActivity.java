@@ -1,7 +1,8 @@
-package com.cnblogs.android;
+package com.cnblogs.android.activity;
 
 import java.io.InputStream;
 
+import com.cnblogs.android.R;
 import com.cnblogs.android.core.Config;
 import com.cnblogs.android.utility.AppUtil;
 import com.cnblogs.android.utility.NetHelper;

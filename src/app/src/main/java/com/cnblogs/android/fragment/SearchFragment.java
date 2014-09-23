@@ -22,8 +22,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cnblogs.android.AuthorBlogActivity;
-import com.cnblogs.android.OrderActivity;
+import com.cnblogs.android.activity.AuthorBlogActivity;
+import com.cnblogs.android.activity.OrderActivity;
 import com.cnblogs.android.R;
 import com.cnblogs.android.adapter.UserListAdapter;
 import com.cnblogs.android.core.UserHelper;

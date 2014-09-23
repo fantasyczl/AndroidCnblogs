@@ -25,12 +25,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cnblogs.android.AuthorBlogActivity;
+import com.cnblogs.android.activity.AuthorBlogActivity;
 import com.cnblogs.android.R;
-import com.cnblogs.android.RssCateActivity;
-import com.cnblogs.android.RssItemsActivity;
+import com.cnblogs.android.activity.RssCateActivity;
+import com.cnblogs.android.activity.RssItemsActivity;
 import com.cnblogs.android.adapter.RssListAdapter;
-import com.cnblogs.android.dal.RssListDalHelper;
+import com.cnblogs.android.db.RssListDalHelper;
 import com.cnblogs.android.entity.RssList;
 
 import java.util.ArrayList;
@@ -53,6 +53,7 @@ public class RssFragment extends Fragment {
     private ProgressDialog progressDialog;  
     int lastItemPosition;
     Resources res;// 资源
+    UpdateListViewReceiver mReceiver;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,15 +71,21 @@ public class RssFragment extends Fragment {
         new PageTask().execute();
         
         //注册广播
-        UpdateListViewReceiver receiver=new UpdateListViewReceiver();
+        mReceiver = new UpdateListViewReceiver();
         IntentFilter filter=new IntentFilter();
         filter.addAction("android.cnblogs.com.update_rsslist");
-        getActivity().registerReceiver(receiver, filter);
+        getActivity().registerReceiver(mReceiver, filter);
         
         return rootView;
 	}
 
-	/**
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        getActivity().unregisterReceiver(mReceiver);
+    }
+
+    /**
      * 初始化列表
      */
     private void InitialControls(View rootView) {
@@ -239,11 +246,11 @@ public class RssFragment extends Fragment {
     public class UpdateListViewReceiver extends BroadcastReceiver{
     	@Override
     	public void onReceive(Context content, Intent intent) {
-    		Bundle bundle=intent.getExtras();
-    		String[] arr=bundle.getStringArray("rsslist");
-    		if(arr!=null){
-    			boolean isRss=bundle.getBoolean("isrss");
-    			RssList entity=new RssList();
+    		Bundle bundle = intent.getExtras();
+    		String[] arr = bundle.getStringArray("rsslist");
+    		if(arr != null){
+    			boolean isRss = bundle.getBoolean("isrss");
+    			RssList entity = new RssList();
     			entity.SetAuthor(arr[0]);
     			entity.SetDescription(arr[1]);
     			entity.SetGuid(arr[2]);
@@ -252,12 +259,14 @@ public class RssFragment extends Fragment {
     			entity.SetLink(arr[5]);
     			entity.SetIsCnblogs(arr[6].equals("1"));
     			
-    			if(isRss){
+    			if (isRss) {
     				List<RssList> list=new ArrayList<RssList>();
     				list.add(entity);
-    				adapter.AddMoreData(list);
-    			}else{
-    				adapter.RemoveData(entity);
+                    if (adapter != null)
+    				    adapter.AddMoreData(list);
+    			} else {
+                    if (adapter != null)
+    				    adapter.RemoveData(entity);
     			}
     		}
     	}                

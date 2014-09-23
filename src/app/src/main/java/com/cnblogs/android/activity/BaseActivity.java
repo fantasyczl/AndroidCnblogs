@@ -1,4 +1,4 @@
-package com.cnblogs.android;
+package com.cnblogs.android.activity;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package com.cnblogs.android;
+package com.cnblogs.android.activity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -29,8 +29,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cnblogs.android.R;
 import com.cnblogs.android.core.Config;
-import com.cnblogs.android.dal.DBHelper;
+import com.cnblogs.android.db.DBHelper;
 import com.cnblogs.android.entity.App;
 import com.cnblogs.android.services.UpdateService;
 import com.cnblogs.android.utility.AppUtil;

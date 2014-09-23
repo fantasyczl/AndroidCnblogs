@@ -1,9 +1,11 @@
-package com.cnblogs.android;
+package com.cnblogs.android.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.cnblogs.android.R;
 
 public class SplashActivity extends BaseActivity{
 
