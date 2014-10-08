@@ -27,33 +27,31 @@ public class BlogListAdapter extends BaseAdapter {
 	private AsyncImageLoader asyncImageLoader;
 	private List<Blog> list;
 	private LayoutInflater mInflater;
-	private Context currentContext;
+	private Context mContext;
+    int mReadedColor;
 
 	public BlogListAdapter(Context context, List<Blog> list, ListView listView) {
-		currentContext = context;
+		mContext = context;
 		this.listView = listView;
 		asyncImageLoader = new AsyncImageLoader(context);
 		this.list = list;
-		this.mInflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        mReadedColor = context.getResources().getColor(R.color.gray);
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder viewHolder = null;
-		Blog entity = list.get(position);
-		if (convertView != null && convertView.getId() == R.id.blog_list) {
-			viewHolder = (ViewHolder) convertView.getTag();
-		} else {
-			viewHolder = new ViewHolder();
-			convertView = mInflater.inflate(R.layout.blog_list_item, null);
+		Blog entity = getItem(position);
 
-			viewHolder.text_title = (TextView) convertView
-					.findViewById(R.id.recommend_text_title);
-			viewHolder.text_desc = (TextView) convertView
-					.findViewById(R.id.recommend_text_desc);
-			viewHolder.imageIcon = (ImageView) convertView
-					.findViewById(R.id.recommend_image_icon);
-			viewHolder.text_diggs = (TextView) convertView
+        if (convertView == null) {
+			viewHolder = new ViewHolder();
+			convertView = mInflater.inflate(R.layout.blog_list_item, parent, false);
+
+			viewHolder.text_title = (TextView)convertView.findViewById(R.id.recommend_text_title);
+			viewHolder.text_desc = (TextView)convertView.findViewById(R.id.recommend_text_desc);
+			viewHolder.imageIcon = (ImageView)convertView.findViewById(R.id.recommend_image_icon);
+			viewHolder.text_diggs = (TextView)convertView
 					.findViewById(R.id.recommend_text_diggs);
 			viewHolder.text_author = (TextView) convertView
 					.findViewById(R.id.recommend_text_author);
@@ -75,9 +73,14 @@ public class BlogListAdapter extends BaseAdapter {
 					.findViewById(R.id.recommend_user_name);
 			viewHolder.icon_downloaded = (ImageView) convertView
 					.findViewById(R.id.icon_downloaded);
-		}
-		if (entity.GetAvator() != null) {
-			String tag = entity.GetAvator();
+
+            convertView.setTag(viewHolder);
+		} else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
+
+        String tag = entity.GetAvator();
+		if (tag != null) {
 			if (tag.contains("?")) {// 截断?后的字符串，避免无效图片
 				tag = tag.substring(0, tag.indexOf("?"));
 			}
@@ -85,27 +88,21 @@ public class BlogListAdapter extends BaseAdapter {
 			viewHolder.imageIcon.setTag(tag);
 			Drawable cachedImage = asyncImageLoader.loadDrawable(
 					ImageCacher.EnumImageType.Avatar, tag, new ImageCallback() {
-						public void imageLoaded(Drawable imageDrawable,
-								String tag) {
+						public void imageLoaded(Drawable imageDrawable, String tag) {
 							Log.i("Drawable", tag);
-							ImageView imageViewByTag = (ImageView) listView
-									.findViewWithTag(tag);
-							if (imageViewByTag != null && imageDrawable != null) {
-								imageViewByTag.setImageDrawable(imageDrawable);
-							} else {
-								try {
-									imageViewByTag
-											.setImageResource(R.drawable.sample_face);
-								} catch (Exception ex) {
+							ImageView imageViewByTag = (ImageView)listView.findViewWithTag(tag);
 
-								}
-							}
+                            if (imageViewByTag != null)
+                                if ( imageDrawable != null) {
+                                    imageViewByTag.setImageDrawable(imageDrawable);
+                                } else {
+                                    imageViewByTag.setImageResource(R.drawable.sample_face);
+                                }
 						}
 					});
+
 			// 阅读模式
-			boolean isPicReadMode = SettingActivity
-					.IsPicReadMode(currentContext);
-			if (isPicReadMode) {
+			if (SettingActivity.IsPicReadMode(mContext)) {
 				viewHolder.imageIcon.setImageResource(R.drawable.sample_face);
 				if (cachedImage != null) {
 					viewHolder.imageIcon.setImageDrawable(cachedImage);
@@ -118,20 +115,18 @@ public class BlogListAdapter extends BaseAdapter {
 		viewHolder.text_title.setText(entity.GetBlogTitle());
 		// 是否已读
 		boolean isReaded = entity.GetIsReaded();
-		Log.i("title", entity.GetBlogTitle());
-		if (isReaded) {
-			// viewHolder.text_title.setTextColor(R.color.gray);
+
+        if (isReaded) {
+			viewHolder.text_title.setTextColor(mReadedColor);
 		}
+
 		viewHolder.text_desc.setText(entity.GetSummary());
 		viewHolder.text_diggs.setText(String.valueOf(entity.GetDiggsNum()));
 		viewHolder.text_author.setText(entity.GetAuthor());
-		viewHolder.text_comments
-				.setText(String.valueOf(entity.GetCommentNum()));
+		viewHolder.text_comments.setText(String.valueOf(entity.GetCommentNum()));
 		viewHolder.text_view.setText(String.valueOf(entity.GetViewNum()));
-		viewHolder.text_date.setText(TimeTools.parseDateToString(entity
-                .GetAddTime()));
-		String simpleDateString = AppUtil.DateToChineseString(entity
-				.GetAddTime());
+		viewHolder.text_date.setText(TimeTools.parseDateToString(entity.GetAddTime()));
+		String simpleDateString = AppUtil.DateToChineseString(entity.GetAddTime());
 		viewHolder.text_formatdate.setText(simpleDateString);
 		viewHolder.text_url.setText(entity.GetBlogUrl());
 		viewHolder.text_domain.setText(entity.GetAuthorUrl());
@@ -142,7 +137,6 @@ public class BlogListAdapter extends BaseAdapter {
 			viewHolder.icon_downloaded.setVisibility(View.GONE);
 		}
 
-		convertView.setTag(viewHolder);
 		return convertView;
 	}
 
@@ -160,9 +154,13 @@ public class BlogListAdapter extends BaseAdapter {
 	 * 
 	 * @param list
 	 */
-	public void InsertData(List<Blog> list) {
-		this.list.addAll(0, list);
-		this.notifyDataSetChanged();
+	public void addDataFromTop(List<Blog> list) {
+        if (list == null) {
+            return;
+        }
+
+		list.addAll(0, list);
+		notifyDataSetChanged();
 	}
 
 	/**
@@ -170,9 +168,9 @@ public class BlogListAdapter extends BaseAdapter {
 	 * 
 	 * @param list
 	 */
-	public void AddMoreData(List<Blog> list) {
-		this.list.addAll(list);
-		this.notifyDataSetChanged();
+	public void addData(List<Blog> list) {
+		list.addAll(list);
+		notifyDataSetChanged();
 	}
 
 	/**
@@ -194,7 +192,7 @@ public class BlogListAdapter extends BaseAdapter {
 		return list.size();
 	}
 
-	public Object getItem(int position) {
+	public Blog getItem(int position) {
 		return list.get(position);
 	}
 

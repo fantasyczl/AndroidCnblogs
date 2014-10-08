@@ -300,7 +300,7 @@ public class NewsFragment extends Fragment {
 					Toast.makeText(getActivity().getApplicationContext(),
 							R.string.sys_network_error, Toast.LENGTH_SHORT)
 							.show();
-					// listView.removeFooterView(viewFooter);
+					// listView.removeFooterView(mFooterView);
 				}
 				return;
 			}

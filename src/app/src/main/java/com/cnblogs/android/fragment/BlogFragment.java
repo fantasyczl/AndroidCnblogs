@@ -17,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnCreateContextMenuListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -46,24 +45,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlogFragment extends Fragment {
-	static final String TAG = "BlogFragment";
+    static final int LOADING_FROM_TOP = -1;
+    static final int LOADING_FROM_MIDDLE = 0;
+    static final int LOADING_FROM_BOTTOM = 1;
 
 	List<Blog> listBlog = new ArrayList<Blog>();
 
-	int pageIndex = 1;
+	int pageIndex = LOADING_FROM_BOTTOM;
 
     PullToRefreshListView mListView;
-	private BlogListAdapter adapter;
+	BlogListAdapter mAdapter;
 
 	ProgressBar blogBody_progressBar;
 	ImageButton blog_refresh_btn;
 	ProgressBar blog_progress_bar;
 
-	private LinearLayout viewFooter;
+	LinearLayout mFooterView;
 
 	Resources res;
-	private int lastItem;
-	BlogListDBTask dbHelper;
+	int lastItem;
     UpdateListViewReceiver mReceiver;
 
     public BlogFragment(){}
@@ -79,10 +79,10 @@ public class BlogFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.blog_layout, container, false);
 
-		initialControls(rootView);
+		findViews(rootView);
 		bindControls();
 		
-		new PageTask(0, true).execute();
+		new PageTask(LOADING_FROM_MIDDLE, true).execute();
 		
 		mReceiver = new UpdateListViewReceiver();
 		IntentFilter filter = new IntentFilter();
@@ -92,7 +92,7 @@ public class BlogFragment extends Fragment {
 		return rootView;
 	}
 	
-	private void initialControls(View rootView) {
+	private void findViews(View rootView) {
 		mListView = (PullToRefreshListView)rootView.findViewById(R.id.blog_list);
 		blogBody_progressBar = (ProgressBar)rootView.findViewById(R.id.blogList_progressBar);
 		blogBody_progressBar.setVisibility(View.VISIBLE);
@@ -101,25 +101,27 @@ public class BlogFragment extends Fragment {
 		blog_progress_bar = (ProgressBar)rootView.findViewById(R.id.blog_progressBar);
 
 		LayoutInflater mInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		viewFooter = (LinearLayout) mInflater.inflate(R.layout.listview_footer, null, false);
+		mFooterView = (LinearLayout) mInflater.inflate(R.layout.listview_footer, null, false);
 	}
 	
 	private void bindControls() {
 		blog_refresh_btn.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				new PageTask(1, true).execute();
+				new PageTask(LOADING_FROM_BOTTOM, true).execute();
 			}
 		});
+
 		mListView.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new PageTask(-1, true).execute();
+                new PageTask(LOADING_FROM_TOP, true).execute();
             }
         });
+
 		mListView.setOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				if (lastItem == adapter.getCount()
+				if (lastItem == mAdapter.getCount()
 						&& scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
 					pageIndex = pageIndex + 1;
 					new PageTask(pageIndex, false).execute();
@@ -132,17 +134,17 @@ public class BlogFragment extends Fragment {
 				lastItem = firstVisibleItem - 2 + visibleItemCount;
 			}
 		});
+
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View v,
-					int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				redirectDetailActivity(v);
 			}
 		});
-		mListView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
+
+		mListView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
 			@Override
-			public void onCreateContextMenu(ContextMenu menu, View v,
-					ContextMenuInfo menuInfo) {
+			public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 				MenuInflater inflater = getActivity().getMenuInflater();
 				inflater.inflate(R.menu.blog_list_contextmenu, menu);
 				menu.setHeaderTitle(R.string.menu_bar_title);
@@ -150,10 +152,11 @@ public class BlogFragment extends Fragment {
 		});
 	}
 
+
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         getActivity().unregisterReceiver(mReceiver);
+        super.onDestroyView();
     }
 
     public class PageTask extends AsyncTask<String, Integer, List<Blog>> {
@@ -167,17 +170,17 @@ public class BlogFragment extends Fragment {
 		}
 
 		protected List<Blog> doInBackground(String... params) {
-			boolean isNetworkAvailable = NetHelper.networkIsAvailable(getActivity().getApplicationContext());
+			boolean isNetworkAvailable = NetHelper.networkIsAvailable(getActivity());
 
 			int _pageIndex = curPageIndex;
-			if (_pageIndex <= 0) {
-				_pageIndex = 1;
+			if (_pageIndex <= LOADING_FROM_MIDDLE) {
+				_pageIndex = LOADING_FROM_BOTTOM;
 			}
 			
 			if (isNetworkAvailable) {
 				List<Blog> listBlogNew = BlogHelper.getBlogList(_pageIndex);
 				switch (curPageIndex) {
-					case -1 :
+					case LOADING_FROM_TOP :
 						List<Blog> listTmp = new ArrayList<Blog>();
 						if (listBlog != null && listBlog.size() > 0) {
 							if (listBlogNew != null && listBlogNew.size() > 0) {
@@ -190,8 +193,8 @@ public class BlogFragment extends Fragment {
 							}
 						}
 						return listTmp;
-					case 0 :
-					case 1 :
+					case LOADING_FROM_MIDDLE :
+					case LOADING_FROM_BOTTOM :
 					    return listBlogNew;
 					default :
 						List<Blog> listT = new ArrayList<Blog>();
@@ -210,7 +213,7 @@ public class BlogFragment extends Fragment {
 			} else {
 				isLocalData = true;
 
-                if (curPageIndex == -1) {
+                if (curPageIndex == LOADING_FROM_TOP) {
 					return null;
 				}
 
@@ -218,10 +221,6 @@ public class BlogFragment extends Fragment {
 			}
 		}
 
-		@Override
-		protected void onCancelled() {
-			super.onCancelled();
-		}
 
 		@Override
 		protected void onPostExecute(List<Blog> result) {
@@ -232,54 +231,53 @@ public class BlogFragment extends Fragment {
 				mListView.onRefreshComplete();
 				if (!NetHelper.networkIsAvailable(getActivity()) && curPageIndex > 1) {
 					Toast.makeText(getActivity(), R.string.sys_network_error, Toast.LENGTH_SHORT).show();
-					// listView.removeFooterView(viewFooter);
+					// listView.removeFooterView(mFooterView);
 				}
 				return;
 			}
 
             int size = result.size();
 			if (size >= Config.BLOG_PAGE_SIZE && mListView.getFooterViewsCount() == 0) {
-				mListView.addFooterView(viewFooter);
+				mListView.addFooterView(mFooterView);
 			}
 
 			if (!isLocalData) {
-				dbHelper.synchronyData2DB(result);
+                BlogListDBTask.synchronyData2DB(result);
 			}
 
-			if (curPageIndex == -1) {
-				adapter.InsertData(result);
-			} else if (curPageIndex == 0) {
+			if (curPageIndex == LOADING_FROM_TOP) {
+				mAdapter.addDataFromTop(result);
+			} else if (curPageIndex == LOADING_FROM_MIDDLE) {
 				listBlog = result;// dbHelper.getTopBlogList();
 
 				blogBody_progressBar.setVisibility(View.GONE);
-				adapter = new BlogListAdapter(getActivity().getApplicationContext(), listBlog, mListView);
-				mListView.setAdapter(adapter);
+				mAdapter = new BlogListAdapter(getActivity(), listBlog, mListView);
+				mListView.setAdapter(mAdapter);
 
-				((PullToRefreshListView) mListView).setDataRow(listBlog.size());
-				((PullToRefreshListView) mListView).setPageSize(Config.BLOG_PAGE_SIZE);
-			} else if (curPageIndex == 1) {
+				mListView.setDataRow(listBlog.size());
+				mListView.setPageSize(Config.BLOG_PAGE_SIZE);
+			} else if (curPageIndex == LOADING_FROM_BOTTOM) {
 				try {
 					listBlog = result;
-					if (adapter != null && adapter.GetData() != null) {
-						adapter.GetData().clear();
-						adapter.AddMoreData(listBlog);
+					if (mAdapter != null && mAdapter.GetData() != null) {
+						mAdapter.GetData().clear();
+						mAdapter.addData(listBlog);
 					} else if (result != null) {
-						adapter = new BlogListAdapter(getActivity().getApplicationContext(),listBlog, mListView);
-						mListView.setAdapter(adapter);
+						mAdapter = new BlogListAdapter(getActivity(), listBlog, mListView);
+						mListView.setAdapter(mAdapter);
 					}
 					
-					((PullToRefreshListView) mListView).setDataRow(listBlog.size());
-					((PullToRefreshListView) mListView).setPageSize(Config.BLOG_PAGE_SIZE);
+					mListView.setDataRow(listBlog.size());
+					mListView.setPageSize(Config.BLOG_PAGE_SIZE);
 				} catch (Exception ex) {
                     ex.printStackTrace();
-					Log.e("BlogActivity", ex.getMessage());
 				}
 			} else {
-				adapter.AddMoreData(result);
+				mAdapter.addData(result);
 			}
 
 			if (isRefresh) {
-				((PullToRefreshListView) mListView).onRefreshComplete();
+				mListView.onRefreshComplete();
 			}
 		}
 		
@@ -300,10 +298,6 @@ public class BlogFragment extends Fragment {
 				ProgressBar list_footer_progress = (ProgressBar) getView().findViewById(R.id.list_footer_progress);
 				list_footer_progress.setVisibility(View.VISIBLE);
 			}
-		}
-
-		@Override
-		protected void onProgressUpdate(Integer... values) {
 		}
 	}
 	
@@ -478,6 +472,7 @@ public class BlogFragment extends Fragment {
 						}*/
 				}
 			}
+
 			for(int i = 0, len = blogIdArr.length; i < len; i++){
 				for(int j = 0, size = listBlog.size(); j < size; j++){
 					if(blogIdArr[i] == listBlog.get(j).GetBlogId()){

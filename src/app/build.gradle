@@ -8,7 +8,7 @@ android {
         applicationId "com.cnblogs.android.opensource"
         minSdkVersion 14
         targetSdkVersion 20
-        versionCode 2
+        versionCode 3
         versionName "2.0"
     }
     buildTypes {
@@ -20,6 +20,11 @@ android {
 }
 
 dependencies {
+    repositories {
+        mavenCentral()
+    }
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:support-v13:20.0.0'
+    compile 'com.github.chrisbanes.actionbarpulltorefresh:library:+'
 }
