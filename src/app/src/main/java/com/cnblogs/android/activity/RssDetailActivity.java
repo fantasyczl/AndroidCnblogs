@@ -104,7 +104,7 @@ public class RssDetailActivity extends BaseActivity implements
 		try {
 			webView = (WebView) findViewById(R.id.rss_body_webview_content);
 			webView.getSettings().setDefaultTextEncodingName("utf-8");
-			// webView.addJavascriptInterface(this, "javatojs");
+			// mWebView.addJavascriptInterface(this, "javatojs");
 			webView.setSelected(true);
 			webView.setScrollBarStyle(0);
 			WebSettings webSetting = webView.getSettings();

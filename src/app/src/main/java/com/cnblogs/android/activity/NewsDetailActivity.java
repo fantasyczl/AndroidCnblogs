@@ -135,7 +135,7 @@ public class NewsDetailActivity extends BaseActivity implements OnGestureListene
     	try{                        
     		webView=(WebView)findViewById(R.id.news_body_webview_content);
     		webView.getSettings().setDefaultTextEncodingName("utf-8");//避免中文乱码
-//          	              webView.addJavascriptInterface(this, "javatojs");
+//          	              mWebView.addJavascriptInterface(this, "javatojs");
     		webView.setScrollBarStyle(0);
     		WebSettings webSetting = webView.getSettings();
     		webSetting.setJavaScriptEnabled(true);

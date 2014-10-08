@@ -1,6 +1,7 @@
 package com.cnblogs.android.core;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.cnblogs.android.db.BlogListDBTask;
 import com.cnblogs.android.entity.Blog;
@@ -158,8 +159,7 @@ public class BlogHelper extends DefaultHandler {
      */
     public static String GetBlogContentByIdWithNet(int blogId) {
     	String blogContent = "";
-    	String url = Config.URL_GET_BLOG_DETAIL.replace("{0}",
-    			String.valueOf(blogId));// 网址
+    	String url = Config.URL_GET_BLOG_DETAIL.replace("{0}", String.valueOf(blogId)); // 网址
     	String xml = NetHelper.getContentFromUrl(url);
     	if (xml == "") {
     		return "";
@@ -178,7 +178,7 @@ public class BlogHelper extends DefaultHandler {
     	String blogContent = "";
     	// 优先考虑本地数据
     	Blog entity = BlogListDBTask.getBlogEntity(blogId);
-    	if (null == entity || entity.GetBlogContent().equals("")) {
+    	if (null == entity || TextUtils.isEmpty(entity.GetBlogContent())) {
     		blogContent = GetBlogContentByIdWithNet(blogId);
     		/*String _blogContent=ImageCacher.FormatLocalHtmlWithImg(ImageCacher.EnumImageType.Blog, blogContent);
                     if (Config.IS_SYNCH2DB_AFTER_READ) {
